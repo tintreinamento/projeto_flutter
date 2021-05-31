@@ -1,6 +1,6 @@
-# projeto_flutter
+# Sistema de Gestão de Vendas
 
-A new Flutter project.
+Projeto Flutter da Academia de TI
 
 ## Getting Started
 
