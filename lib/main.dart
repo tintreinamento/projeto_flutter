@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './views/menu/menu.dart';
 
 void main() {
   runApp(MyApp());
@@ -59,52 +60,6 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  //Menu principal
-  Widget menuPrincipal() {
-    return Drawer(
-      // Add a ListView to the drawer. This ensures the user can scroll
-      // through the options in the drawer if there isn't enough vertical
-      // space to fit everything.
-      child: ListView(
-        // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          Container(
-            child: DrawerHeader(
-              child: Row(children: <Widget>[
-                IconButton(
-                  icon: Image.asset('assets/images/return.png'),
-                  onPressed: () => {},
-                ),
-              ]),
-            ),
-            color: Color(0xFF005EB5),
-            width: 368.0,
-            height: 73.0,
-          ),
-          ListTile(
-            title: Text('Item 1'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: Text('Item 2'),
-            onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -119,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      drawer: menuPrincipal(),
+      drawer: MenuPrincipal(),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
