@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../homepage/homepage.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -104,6 +105,13 @@ class _LoginState extends State<Login> {
                     ),
                     TextFormField(
                         obscureText: true,
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontWeight: FontWeight.w700,
+                          fontStyle: FontStyle.normal,
+                          fontSize: 24,
+                          color: Color.fromRGBO(0, 0, 0, 1),
+                        ),
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
@@ -137,7 +145,14 @@ class _LoginState extends State<Login> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                             content:
-                                                Text('Processando dados...')))
+                                                Text('Processando dados...'))),
+
+                                    //Executa rota para a página inicial
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                MyHomePage(title: 'Sistema '))),
                                   }
                               },
                           child: Text(
