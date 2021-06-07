@@ -18,5 +18,6 @@ samples, guidance on mobile development, and a full API reference.
 ## Apresentação
 
 ### Login
-
-![Login](./apresentacao/apresentacao_login.gif)
+<p align="center">
+    <img src='./apresentacao/apresentacao_login.gif'>
+</p>
