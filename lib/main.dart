@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/views/cliente/cadastro_cliente.dart';
 import './views/menu/menu.dart';
 
 void main() {
