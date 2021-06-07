@@ -17,7 +17,7 @@ class _ClienteCadastroState extends State<ClienteCadastro> {
           children: [
             TextField(
               decoration: InputDecoration(
-                labelText: 'Nome',
+                labelText: 'Nome Cliente',
                 border: OutlineInputBorder(),
               ),
             ),
