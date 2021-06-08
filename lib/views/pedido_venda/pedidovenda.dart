@@ -29,10 +29,11 @@ class _PedidoVendaState extends State<PedidoVenda> {
                       color: Color.fromRGBO(191, 188, 188, 1), width: 1)),
               child: Column(
                 children: [
-                  Row(
-                    children: [Text('CPF/CNPJ'), TextField()],
+                  Container(
+                    child: Row(
+                      children: [Text('CPF/CNPJ'), TextField()],
+                    ),
                   ),
-                  ElevatedButton(onPressed: () {}, child: Text('Consulta'))
                 ],
               ),
             ),
