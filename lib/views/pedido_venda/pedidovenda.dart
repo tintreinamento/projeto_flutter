@@ -15,19 +15,14 @@ class _PedidoVendaState extends State<PedidoVenda> {
     return Scaffold(
       appBar: AppBarComponente(appBar: AppBar()),
       drawer: DrawerComponente(),
-      body: SingleChildScrollView(
+      body: Center(
         child: Column(
-          children: [
-            Container(
-              child: Column(
-                children: [
-                  Row(
-                    children: [Text('CPF/CNPJ'), TextField()],
-                  ),
-                  ElevatedButton(onPressed: () {}, child: Text('Consultar'))
-                ],
-              ),
-            )
+          // horizontal).
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Pedido venda',
+            ),
           ],
         ),
       ),
