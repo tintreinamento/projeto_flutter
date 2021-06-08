@@ -20,6 +20,13 @@ class _PedidoVendaState extends State<PedidoVenda> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Container(
+                width: 330,
+                height: 120,
+                margin: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Color.fromRGBO(191, 188, 188, 1), width: 1))),
             Text(
               'Pedido venda',
             ),
