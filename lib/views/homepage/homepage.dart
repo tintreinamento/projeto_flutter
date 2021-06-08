@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/appbar.dart';
 import 'package:projeto_flutter/componentes/drawer.dart';
-import '../menu/menu.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
