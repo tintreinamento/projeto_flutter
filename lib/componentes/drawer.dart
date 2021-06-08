@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MenuPrincipal extends StatelessWidget {
+class DrawerComponente extends StatelessWidget {
   Widget headerMenu() {
     return Container(
         width: 368,
