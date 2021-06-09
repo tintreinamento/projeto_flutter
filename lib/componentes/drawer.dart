@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/views/pedido_venda/pedidovenda.dart';
+import '../views/pedido_venda/pedidovenda.dart';
 
 class DrawerComponente extends StatelessWidget {
   Widget headerMenu() {
@@ -72,7 +74,7 @@ class DrawerComponente extends StatelessWidget {
   }
 
   //Item do menu
-  Widget itemMenu(String titulo) {
+  Widget itemMenu(String titulo, BuildContext context) {
     return Container(
       margin: EdgeInsets.fromLTRB(0.0, 32.0, 0.0, 0.0),
       child: ListTile(
@@ -96,7 +98,10 @@ class DrawerComponente extends StatelessWidget {
           // Update the state of the app
           // ...
           // Then close the drawer
-          //avigator.pop(context);
+          //navigator.pop(context);
+
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => PedidoVenda()));
         },
       ),
     );
@@ -116,13 +121,13 @@ class DrawerComponente extends StatelessWidget {
           children: <Widget>[
             // Figma Flutter Generator Group62Widget - GROUP
             headerMenu(),
-            itemMenu('Fornecedor'),
-            itemMenu('Produto'),
-            itemMenu('Precificação'),
-            itemMenu('Estoque'),
-            itemMenu('Pedido de compras'),
-            itemMenu('Cliente'),
-            itemMenu('Pedido de venda'),
+            itemMenu('Fornecedor', context),
+            itemMenu('Produto', context),
+            itemMenu('Precificação', context),
+            itemMenu('Estoque', context),
+            itemMenu('Pedido de compras', context),
+            itemMenu('Cliente', context),
+            itemMenu('Pedido de venda', context),
           ],
         ),
       ),
