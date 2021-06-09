@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/componentes/input.dart';
 import '../../componentes/appbar.dart';
 import '../../componentes/drawer.dart';
 
@@ -10,6 +11,14 @@ class PedidoVenda extends StatefulWidget {
 }
 
 class _PedidoVendaState extends State<PedidoVenda> {
+  //Endereço
+  TextEditingController cepController = TextEditingController();
+  TextEditingController logradouroController = TextEditingController();
+  TextEditingController numeroController = TextEditingController();
+  TextEditingController bairroController = TextEditingController();
+  TextEditingController cidadeController = TextEditingController();
+  TextEditingController estadoController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +38,12 @@ class _PedidoVendaState extends State<PedidoVenda> {
                       color: Color.fromRGBO(191, 188, 188, 1), width: 1)),
               child: Column(
                 children: [
-                  Text('CPF/CNPJ'),
+                  inputComponente('CEP', cepController),
+                  inputComponente('Logradouro', logradouroController),
+                  inputComponente('Número', numeroController),
+                  inputComponente('Bairro', bairroController),
+                  inputComponente('Cidade', cidadeController),
+                  inputComponente('Estado', estadoController)
                 ],
               ),
             ),
