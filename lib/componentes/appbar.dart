@@ -14,7 +14,7 @@ class AppBarComponente extends StatelessWidget implements PreferredSizeWidget {
     return PreferredSize(
         child: AppBar(
           centerTitle: false,
-          title: textComponente(this.titulo),
+          title: TextComponente(label: this.titulo),
           backgroundColor: Color.fromRGBO(0, 94, 181, 1),
           actions: [
             Container(

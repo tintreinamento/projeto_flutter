@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/classes/endereco.dart';
-import 'package:projeto_flutter/componentes/input.dart';
-import 'package:projeto_flutter/componentes/text.dart';
-import 'package:projeto_flutter/services/apicorreios.dart';
 import '../../componentes/appbar.dart';
 import '../../componentes/drawer.dart';
 
-import '../../classes/endereco.dart';
-import 'dart:convert';
-import '../../services/apicorreios.dart';
-
-//http
-
-import 'package:http/http.dart' as http;
+import '../pedido_venda/endereco.dart';
 
 class PedidoVenda extends StatefulWidget {
   const PedidoVenda({Key? key}) : super(key: key);
@@ -22,34 +12,6 @@ class PedidoVenda extends StatefulWidget {
 }
 
 class _PedidoVendaState extends State<PedidoVenda> {
-  late Future<Endereco> futureEndereco;
-  //Endereço
-  TextEditingController cepController = TextEditingController();
-  TextEditingController logradouroController = TextEditingController();
-  TextEditingController complementoController = TextEditingController();
-  TextEditingController numeroController = TextEditingController();
-  TextEditingController bairroController = TextEditingController();
-  TextEditingController cidadeController = TextEditingController();
-  TextEditingController estadoController = TextEditingController();
-
-  void handleSubmittedCep() async {
-    print(cepController.text);
-
-    // var endereco = getEndereco('01001000');
-    //print(endereco);
-
-    var endereco = await getEndereco(cepController.text);
-
-    //Seta valores nos campos de endereço
-    logradouroController.text = endereco['logradouro'];
-    complementoController.text = endereco['complemento'];
-    bairroController.text = endereco['bairro'];
-    cidadeController.text = endereco['localidade'];
-    estadoController.text = endereco['uf'];
-
-    print(endereco['cep']);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,23 +31,7 @@ class _PedidoVendaState extends State<PedidoVenda> {
                       border: Border.all(
                           color: Color.fromRGBO(191, 188, 188, 1), width: 1)),
                   child: Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        textComponente('Entrega'),
-                        Divider(),
-                        inputComponente(
-                            'CEP:', cepController, handleSubmittedCep),
-                        inputComponente(
-                            'Logradouro:', logradouroController, () {}),
-                        inputComponente(
-                            'Complemento:', complementoController, () {}),
-                        inputComponente('Bairro:', bairroController, () {}),
-                        inputComponente('Cidade:', cidadeController, () {}),
-                        inputComponente('Estado:', estadoController, () {})
-                      ],
-                    ),
+                    child: Endereco(), //Componente de formulário de endereço
                   )),
             ],
           ),
