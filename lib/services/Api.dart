@@ -13,4 +13,11 @@ class Api {
 
     return resposta;
   }
+
+  Future<Response> crie(String query, Object body) async {
+    var resposta = await http
+        .post(Uri.parse('http://10.66.8.160:1337/' + query), body: body);
+
+    return resposta;
+  }
 }
