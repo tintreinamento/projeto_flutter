@@ -1,4 +1,4 @@
-class Cliente {
+class ClienteModel {
   var id;
   var nome;
   var cpf;
@@ -14,9 +14,8 @@ class Cliente {
   var cidade;
   var cep;
   var uf;
-  var pedidos;
 
-  Cliente(
+  ClienteModel(
       {this.id,
       this.nome,
       this.cpf,
@@ -31,11 +30,10 @@ class Cliente {
       this.bairro,
       this.cidade,
       this.cep,
-      this.uf,
-      this.pedidos});
+      this.uf});
 
-  factory Cliente.fromJson(Map<String, dynamic> parsedJson) {
-    return Cliente(
+  factory ClienteModel.fromJson(Map<String, dynamic> parsedJson) {
+    return ClienteModel(
         id: parsedJson['id'],
         nome: parsedJson['nome'],
         cpf: parsedJson['cpf'],
@@ -50,7 +48,23 @@ class Cliente {
         bairro: parsedJson['bairro'],
         cidade: parsedJson['cidade'],
         cep: parsedJson['cep'],
-        uf: parsedJson['uf'],
-        pedidos: parsedJson['pedidos']);
+        uf: parsedJson['uf']);
   }
+
+  Map<String, dynamic> toJson() => {
+        'nome': nome,
+        'cpf': cpf,
+        'email': email,
+        'data_de_nascimento': dataNascimento,
+        'estado_civil': estadoCivil,
+        'sexo': sexo,
+        'ddd': ddd,
+        'numero_telefone': numeroTelefone,
+        'logradouro': logradouro,
+        'numero': numero,
+        'bairro': bairro,
+        'cidade': cidade,
+        'cep': cep,
+        'uf': uf,
+      };
 }
