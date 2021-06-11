@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'package:projeto_flutter/models/Cliente.dart';
 import 'package:projeto_flutter/services/Api.dart';
@@ -7,10 +8,10 @@ class ClienteController {
     final resposta = await new Api().obtenha('clientes');
 
     if (resposta.statusCode != 200) {
-      throw new Exception("Falha ao comunicar com a api");
+      throw new Exception("Falha ao obter os dados na api");
     }
 
-    final List<Cliente> colecaoDeClientes = new List.empty();
+    List<Cliente> colecaoDeClientes = new List.empty(growable: true);
 
     List<dynamic> stringJson = json.decode(resposta.body);
 
@@ -22,7 +23,7 @@ class ClienteController {
     return colecaoDeClientes;
   }
 
-  Future<Cliente> obtenhaCliente(String cpf) async {
+  Future<Cliente> obtenhaClienteCpf(String cpf) async {
     final resposta = await new Api().obtenha('clientes?cpf=' + cpf);
 
     if (resposta.statusCode != 200) {
