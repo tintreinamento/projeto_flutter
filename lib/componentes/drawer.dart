@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/views/pedido_venda/pedidovenda.dart';
-import '../views/pedido_venda/pedidovenda.dart';
+import 'package:projeto_flutter/views/pedido/pedido.dart';
+import '../views/pedido/pedido.dart';
 
 class DrawerComponente extends StatelessWidget {
   Widget headerMenu() {
@@ -101,7 +101,7 @@ class DrawerComponente extends StatelessWidget {
           //navigator.pop(context);
 
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PedidoVenda()));
+              context, MaterialPageRoute(builder: (context) => Pedido()));
         },
       ),
     );
