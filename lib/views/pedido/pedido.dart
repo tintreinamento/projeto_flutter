@@ -8,8 +8,6 @@ import 'package:projeto_flutter/views/pedido/buscarproduto.dart';
 import '../../componentes/appbar.dart';
 import '../../componentes/drawer.dart';
 
-import '../../models/endereco.dart';
-
 import '../pedido/endereco.dart';
 
 import '../../componentes/textstyle.dart';
@@ -17,16 +15,17 @@ import '../../componentes/inputdecoration.dart';
 import '../../componentes/boxdecoration.dart';
 
 import '../../controllers/ClienteController.dart';
+import '../../controllers/EnderecoController.dart';
 
 class Pedido extends StatefulWidget {
-  EnderecoModel? enderecoModel;
+  //EnderecoModel? enderecoModel;
   List<ProdutoModels> listaProduto = [];
 
-  Pedido({Key? key, this.enderecoModel}) : super(key: key);
+  //Pedido({Key? key, this.enderecoModel}) : super(key: key);
 
-  changeEndereco(EnderecoModel endereco) {
-    this.enderecoModel = endereco;
-  }
+  //changeEndereco(EnderecoModel endereco) {
+  //this.enderecoModel = endereco;
+  //}
 
   //Adiciona produto
   handleAdicionarProduto(ProdutoModels produtoModel) {
@@ -56,6 +55,8 @@ class Pedido extends StatefulWidget {
 }
 
 class _PedidoState extends State<Pedido> {
+  final _formKeyConsultarCliente = GlobalKey<FormState>();
+
   //Cliente
   final cpfCnpjController = TextEditingController();
   final nomeClienteController = TextEditingController();
@@ -94,6 +95,19 @@ class _PedidoState extends State<Pedido> {
     estadoController.text = cliente.uf;
   }
 
+  consultarEndereco(String cep) async {
+    EnderecoController enderecoController = new EnderecoController();
+
+    final endereco = await enderecoController
+        .obtenhaEnderecoPorCep(UtilBrasilFields.removeCaracteres(cep));
+
+    logradouroController.text = endereco.logradouro;
+    //  numeroController.text = '';
+    bairroController.text = endereco.bairro;
+    cidadeController.text = endereco.cidade;
+    estadoController.text = endereco.uf;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,68 +116,80 @@ class _PedidoState extends State<Pedido> {
       body: Column(
         children: [
           Container(
-            height: 535,
+            height: 520,
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   //Consultar cliente
-                  Container(
-                    width: 330,
-                    margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
-                    padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
-                    decoration: boxDecorationComponente,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'CPF/CNPJ:',
-                              style: textStyleComponente,
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 3),
-                              width: 230,
-                              height: 31,
-                              child: TextField(
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  CpfOuCnpjFormatter()
-                                ],
-                                decoration: inputDecorationComponente,
+                  Form(
+                    key: _formKeyConsultarCliente,
+                    child: Container(
+                      width: 330,
+                      margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
+                      padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
+                      decoration: boxDecorationComponente,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'CPF/CNPJ:',
+                                style: textStyleComponente,
                               ),
-                            )
-                          ],
-                        ),
-                        Container(
-                          width: 241,
-                          height: 31,
-                          margin: EdgeInsets.only(top: 18, bottom: 13),
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Color.fromRGBO(0, 94, 181, 1)),
-                                  shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(100),
-                                  ))),
-                              onPressed: () {
-                                consultarCliente();
-                              },
-                              child: Text(
-                                'Consultar',
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                  color: Color.fromRGBO(255, 255, 255, 1),
+                              Container(
+                                margin: EdgeInsets.only(left: 3),
+                                width: 230,
+                                height: 31,
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Informe o CPF ou CNPJ';
+                                    }
+                                    return null;
+                                  },
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                    CpfOuCnpjFormatter()
+                                  ],
+                                  decoration: inputDecorationComponente,
                                 ),
-                              )),
-                        )
-                      ],
+                              )
+                            ],
+                          ),
+                          Container(
+                            width: 241,
+                            height: 31,
+                            margin: EdgeInsets.only(top: 18, bottom: 13),
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Color.fromRGBO(0, 94, 181, 1)),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(100),
+                                    ))),
+                                onPressed: () {
+                                  if (_formKeyConsultarCliente.currentState!
+                                      .validate()) {
+                                    consultarCliente();
+                                  }
+                                },
+                                child: Text(
+                                  'Consultar',
+                                  style: TextStyle(
+                                    fontFamily: 'Roboto',
+                                    fontStyle: FontStyle.normal,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                    color: Color.fromRGBO(255, 255, 255, 1),
+                                  ),
+                                )),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   //Cliente
@@ -238,6 +264,9 @@ class _PedidoState extends State<Pedido> {
                               width: 260,
                               height: 31,
                               child: TextField(
+                                onSubmitted: (cep) {
+                                  consultarEndereco(cep);
+                                },
                                 controller: cepController,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,

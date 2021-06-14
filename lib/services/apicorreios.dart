@@ -1,9 +1,17 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
-Future<Map> getEndereco(String cep) async {
-  final request = Uri.parse('https://viacep.com.br/ws/' + cep + '/json/');
-  http.Response response = await http.get(request);
+class Api {
+  Future<Response> obtenha(String query) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
 
-  return jsonDecode(response.body);
+    var resposta = await http.get(
+        Uri.parse('https://viacep.com.br/ws/' + query + '/json/'),
+        headers: headers);
+
+    return resposta;
+  }
 }

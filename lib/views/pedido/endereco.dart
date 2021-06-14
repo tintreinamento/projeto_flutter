@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:projeto_flutter/componentes/textstyle.dart';
-import 'package:projeto_flutter/models/endereco.dart';
+
 import 'package:projeto_flutter/services/apicorreios.dart';
 
 //Mask
@@ -9,8 +9,6 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
 
 import '../../services/apicorreios.dart';
-
-import '../../models/endereco.dart';
 
 import '../../componentes/textstyle.dart';
 import '../../componentes/inputdecoration.dart';
@@ -29,7 +27,7 @@ class Endereco extends StatefulWidget {
 
   Endereco({Key? key, required this.changeEndereco}) : super(key: key);
 
-  handleSubmittedCep() async {
+  /*handleSubmittedCep() async {
     var endereco = await getEndereco(
         UtilBrasilFields.removeCaracteres(cepController.text));
 
@@ -52,7 +50,7 @@ class Endereco extends StatefulWidget {
 
     this.changeEndereco(enderecoModel);
   }
-
+*/
   @override
   _EnderecoState createState() => _EnderecoState();
 }
@@ -199,7 +197,7 @@ class _EnderecoState extends State<Endereco> {
             ],
             controller: widget.cepController,
             onSubmitted: (text) {
-              widget.handleSubmittedCep();
+              //widget.handleSubmittedCep();
             },
           ),
           Divider(),
