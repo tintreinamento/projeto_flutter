@@ -102,7 +102,7 @@ class _PedidoState extends State<Pedido> {
         .obtenhaEnderecoPorCep(UtilBrasilFields.removeCaracteres(cep));
 
     logradouroController.text = endereco.logradouro;
-    //  numeroController.text = '';
+    numeroController.text = '';
     bairroController.text = endereco.bairro;
     cidadeController.text = endereco.cidade;
     estadoController.text = endereco.uf;
