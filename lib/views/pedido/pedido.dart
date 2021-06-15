@@ -203,6 +203,7 @@ class _PedidoState extends State<Pedido> {
         listaItemPedido[index].quantidade++;
         listaItemPedido[index].subtotal += produto.valorVenda;
       }
+      getPrecoTotal();
     });
   }
 
@@ -218,6 +219,7 @@ class _PedidoState extends State<Pedido> {
         listaItemPedido[index].quantidade--;
         listaItemPedido[index].subtotal -= produto.valorVenda;
       }
+      getPrecoTotal();
     });
   }
 
@@ -238,12 +240,12 @@ class _PedidoState extends State<Pedido> {
       return Column(
         children: [
           Container(
-            width: 284,
+            width: 270,
             height: 68,
             child: Row(
               children: [
                 Container(
-                  width: 238,
+                  width: 200,
                   height: 68,
                   padding: EdgeInsets.only(left: 12, top: 6, bottom: 6),
                   color: Color.fromRGBO(235, 231, 231, 1),
@@ -323,7 +325,7 @@ class _PedidoState extends State<Pedido> {
                   ),
                 ),
                 Container(
-                  width: 46,
+                  width: 20,
                   height: 68,
                   child: Column(
                     children: [
@@ -406,6 +408,17 @@ class _PedidoState extends State<Pedido> {
                         ),
                         Text('Dado')
                       ],
+                    ),
+                    Divider(),
+                    Text(
+                      'Itens do pedido',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color.fromRGBO(0, 0, 0, 1),
+                      ),
                     ),
                     ...listaItem,
                   ],
@@ -549,541 +562,645 @@ class _PedidoState extends State<Pedido> {
             ),
           )),
           Container(
-            height: 500,
+            height: 640,
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  //Consultar cliente
-                  Form(
-                    key: _formKeyConsultarCliente,
-                    child: Container(
-                      width: 330,
-                      margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
-                      padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
-                      decoration: boxDecorationComponente,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
+                  Stack(
+                    children: [
+                      //Consultar cliente
+                      Form(
+                        key: _formKeyConsultarCliente,
+                        child: Container(
+                          width: 330,
+                          margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
+                          padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
+                          decoration: boxDecorationComponente,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'CPF/CNPJ:',
-                                style: textStyleComponente,
+                              Row(
+                                children: [
+                                  Text(
+                                    'CPF/CNPJ:',
+                                    style: textStyleComponente,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 3),
+                                    width: 230,
+                                    height: 31,
+                                    child: TextFormField(
+                                      controller: parametrocpfCnpjController,
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Informe o CPF ou CNPJ';
+                                        }
+                                        return null;
+                                      },
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        CpfOuCnpjFormatter()
+                                      ],
+                                      decoration: inputDecorationComponente,
+                                    ),
+                                  )
+                                ],
                               ),
                               Container(
-                                margin: EdgeInsets.only(left: 3),
-                                width: 230,
+                                width: 241,
                                 height: 31,
-                                child: TextFormField(
-                                  controller: parametrocpfCnpjController,
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Informe o CPF ou CNPJ';
-                                    }
-                                    return null;
-                                  },
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                    CpfOuCnpjFormatter()
-                                  ],
-                                  decoration: inputDecorationComponente,
-                                ),
+                                margin: EdgeInsets.only(top: 18, bottom: 13),
+                                child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Color.fromRGBO(0, 94, 181, 1)),
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                        ))),
+                                    onPressed: () {
+                                      if (_formKeyConsultarCliente.currentState!
+                                          .validate()) {
+                                        consultarCliente();
+                                      }
+                                    },
+                                    child: Text(
+                                      'Consultar',
+                                      style: TextStyle(
+                                        fontFamily: 'Roboto',
+                                        fontStyle: FontStyle.normal,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                        color: Color.fromRGBO(255, 255, 255, 1),
+                                      ),
+                                    )),
                               )
                             ],
                           ),
-                          Container(
-                            width: 241,
-                            height: 31,
-                            margin: EdgeInsets.only(top: 18, bottom: 13),
-                            child: ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Color.fromRGBO(0, 94, 181, 1)),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(100),
-                                    ))),
-                                onPressed: () {
-                                  if (_formKeyConsultarCliente.currentState!
-                                      .validate()) {
-                                    consultarCliente();
-                                  }
-                                },
-                                child: Text(
-                                  'Consultar',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontStyle: FontStyle.normal,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14,
-                                    color: Color.fromRGBO(255, 255, 255, 1),
-                                  ),
-                                )),
-                          )
-                        ],
+                        ),
                       ),
-                    ),
+                      Positioned(
+                          top: 9,
+                          left: 50,
+                          child: Container(
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                            child: Text(
+                              'CONSULTA',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                              ),
+                            ),
+                          )),
+                    ],
                   ),
-                  //Cliente
-                  Container(
-                    width: 330,
-                    margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
-                    padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
-                    decoration: boxDecorationComponente,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Nome:',
-                              style: textStyleComponente,
-                            ),
-                            Container(
-                              //margin: EdgeInsets.only(left: 3),
-                              width: 260,
-                              height: 31,
-                              child: TextField(
-                                controller: nomeClienteController,
-                                decoration: inputDecorationComponente,
-                              ),
-                            )
-                          ],
-                        ),
-                        Divider(),
-                        Row(
-                          children: [
-                            Text(
-                              'CPF/CNPJ:',
-                              style: textStyleComponente,
-                            ),
-                            Container(
-                              //  margin: EdgeInsets.only(left: 2),
-                              width: 233,
-                              height: 31,
-                              child: TextField(
-                                controller: cpfCnpjController,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  CpfOuCnpjFormatter()
-                                ],
-                                decoration: inputDecorationComponente,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  //Entrega
-                  Container(
-                    width: 330,
-                    margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
-                    padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
-                    decoration: boxDecorationComponente,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'CEP:',
-                              style: textStyleComponente,
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 10),
-                              width: 260,
-                              height: 31,
-                              child: TextField(
-                                onSubmitted: (cep) {
-                                  consultarEndereco(cep);
-                                },
-                                controller: cepController,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly,
-                                  CepInputFormatter()
-                                ],
-                                decoration: inputDecorationComponente,
-                              ),
-                            )
-                          ],
-                        ),
-                        Divider(),
-                        Row(
-                          children: [
-                            Text(
-                              'Logradouro:',
-                              style: textStyleComponente,
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 3),
-                              width: 224,
-                              height: 31,
-                              child: TextField(
-                                controller: logradouroController,
-                                decoration: inputDecorationComponente,
-                              ),
-                            )
-                          ],
-                        ),
-                        Divider(),
-                        Row(
+                  Stack(
+                    children: [
+                      //Cliente
+                      Container(
+                        width: 330,
+                        margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
+                        padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
+                        decoration: boxDecorationComponente,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Row(
                               children: [
                                 Text(
-                                  'Num.:',
+                                  'Nome:',
                                   style: textStyleComponente,
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(left: 9),
-                                  width: 73,
+                                  //margin: EdgeInsets.only(left: 3),
+                                  width: 260,
                                   height: 31,
                                   child: TextField(
-                                    controller: numeroController,
+                                    controller: nomeClienteController,
                                     decoration: inputDecorationComponente,
                                   ),
                                 )
                               ],
                             ),
                             Divider(),
-                            Container(
-                              margin: EdgeInsets.only(left: 10),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Bairro:',
-                                    style: textStyleComponente,
+                            Row(
+                              children: [
+                                Text(
+                                  'CPF/CNPJ:',
+                                  style: textStyleComponente,
+                                ),
+                                Container(
+                                  //  margin: EdgeInsets.only(left: 2),
+                                  width: 233,
+                                  height: 31,
+                                  child: TextField(
+                                    controller: cpfCnpjController,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      CpfOuCnpjFormatter()
+                                    ],
+                                    decoration: inputDecorationComponente,
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 4),
-                                    width: 128,
-                                    height: 31,
-                                    child: TextField(
-                                      controller: bairroController,
-                                      decoration: inputDecorationComponente,
-                                    ),
-                                  )
-                                ],
-                              ),
+                                )
+                              ],
                             ),
                           ],
                         ),
-                        Divider(),
-                        Row(
+                      ),
+                      Positioned(
+                          top: 9,
+                          left: 50,
+                          child: Text(
+                            'CLIENTE',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          )),
+                    ],
+                  ),
+                  Stack(
+                    children: [
+                      //Entrega
+                      Container(
+                        width: 330,
+                        margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
+                        padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
+                        decoration: boxDecorationComponente,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Row(
                               children: [
                                 Text(
-                                  'Cidade:',
+                                  'CEP:',
                                   style: textStyleComponente,
                                 ),
                                 Container(
-                                  margin: EdgeInsets.only(left: 1),
-                                  width: 115,
+                                  margin: EdgeInsets.only(left: 10),
+                                  width: 260,
                                   height: 31,
                                   child: TextField(
-                                    controller: cidadeController,
+                                    onSubmitted: (cep) {
+                                      consultarEndereco(cep);
+                                    },
+                                    controller: cepController,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                      CepInputFormatter()
+                                    ],
                                     decoration: inputDecorationComponente,
                                   ),
                                 )
                               ],
                             ),
                             Divider(),
-                            Container(
-                              margin: EdgeInsets.only(left: 14),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Estado:',
-                                    style: textStyleComponente,
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 6),
-                                    width: 73,
-                                    height: 31,
-                                    child: TextField(
-                                      controller: estadoController,
-                                      decoration: inputDecorationComponente,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  FutureBuilder(
-                      future: listaProduto,
-                      builder: (BuildContext context,
-                          AsyncSnapshot<List<ProdutoModel>> snapshot) {
-                        if (snapshot.hasData) {
-                          // Data fetched successfully, display your data here
-
-                          final listaProdutoOrdenada =
-                              snapshot.data!.where((produto) {
-                            return produto.getNome().toLowerCase().startsWith(
-                                parametroNomeProdutoController.text);
-                          });
-
-                          final listaProduto =
-                              listaProdutoOrdenada.map((produto) {
-                            return Column(
+                            Row(
                               children: [
+                                Text(
+                                  'Logradouro:',
+                                  style: textStyleComponente,
+                                ),
                                 Container(
-                                  width: 284,
-                                  height: 68,
+                                  margin: EdgeInsets.only(left: 3),
+                                  width: 224,
+                                  height: 31,
+                                  child: TextField(
+                                    controller: logradouroController,
+                                    decoration: inputDecorationComponente,
+                                  ),
+                                )
+                              ],
+                            ),
+                            Divider(),
+                            Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Num.:',
+                                      style: textStyleComponente,
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(left: 9),
+                                      width: 73,
+                                      height: 31,
+                                      child: TextField(
+                                        controller: numeroController,
+                                        decoration: inputDecorationComponente,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Divider(),
+                                Container(
+                                  margin: EdgeInsets.only(left: 10),
                                   child: Row(
                                     children: [
-                                      Container(
-                                        width: 238,
-                                        height: 68,
-                                        padding: EdgeInsets.only(
-                                            left: 12, top: 6, bottom: 6),
-                                        color: Color.fromRGBO(235, 231, 231, 1),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Nome: ',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 14,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  produto.nome,
-                                                  style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontSize: 14,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Categoria:',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 14,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontSize: 14,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  'Valor de venda: ',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 14,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  produto.valorVenda.toString(),
-                                                  style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontSize: 14,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ],
-                                        ),
+                                      Text(
+                                        'Bairro:',
+                                        style: textStyleComponente,
                                       ),
                                       Container(
-                                        width: 46,
-                                        height: 68,
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              width: 46,
-                                              height: 45,
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                  getQuantidade(produto)
-                                                      .toString(),
-                                                  style: TextStyle(
-                                                    fontFamily: 'Roboto',
-                                                    fontStyle: FontStyle.normal,
-                                                    fontWeight: FontWeight.w700,
-                                                    fontSize: 18,
-                                                    color: Color.fromRGBO(
-                                                        0, 0, 0, 1),
-                                                  )),
-                                            ),
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  width: 23,
-                                                  height: 23,
-                                                  child: ElevatedButton(
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all<Color>(Color
-                                                                      .fromRGBO(
-                                                                          8,
-                                                                          201,
-                                                                          62,
-                                                                          1)),
-                                                          shape: MaterialStateProperty.all<
-                                                                  RoundedRectangleBorder>(
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        0),
-                                                          ))),
-                                                      onPressed: () {
-                                                        adicionarItemPedido(
-                                                            produto);
-                                                      },
-                                                      child: Text(
-                                                        '+',
-                                                        style: TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          fontStyle:
-                                                              FontStyle.normal,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: 14,
-                                                          color: Color.fromRGBO(
-                                                              255, 255, 255, 1),
-                                                        ),
-                                                      )),
-                                                ),
-                                                Container(
-                                                  width: 23,
-                                                  height: 23,
-                                                  // margin: EdgeInsets.only(top: 18, bottom: 13),
-                                                  child: ElevatedButton(
-                                                      style: ButtonStyle(
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all<Color>(Color
-                                                                      .fromRGBO(
-                                                                          206,
-                                                                          5,
-                                                                          5,
-                                                                          1)),
-                                                          shape: MaterialStateProperty.all<
-                                                                  RoundedRectangleBorder>(
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        0),
-                                                          ))),
-                                                      onPressed: () {
-                                                        removerItemPedido(
-                                                            produto);
-                                                      },
-                                                      child: Text(
-                                                        '-',
-                                                        style: TextStyle(
-                                                          fontFamily: 'Roboto',
-                                                          fontStyle:
-                                                              FontStyle.normal,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          fontSize: 14,
-                                                          color: Color.fromRGBO(
-                                                              255, 255, 255, 1),
-                                                        ),
-                                                      )),
-                                                ),
-                                              ],
-                                            )
-                                          ],
+                                        margin: EdgeInsets.only(left: 4),
+                                        width: 128,
+                                        height: 31,
+                                        child: TextField(
+                                          controller: bairroController,
+                                          decoration: inputDecorationComponente,
                                         ),
                                       )
                                     ],
                                   ),
                                 ),
                               ],
-                            );
-                          }).toList();
-
-                          return Container(
-                              width: 330,
-                              margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
-                              padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
-                              decoration: boxDecorationComponente,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                            ),
+                            Divider(),
+                            Row(
+                              children: [
+                                Row(
                                   children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'Produto:',
-                                          style: textStyleComponente,
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(left: 3),
-                                          width: 230,
-                                          height: 31,
-                                          child: TextField(
-                                            onChanged: (nomeProduto) {
-                                              ordenarProduto(nomeProduto);
-                                            },
-                                            decoration:
-                                                inputDecorationComponente,
-                                          ),
-                                        )
-                                      ],
+                                    Text(
+                                      'Cidade:',
+                                      style: textStyleComponente,
                                     ),
-                                    ...listaProduto,
+                                    Container(
+                                      margin: EdgeInsets.only(left: 1),
+                                      width: 115,
+                                      height: 31,
+                                      child: TextField(
+                                        controller: cidadeController,
+                                        decoration: inputDecorationComponente,
+                                      ),
+                                    )
                                   ],
                                 ),
-                              ));
-                        } else if (snapshot.hasError) {
-                          // If something went wrong
-                          return Text('Something went wrong...');
-                        }
+                                Divider(),
+                                Container(
+                                  margin: EdgeInsets.only(left: 14),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Estado:',
+                                        style: textStyleComponente,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(left: 6),
+                                        width: 73,
+                                        height: 31,
+                                        child: TextField(
+                                          controller: estadoController,
+                                          decoration: inputDecorationComponente,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                          top: 9,
+                          left: 50,
+                          child: Text(
+                            'ENDEREÇO',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          )),
+                    ],
+                  ),
+                  Stack(
+                    children: [
+                      FutureBuilder(
+                          future: listaProduto,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<ProdutoModel>> snapshot) {
+                            if (snapshot.hasData) {
+                              // Data fetched successfully, display your data here
 
-                        // While fetching, show a loading spinner.
-                        return CircularProgressIndicator();
-                      })
+                              final listaProdutoOrdenada =
+                                  snapshot.data!.where((produto) {
+                                return produto
+                                    .getNome()
+                                    .toLowerCase()
+                                    .startsWith(
+                                        parametroNomeProdutoController.text);
+                              });
+
+                              final listaProduto =
+                                  listaProdutoOrdenada.map((produto) {
+                                return Column(
+                                  children: [
+                                    Container(
+                                      width: 284,
+                                      height: 68,
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 238,
+                                            height: 68,
+                                            padding: EdgeInsets.only(
+                                                left: 12, top: 6, bottom: 6),
+                                            color: Color.fromRGBO(
+                                                235, 231, 231, 1),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Nome: ',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 14,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      produto.nome,
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        fontSize: 14,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Categoria:',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 14,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        fontSize: 14,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      'Valor de venda: ',
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 14,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      produto.valorVenda
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        fontSize: 14,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 46,
+                                            height: 68,
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  width: 46,
+                                                  height: 45,
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                      getQuantidade(produto)
+                                                          .toString(),
+                                                      style: TextStyle(
+                                                        fontFamily: 'Roboto',
+                                                        fontStyle:
+                                                            FontStyle.normal,
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontSize: 18,
+                                                        color: Color.fromRGBO(
+                                                            0, 0, 0, 1),
+                                                      )),
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 23,
+                                                      height: 23,
+                                                      child: ElevatedButton(
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                                  MaterialStateProperty.all<
+                                                                          Color>(
+                                                                      Color.fromRGBO(
+                                                                          8,
+                                                                          201,
+                                                                          62,
+                                                                          1)),
+                                                              shape: MaterialStateProperty.all<
+                                                                      RoundedRectangleBorder>(
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            0),
+                                                              ))),
+                                                          onPressed: () {
+                                                            adicionarItemPedido(
+                                                                produto);
+                                                          },
+                                                          child: Text(
+                                                            '+',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .normal,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 14,
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      255,
+                                                                      255,
+                                                                      255,
+                                                                      1),
+                                                            ),
+                                                          )),
+                                                    ),
+                                                    Container(
+                                                      width: 23,
+                                                      height: 23,
+                                                      // margin: EdgeInsets.only(top: 18, bottom: 13),
+                                                      child: ElevatedButton(
+                                                          style: ButtonStyle(
+                                                              backgroundColor:
+                                                                  MaterialStateProperty.all<
+                                                                          Color>(
+                                                                      Color.fromRGBO(
+                                                                          206,
+                                                                          5,
+                                                                          5,
+                                                                          1)),
+                                                              shape: MaterialStateProperty.all<
+                                                                      RoundedRectangleBorder>(
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            0),
+                                                              ))),
+                                                          onPressed: () {
+                                                            removerItemPedido(
+                                                                produto);
+                                                          },
+                                                          child: Text(
+                                                            '-',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Roboto',
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .normal,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700,
+                                                              fontSize: 14,
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      255,
+                                                                      255,
+                                                                      255,
+                                                                      1),
+                                                            ),
+                                                          )),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }).toList();
+
+                              return Container(
+                                  width: 330,
+                                  margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
+                                  padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
+                                  decoration: boxDecorationComponente,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Produto:',
+                                              style: textStyleComponente,
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.only(left: 3),
+                                              width: 230,
+                                              height: 31,
+                                              child: TextField(
+                                                onChanged: (nomeProduto) {
+                                                  ordenarProduto(nomeProduto);
+                                                },
+                                                decoration:
+                                                    inputDecorationComponente,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        ...listaProduto,
+                                      ],
+                                    ),
+                                  ));
+                            } else if (snapshot.hasError) {
+                              // If something went wrong
+                              return Text('Something went wrong...');
+                            }
+
+                            // While fetching, show a loading spinner.
+                            return CircularProgressIndicator();
+                          }),
+                      Positioned(
+                          top: 9,
+                          left: 50,
+                          child: Text(
+                            'PRODUTOS',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          )),
+                    ],
+                  ),
                 ],
               ),
             ),
