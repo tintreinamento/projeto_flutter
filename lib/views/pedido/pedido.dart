@@ -906,8 +906,9 @@ class _PedidoState extends State<Pedido> {
                                 return produto
                                     .getNome()
                                     .toLowerCase()
-                                    .startsWith(
-                                        parametroNomeProdutoController.text);
+                                    .startsWith(parametroNomeProdutoController
+                                        .text
+                                        .toLowerCase());
                               });
 
                               final listaProduto =
