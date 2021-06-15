@@ -105,7 +105,7 @@ class _PedidoState extends State<Pedido> {
       cpfCnpjCliente = UtilBrasilFields.obterCnpj(cliente.cpf);
     }
     //Caso exista o cliente cadastrado, preencha os campos com as respectivas informações
-    cpfCnpjController.text = cpfCnpjCliente;
+    cpfCnpjController.text = parametrocpfCnpjController.text;
     nomeClienteController.text = cliente.nome;
 
     //Preenche os dados de endereço do cliente
@@ -701,10 +701,10 @@ class _PedidoState extends State<Pedido> {
                                   height: 31,
                                   child: TextField(
                                     controller: cpfCnpjController,
-                                    inputFormatters: [
+                                    /*  inputFormatters: [
                                       FilteringTextInputFormatter.digitsOnly,
                                       CpfOuCnpjFormatter()
-                                    ],
+                                    ],*/
                                     decoration: inputDecorationComponente,
                                   ),
                                 )
