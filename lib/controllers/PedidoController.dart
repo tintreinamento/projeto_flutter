@@ -24,10 +24,6 @@ class PedidoController {
 
     var stringJson = json.decode(resposta.body);
 
-    print(json.encode(pedido));
-    print('');
-    print(stringJson);
-
     return new PedidoModel.fromJson(stringJson);
   }
 
