@@ -216,8 +216,12 @@ class _PedidoState extends State<Pedido> {
       if (index < 0) {
         //Não existe o produto
       } else {
-        listaItemPedido[index].quantidade--;
-        listaItemPedido[index].subtotal -= produto.valorVenda;
+        if (listaItemPedido[index].quantidade == 1) {
+          listaItemPedido.removeAt(index);
+        } else {
+          listaItemPedido[index].quantidade--;
+          listaItemPedido[index].subtotal -= produto.valorVenda;
+        }
       }
       getPrecoTotal();
     });

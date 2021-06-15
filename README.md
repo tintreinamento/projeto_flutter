@@ -21,3 +21,8 @@ samples, guidance on mobile development, and a full API reference.
 <p align="center">
     <img src='./apresentacao/apresentacao_login.gif'>
 </p>
+
+### Pedido
+<p align="center">
+    <img src='./apresentacao/apresentacao_pedido.gif'>
+</p>
