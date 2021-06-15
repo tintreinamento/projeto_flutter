@@ -716,14 +716,17 @@ class _PedidoState extends State<Pedido> {
                       Positioned(
                           top: 9,
                           left: 50,
-                          child: Text(
-                            'CLIENTE',
-                            style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                            child: Text(
+                              'CLIENTE',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                              ),
                             ),
                           )),
                     ],
@@ -874,14 +877,17 @@ class _PedidoState extends State<Pedido> {
                       Positioned(
                           top: 9,
                           left: 50,
-                          child: Text(
-                            'ENDEREÇO',
-                            style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                            child: Text(
+                              'ENDEREÇO',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                              ),
                             ),
                           )),
                     ],
@@ -1189,14 +1195,17 @@ class _PedidoState extends State<Pedido> {
                       Positioned(
                           top: 9,
                           left: 50,
-                          child: Text(
-                            'PRODUTOS',
-                            style: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                              color: Color.fromRGBO(0, 0, 0, 1),
+                          child: Container(
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                            child: Text(
+                              'PRODUTOS',
+                              style: TextStyle(
+                                fontFamily: 'Roboto',
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                                color: Color.fromRGBO(0, 0, 0, 1),
+                              ),
                             ),
                           )),
                     ],
