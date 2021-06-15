@@ -76,6 +76,12 @@ class _BuscarProdutoState extends State<BuscarProduto> {
     });
   }
 
+  limparCampos() {
+    setState(() {
+      parametroNomeProdutoController.text = '';
+    });
+  }
+
   void adicionarItemPedido(ProdutoModel produto) {
     setState(() {
       int index = listaItemPedido.indexWhere((itemPedido) {

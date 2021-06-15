@@ -13,16 +13,90 @@ class AppBarComponente extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return PreferredSize(
         child: AppBar(
-          centerTitle: false,
-          title: TextComponente(label: this.titulo),
           backgroundColor: Color.fromRGBO(0, 94, 181, 1),
-          actions: [
-            Container(
-              width: 100,
-            )
-          ],
+          actions: [],
+          flexibleSpace: Container(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    color: Colors.green,
+                    padding: EdgeInsets.only(right: 6, bottom: 5),
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      this.titulo,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                      ),
+                    ),
+                  ),
+                ),
+                Flexible(
+                    child: Container(
+                  height: 27,
+                  color: Color.fromRGBO(206, 5, 5, 1),
+                  child: Row(
+                    children: [
+                      Text('Pedido venda ',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                          )),
+                      Text('|',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                          )),
+                      Text('Cadastro ',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                          )),
+                      Text('|',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                          )),
+                      Text('Consulta ',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                          )),
+                      Text('|',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                          )),
+                    ],
+                  ),
+                ))
+              ],
+            ),
+          ),
         ),
-        preferredSize: Size.fromHeight(73.0));
+        preferredSize: Size.fromHeight(300.0));
   }
 
   @override

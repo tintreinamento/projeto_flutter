@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_flutter/componentes/boxdecoration.dart';
 import 'package:projeto_flutter/componentes/inputdecoration.dart';
+import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/produto.dart';
 import 'package:projeto_flutter/views/pedido/buscarproduto.dart';
 import '../../componentes/appbar.dart';
@@ -20,6 +21,13 @@ import '../../controllers/EnderecoController.dart';
 import '../../models/ItemPedidoModel.dart';
 
 import 'package:intl/intl.dart';
+
+//Produto
+import '../../controllers/ProdutoController.dart';
+import 'package:projeto_flutter/models/ProdutoModel.dart';
+
+//Pedido
+import '../../models/PedidoModel.dart';
 
 class Pedido extends StatefulWidget {
   //EnderecoModel? enderecoModel;
@@ -75,6 +83,10 @@ class _PedidoState extends State<Pedido> {
   TextEditingController cidadeController = TextEditingController();
   TextEditingController estadoController = TextEditingController();
 
+  //Produto
+  final parametroNomeProdutoController = TextEditingController();
+  late Future<List<ProdutoModel>> listaProduto;
+
   //Pedido
   List<ItemPedidoModel> listaItemPedido = [];
   var precoTotal = 0.0;
@@ -93,7 +105,7 @@ class _PedidoState extends State<Pedido> {
       cpfCnpjCliente = UtilBrasilFields.obterCnpj(cliente.cpf);
     }
     //Caso exista o cliente cadastrado, preencha os campos com as respectivas informações
-    cpfCnpjController.text = cpfCnpjCliente;
+    this.cpfCnpjController.text = cpfCnpjCliente;
     nomeClienteController.text = cliente.nome;
 
     //Preenche os dados de endereço do cliente
@@ -109,12 +121,14 @@ class _PedidoState extends State<Pedido> {
     parametrocpfCnpjController.text = '';
     cpfCnpjController.text = '';
     nomeClienteController.text = '';
-
+    cepController.text = '';
     logradouroController.text = '';
     numeroController.text = '';
     bairroController.text = '';
     cidadeController.text = '';
     estadoController.text = '';
+
+    parametroNomeProdutoController.text = '';
   }
 
   consultarEndereco(String cep) async {
@@ -151,19 +165,391 @@ class _PedidoState extends State<Pedido> {
     return 'R\$ ' + formatoPreco.format(precoTotal).toString();
   }
 
-  finalizarPedido() {
+  finalizarPedido(BuildContext context) {
     limparCampos();
+    PedidoModel pedido =
+        new PedidoModel(id: 1, total: 100.0, data: DateTime.now());
+    _showDialog(context, pedido);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    carregarProdutos();
+  }
+
+  void carregarProdutos() {
+    ProdutoController produtoController = new ProdutoController();
+    listaProduto = produtoController.obtenhaTodos();
+  }
+
+  ordenarProduto(nomeProduto) {
+    setState(() {
+      parametroNomeProdutoController.text = nomeProduto;
+    });
+  }
+
+  adicionarItemPedido(ProdutoModel produto) {
+    setState(() {
+      int index = listaItemPedido.indexWhere((itemPedido) {
+        return itemPedido.produto!.id == produto.id;
+      });
+
+      if (index < 0) {
+        ItemPedidoModel itemPedido = new ItemPedidoModel(
+            produto: produto, quantidade: 1, subtotal: produto.valorVenda);
+        listaItemPedido.add(itemPedido);
+      } else {
+        listaItemPedido[index].quantidade++;
+        listaItemPedido[index].subtotal += produto.valorVenda;
+      }
+    });
+  }
+
+  removerItemPedido(ProdutoModel produto) {
+    setState(() {
+      int index = listaItemPedido.indexWhere((itemPedido) {
+        return itemPedido.produto!.id == produto.id;
+      });
+
+      if (index < 0) {
+        //Não existe o produto
+      } else {
+        listaItemPedido[index].quantidade--;
+        listaItemPedido[index].subtotal -= produto.valorVenda;
+      }
+    });
+  }
+
+  getQuantidade(produto) {
+    int index = listaItemPedido.indexWhere((itemPedido) {
+      return itemPedido.produto!.id == produto.id;
+    });
+
+    if (index < 0) {
+      return 0;
+    }
+
+    return listaItemPedido[index].quantidade;
+  }
+
+  void _showDialog(BuildContext context, PedidoModel pedido) {
+    final listaItem = listaItemPedido.map((itemPedido) {
+      return Column(
+        children: [
+          Container(
+            width: 284,
+            height: 68,
+            child: Row(
+              children: [
+                Container(
+                  width: 238,
+                  height: 68,
+                  padding: EdgeInsets.only(left: 12, top: 6, bottom: 6),
+                  color: Color.fromRGBO(235, 231, 231, 1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Nome: ',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          ),
+                          Text(
+                            itemPedido.produto!.nome,
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Categoria:',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          ),
+                          Text(
+                            '',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Valor de venda: ',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          ),
+                          Text(
+                            itemPedido.produto!.valorVenda.toString(),
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontSize: 14,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 46,
+                  height: 68,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 46,
+                        height: 45,
+                        alignment: Alignment.center,
+                        child:
+                            Text(getQuantidade(itemPedido.produto!).toString(),
+                                style: TextStyle(
+                                  fontFamily: 'Roboto',
+                                  fontStyle: FontStyle.normal,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18,
+                                  color: Color.fromRGBO(0, 0, 0, 1),
+                                )),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      );
+    }).toList();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Pedido"),
+          actions: <Widget>[
+            Column(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Cliente: ',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(0, 0, 0, 1),
+                          ),
+                        ),
+                        Text('Dado')
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Data do pedido: ',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(0, 0, 0, 1),
+                          ),
+                        ),
+                        Text('Dado')
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          'Valor total do pedido: ',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
+                            color: Color.fromRGBO(0, 0, 0, 1),
+                          ),
+                        ),
+                        Text('Dado')
+                      ],
+                    ),
+                    ...listaItem,
+                  ],
+                ),
+                Container(
+                  width: 241,
+                  height: 31,
+                  margin: EdgeInsets.only(top: 18, bottom: 13),
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Color.fromRGBO(0, 94, 181, 1)),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
+                          ))),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Confirmar pedido',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: Color.fromRGBO(255, 255, 255, 1),
+                        ),
+                      )),
+                )
+              ],
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarComponente(appBar: AppBar()),
+      appBar: PreferredSize(
+          child: AppBar(
+            backgroundColor: Color.fromRGBO(0, 94, 181, 1),
+            actions: [],
+            flexibleSpace: Container(
+              height: 100.0,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 73.0,
+                      padding: EdgeInsets.only(top: 30, right: 6, bottom: 5),
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        'Sistema de Gestão de Vendas',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 14,
+                          color: Color.fromRGBO(255, 255, 255, 1),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          preferredSize: Size.fromHeight(73.0)),
       drawer: DrawerComponente(),
       body: Column(
         children: [
+          Flexible(
+              child: Container(
+            padding: EdgeInsets.fromLTRB(20, 5, 0, 7),
+            height: 27,
+            color: Color.fromRGBO(206, 5, 5, 1),
+            child: Row(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 38),
+                  child: Text('Pedido venda ',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                      )),
+                ),
+                Text('|',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: Color.fromRGBO(255, 255, 255, 1),
+                    )),
+                Container(
+                  margin: EdgeInsets.only(left: 16, right: 13),
+                  child: Text('Cadastrar ',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                      )),
+                ),
+                Text('|',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: Color.fromRGBO(255, 255, 255, 1),
+                    )),
+                Container(
+                  margin: EdgeInsets.only(left: 15, right: 13),
+                  child: Text('Consultar ',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14,
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                      )),
+                ),
+                Text('|',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: Color.fromRGBO(255, 255, 255, 1),
+                    )),
+              ],
+            ),
+          )),
           Container(
-            height: 520,
+            height: 500,
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -432,9 +818,272 @@ class _PedidoState extends State<Pedido> {
                       ],
                     ),
                   ),
-                  BuscarProduto(
-                    carregarListaItemPedido: carregarListaItemPedido,
-                  )
+                  FutureBuilder(
+                      future: listaProduto,
+                      builder: (BuildContext context,
+                          AsyncSnapshot<List<ProdutoModel>> snapshot) {
+                        if (snapshot.hasData) {
+                          // Data fetched successfully, display your data here
+
+                          final listaProdutoOrdenada =
+                              snapshot.data!.where((produto) {
+                            return produto.getNome().toLowerCase().startsWith(
+                                parametroNomeProdutoController.text);
+                          });
+
+                          final listaProduto =
+                              listaProdutoOrdenada.map((produto) {
+                            return Column(
+                              children: [
+                                Container(
+                                  width: 284,
+                                  height: 68,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 238,
+                                        height: 68,
+                                        padding: EdgeInsets.only(
+                                            left: 12, top: 6, bottom: 6),
+                                        color: Color.fromRGBO(235, 231, 231, 1),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Nome: ',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 14,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  produto.nome,
+                                                  style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontSize: 14,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Categoria:',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 14,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  '',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontSize: 14,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  'Valor de venda: ',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 14,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  produto.valorVenda.toString(),
+                                                  style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontSize: 14,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 46,
+                                        height: 68,
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              width: 46,
+                                              height: 45,
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                  getQuantidade(produto)
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    fontFamily: 'Roboto',
+                                                    fontStyle: FontStyle.normal,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 18,
+                                                    color: Color.fromRGBO(
+                                                        0, 0, 0, 1),
+                                                  )),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                  width: 23,
+                                                  height: 23,
+                                                  child: ElevatedButton(
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all<Color>(Color
+                                                                      .fromRGBO(
+                                                                          8,
+                                                                          201,
+                                                                          62,
+                                                                          1)),
+                                                          shape: MaterialStateProperty.all<
+                                                                  RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        0),
+                                                          ))),
+                                                      onPressed: () {
+                                                        adicionarItemPedido(
+                                                            produto);
+                                                      },
+                                                      child: Text(
+                                                        '+',
+                                                        style: TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          fontStyle:
+                                                              FontStyle.normal,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 14,
+                                                          color: Color.fromRGBO(
+                                                              255, 255, 255, 1),
+                                                        ),
+                                                      )),
+                                                ),
+                                                Container(
+                                                  width: 23,
+                                                  height: 23,
+                                                  // margin: EdgeInsets.only(top: 18, bottom: 13),
+                                                  child: ElevatedButton(
+                                                      style: ButtonStyle(
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all<Color>(Color
+                                                                      .fromRGBO(
+                                                                          206,
+                                                                          5,
+                                                                          5,
+                                                                          1)),
+                                                          shape: MaterialStateProperty.all<
+                                                                  RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        0),
+                                                          ))),
+                                                      onPressed: () {
+                                                        removerItemPedido(
+                                                            produto);
+                                                      },
+                                                      child: Text(
+                                                        '-',
+                                                        style: TextStyle(
+                                                          fontFamily: 'Roboto',
+                                                          fontStyle:
+                                                              FontStyle.normal,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          fontSize: 14,
+                                                          color: Color.fromRGBO(
+                                                              255, 255, 255, 1),
+                                                        ),
+                                                      )),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList();
+
+                          return Container(
+                              width: 330,
+                              margin: EdgeInsets.fromLTRB(20, 17, 20, 3),
+                              padding: EdgeInsets.fromLTRB(15, 25, 10, 13),
+                              decoration: boxDecorationComponente,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Produto:',
+                                          style: textStyleComponente,
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 3),
+                                          width: 230,
+                                          height: 31,
+                                          child: TextField(
+                                            onChanged: (nomeProduto) {
+                                              ordenarProduto(nomeProduto);
+                                            },
+                                            decoration:
+                                                inputDecorationComponente,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    ...listaProduto,
+                                  ],
+                                ),
+                              ));
+                        } else if (snapshot.hasError) {
+                          // If something went wrong
+                          return Text('Something went wrong...');
+                        }
+
+                        // While fetching, show a loading spinner.
+                        return CircularProgressIndicator();
+                      })
                 ],
               ),
             ),
@@ -487,7 +1136,7 @@ class _PedidoState extends State<Pedido> {
                             borderRadius: BorderRadius.circular(0),
                           ))),
                       onPressed: () {
-                        finalizarPedido();
+                        finalizarPedido(context);
                       },
                       child: Container(
                           child: Image(
