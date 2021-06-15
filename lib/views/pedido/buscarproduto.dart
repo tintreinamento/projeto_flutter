@@ -16,13 +16,9 @@ import 'package:projeto_flutter/models/ProdutoModel.dart';
 import '../../models/ItemPedidoModel.dart';
 
 class BuscarProduto extends StatefulWidget {
-  Function handleAdicionarProduto;
-  Function handleRemoveProduto;
+  Function carregarListaItemPedido;
 
-  BuscarProduto(
-      {Key? key,
-      required this.handleAdicionarProduto,
-      required this.handleRemoveProduto})
+  BuscarProduto({Key? key, required this.carregarListaItemPedido})
       : super(key: key);
 
   @override
@@ -83,7 +79,7 @@ class _BuscarProdutoState extends State<BuscarProduto> {
   void adicionarItemPedido(ProdutoModel produto) {
     setState(() {
       int index = listaItemPedido.indexWhere((itemPedido) {
-        return itemPedido.produto!.id = produto.id;
+        return itemPedido.produto!.id == produto.id;
       });
 
       if (index < 0) {
@@ -94,13 +90,15 @@ class _BuscarProdutoState extends State<BuscarProduto> {
         listaItemPedido[index].quantidade++;
         listaItemPedido[index].subtotal += produto.valorVenda;
       }
+
+      carregarListaItemPedidoPai(listaItemPedido);
     });
   }
 
   removerItemPedido(ProdutoModel produto) {
     setState(() {
       int index = listaItemPedido.indexWhere((itemPedido) {
-        return itemPedido.produto!.id = produto.id;
+        return itemPedido.produto!.id == produto.id;
       });
 
       if (index < 0) {
@@ -109,7 +107,25 @@ class _BuscarProdutoState extends State<BuscarProduto> {
         listaItemPedido[index].quantidade--;
         listaItemPedido[index].subtotal -= produto.valorVenda;
       }
+
+      carregarListaItemPedidoPai(listaItemPedido);
     });
+  }
+
+  carregarListaItemPedidoPai(listaItemPedido) {
+    widget.carregarListaItemPedido(listaItemPedido);
+  }
+
+  getQuantidade(produto) {
+    int index = listaItemPedido.indexWhere((itemPedido) {
+      return itemPedido.produto!.id == produto.id;
+    });
+
+    if (index < 0) {
+      return 0;
+    }
+
+    return listaItemPedido[index].quantidade;
   }
 
   @override
@@ -150,10 +166,75 @@ class _BuscarProdutoState extends State<BuscarProduto> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Nome: ' + produto.nome),
-                              Text('Categoria: '),
-                              Text('Valor Venda: ' +
-                                  produto.valorVenda.toString()),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Nome: ',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                    ),
+                                  ),
+                                  Text(
+                                    produto.nome,
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 14,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Categoria:',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                    ),
+                                  ),
+                                  Text(
+                                    '',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 14,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Valor de venda: ',
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                    ),
+                                  ),
+                                  Text(
+                                    produto.valorVenda.toString(),
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontStyle: FontStyle.normal,
+                                      fontSize: 14,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -166,7 +247,14 @@ class _BuscarProdutoState extends State<BuscarProduto> {
                                 width: 46,
                                 height: 45,
                                 alignment: Alignment.center,
-                                child: Text('Qu'),
+                                child: Text(getQuantidade(produto).toString(),
+                                    style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontStyle: FontStyle.normal,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18,
+                                      color: Color.fromRGBO(0, 0, 0, 1),
+                                    )),
                               ),
                               Row(
                                 children: [
@@ -216,7 +304,9 @@ class _BuscarProdutoState extends State<BuscarProduto> {
                                               borderRadius:
                                                   BorderRadius.circular(0),
                                             ))),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          removerItemPedido(produto);
+                                        },
                                         child: Text(
                                           '-',
                                           style: TextStyle(

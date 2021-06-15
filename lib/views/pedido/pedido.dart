@@ -17,6 +17,10 @@ import '../../componentes/boxdecoration.dart';
 import '../../controllers/ClienteController.dart';
 import '../../controllers/EnderecoController.dart';
 
+import '../../models/ItemPedidoModel.dart';
+
+import 'package:intl/intl.dart';
+
 class Pedido extends StatefulWidget {
   //EnderecoModel? enderecoModel;
   List<ProdutoModels> listaProduto = [];
@@ -58,6 +62,7 @@ class _PedidoState extends State<Pedido> {
   final _formKeyConsultarCliente = GlobalKey<FormState>();
 
   //Cliente
+  final parametrocpfCnpjController = TextEditingController();
   final cpfCnpjController = TextEditingController();
   final nomeClienteController = TextEditingController();
 
@@ -70,11 +75,16 @@ class _PedidoState extends State<Pedido> {
   TextEditingController cidadeController = TextEditingController();
   TextEditingController estadoController = TextEditingController();
 
+  //Pedido
+  List<ItemPedidoModel> listaItemPedido = [];
+  var precoTotal = 0.0;
+
   consultarCliente() async {
     var cpfCnpjCliente;
     //Consultando dados do cliente através da API
     ClienteController clienteController = new ClienteController();
-    final cliente = await clienteController.obtenhaPorCpf('22885243082');
+    final cliente = await clienteController.obtenhaPorCpf(
+        UtilBrasilFields.removeCaracteres(parametrocpfCnpjController.text));
 
     //Caso seja cpf, aplica-se a máscara de CPF, caso contrário aplica-se a máscara de CNPJ
     if (cliente.cpf.length == 11) {
@@ -106,6 +116,27 @@ class _PedidoState extends State<Pedido> {
     bairroController.text = endereco.bairro;
     cidadeController.text = endereco.cidade;
     estadoController.text = endereco.uf;
+  }
+
+  carregarListaItemPedido(listaItemPedido) {
+    setState(() {
+      this.listaItemPedido = listaItemPedido;
+      getPrecoTotal();
+    });
+  }
+
+  getPrecoTotal() {
+    setState(() {
+      precoTotal = 0.0;
+      for (var itemPedido in this.listaItemPedido) {
+        precoTotal += itemPedido.subtotal;
+      }
+    });
+  }
+
+  getPrecoTotalFormatado() {
+    var formatoPreco = NumberFormat("#,##0.00", "pt_BR");
+    return 'R\$ ' + formatoPreco.format(precoTotal).toString();
   }
 
   @override
@@ -142,6 +173,7 @@ class _PedidoState extends State<Pedido> {
                                 width: 230,
                                 height: 31,
                                 child: TextFormField(
+                                  controller: parametrocpfCnpjController,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return 'Informe o CPF ou CNPJ';
@@ -385,8 +417,8 @@ class _PedidoState extends State<Pedido> {
                     ),
                   ),
                   BuscarProduto(
-                      handleAdicionarProduto: widget.handleAdicionarProduto,
-                      handleRemoveProduto: widget.handleRemoveProduto)
+                    carregarListaItemPedido: carregarListaItemPedido,
+                  )
                 ],
               ),
             ),
@@ -414,7 +446,7 @@ class _PedidoState extends State<Pedido> {
                         ),
                       ),
                       Text(
-                        '40.000',
+                        getPrecoTotalFormatado(),
                         style: TextStyle(
                           fontFamily: 'Roboto',
                           fontWeight: FontWeight.w700,
