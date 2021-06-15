@@ -1,6 +1,7 @@
 class ProdutoModel {
   var id;
   var nome;
+  var categoria;
   var descricao;
   var valorCompra;
   var valorVenda;
@@ -9,6 +10,7 @@ class ProdutoModel {
   ProdutoModel(
       {this.id,
       this.nome,
+      this.categoria,
       this.descricao,
       this.valorCompra,
       this.valorVenda,
@@ -18,6 +20,7 @@ class ProdutoModel {
     return ProdutoModel(
         id: parsedJson['id'],
         nome: parsedJson['nome'],
+        categoria: parsedJson['categoria'],
         descricao: parsedJson['descricao'],
         valorCompra: parsedJson['valor_compra'],
         valorVenda: parsedJson['valor_venda'],
@@ -26,6 +29,7 @@ class ProdutoModel {
 
   Map<String, dynamic> toJson() => {
         'nome': nome,
+        'categoria': categoria,
         'descricao': descricao,
         'valor_compra': valorCompra,
         'valor_venda': valorVenda,
