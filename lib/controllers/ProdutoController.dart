@@ -11,7 +11,6 @@ class ProdutoController {
     List<dynamic> stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
-      print(json.encode(element));
       var produto = new ProdutoModel.fromJson(element);
       colecaoDeProdutos.add(produto);
     });

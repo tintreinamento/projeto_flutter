@@ -74,7 +74,7 @@ class _PedidoState extends State<Pedido> {
     var cpfCnpjCliente;
     //Consultando dados do cliente através da API
     ClienteController clienteController = new ClienteController();
-    final cliente = await clienteController.obtenhaClientePorCpf('22885243082');
+    final cliente = await clienteController.obtenhaPorCpf('22885243082');
 
     //Caso seja cpf, aplica-se a máscara de CPF, caso contrário aplica-se a máscara de CNPJ
     if (cliente.cpf.length == 11) {

@@ -14,6 +14,10 @@ class ProdutoModel {
       this.valorVenda,
       this.imageLinks});
 
+  String getNome() {
+    return this.nome;
+  }
+
   factory ProdutoModel.fromJson(Map<String, dynamic> parsedJson) {
     return ProdutoModel(
         id: parsedJson['id'],
