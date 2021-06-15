@@ -80,7 +80,7 @@ class _PedidoState extends State<Pedido> {
   var precoTotal = 0.0;
 
   consultarCliente() async {
-    var cpfCnpjCliente;
+    var cpfCnpjCliente = '';
     //Consultando dados do cliente através da API
     ClienteController clienteController = new ClienteController();
     final cliente = await clienteController.obtenhaPorCpf(
@@ -103,6 +103,18 @@ class _PedidoState extends State<Pedido> {
     bairroController.text = cliente.bairro;
     cidadeController.text = cliente.cidade;
     estadoController.text = cliente.uf;
+  }
+
+  limparCampos() {
+    parametrocpfCnpjController.text = '';
+    cpfCnpjController.text = '';
+    nomeClienteController.text = '';
+
+    logradouroController.text = '';
+    numeroController.text = '';
+    bairroController.text = '';
+    cidadeController.text = '';
+    estadoController.text = '';
   }
 
   consultarEndereco(String cep) async {
@@ -137,6 +149,10 @@ class _PedidoState extends State<Pedido> {
   getPrecoTotalFormatado() {
     var formatoPreco = NumberFormat("#,##0.00", "pt_BR");
     return 'R\$ ' + formatoPreco.format(precoTotal).toString();
+  }
+
+  finalizarPedido() {
+    limparCampos();
   }
 
   @override
@@ -470,7 +486,9 @@ class _PedidoState extends State<Pedido> {
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(0),
                           ))),
-                      onPressed: () {},
+                      onPressed: () {
+                        finalizarPedido();
+                      },
                       child: Container(
                           child: Image(
                               image: AssetImage('assets/images/cart.png')))),
