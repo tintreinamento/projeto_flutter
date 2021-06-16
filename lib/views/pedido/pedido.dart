@@ -118,6 +118,7 @@ class _PedidoState extends State<Pedido> {
   }
 
   limparCampos() {
+    precoTotal = 0.0;
     parametrocpfCnpjController.text = '';
     cpfCnpjController.text = '';
     nomeClienteController.text = '';
