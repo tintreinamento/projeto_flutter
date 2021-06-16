@@ -100,8 +100,7 @@ class DrawerComponente extends StatelessWidget {
           // Then close the drawer
           //navigator.pop(context);
 
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Pedido()));
+          Navigator.pushNamed(context, '/login');
         },
       ),
     );
