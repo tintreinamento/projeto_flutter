@@ -1,19 +1,28 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:projeto_flutter/componentes/styles.dart';
 
-class TextComponente extends StatelessWidget {
-  String label;
-  TextComponente({Key? key, required this.label}) : super(key: key);
+class TextLabel extends StatefulWidget {
+  var label;
+  Color? cor = colorPreto;
+  double? tamanho = fontTamanho;
 
+  TextLabel({Key? key, this.label, this.tamanho, this.cor}) : super(key: key);
+
+  @override
+  _TextLabelState createState() => _TextLabelState();
+}
+
+class _TextLabelState extends State<TextLabel> {
   @override
   Widget build(BuildContext context) {
     return Text(
-      label,
+      widget.label,
       style: TextStyle(
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.w400,
-        fontSize: 24,
-        color: Color.fromRGBO(0, 0, 0, 1),
-      ),
+          fontFamily: fontFamilia,
+          fontWeight: fontLargura,
+          fontSize: widget.tamanho,
+          fontStyle: fontEstilo,
+          color: widget.cor),
     );
   }
 }

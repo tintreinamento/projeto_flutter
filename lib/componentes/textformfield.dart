@@ -1,48 +1,30 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/componentes/styles.dart';
 
-import 'package:flutter/services.dart';
+class TextFieldFormComponent extends StatefulWidget {
+  TextEditingController? controller;
 
-class TextFormFieldComponente extends StatelessWidget {
-  TextInputFormatter maskFormatter;
-  TextInputFormatter filter;
-  TextEditingController textEditingController;
-  Function handleSubmitted;
+  Function? handleOnchange;
 
-  TextFormFieldComponente(
-      {Key? key,
-      required this.maskFormatter,
-      required this.filter,
-      required this.textEditingController,
-      required this.handleSubmitted})
+  TextFieldFormComponent({Key? key, this.controller, this.handleOnchange})
       : super(key: key);
 
   @override
+  _TextFieldFormComponentState createState() => _TextFieldFormComponentState();
+}
+
+class _TextFieldFormComponentState extends State<TextFieldFormComponent> {
+  @override
   Widget build(BuildContext context) {
-    return TextField(
-      inputFormatters: [
-        filter,
-        maskFormatter,
-      ],
-      controller: textEditingController,
-      onSubmitted: (text) {
-        handleSubmitted();
-      },
-      style: TextStyle(
-        fontFamily: 'Roboto',
-        fontWeight: FontWeight.w700,
-        fontStyle: FontStyle.normal,
-        fontSize: 24,
-        color: Color.fromRGBO(0, 0, 0, 1),
+    return Container(
+      width: 240.0,
+      child: TextField(
+        controller: widget.controller,
+        decoration: inputDecorationComponente,
+        onChanged: (text) {
+          widget.handleOnchange!();
+        },
       ),
-      decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(186, 171, 171, 1))),
-          focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Color.fromRGBO(186, 171, 171, 1))),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5),
-          )),
     );
   }
 }

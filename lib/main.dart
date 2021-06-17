@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/views/cliente/Cadastro.dart';
 import 'package:projeto_flutter/views/pedido/pedido.dart';
 import './views/login/login.dart';
 import './views/pedido/pedido.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => Pedido(),
+        '/': (context) => ClienteCadastro(),
         '/login': (context) => Login(),
       },
     );
