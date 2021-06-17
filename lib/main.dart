@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/views/cliente/cadastro_cliente.dart';
-import './views/menu/menu.dart';
+import 'package:projeto_flutter/views/splash/splash_screen.dart';
 import './views/login/login.dart';
 
 void main() {
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: Login(),
+      home: MySplashPage(),
     );
   }
 }
