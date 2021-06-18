@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/componentes/appbar.dart';
-import 'package:projeto_flutter/componentes/drawer.dart';
+
+import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -30,8 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBarComponente(appBar: AppBar()),
-      drawer: DrawerComponente(),
+      drawer: DrawerComponent(),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
