@@ -13,6 +13,7 @@ class EstoqueModel {
 
   factory EstoqueModel.fromJson(Map<String, dynamic> parsedJson) {
     return EstoqueModel(
+        id: parsedJson['id'],
         idProduto: parsedJson['id_produto'],
         quantidade: parsedJson['quantidade'],
         nome: parsedJson['nome']);

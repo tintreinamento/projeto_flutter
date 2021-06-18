@@ -7,7 +7,9 @@ class CidadeModel {
 
   factory CidadeModel.fromJson(Map<String, dynamic> parsedJson) {
     return CidadeModel(
-        idEstado: parsedJson['id_estado'], nome: parsedJson['nome']);
+        id: parsedJson['id'],
+        idEstado: parsedJson['id_estado'],
+        nome: parsedJson['nome']);
   }
 
   Map<String, dynamic> toJson() => {'nome': nome, 'id_estado': idEstado};

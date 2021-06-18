@@ -10,6 +10,7 @@ class FornecedorModel {
 
   factory FornecedorModel.fromJson(Map<String, dynamic> parsedJson) {
     return FornecedorModel(
+        id: parsedJson['id'],
         nome: parsedJson['nome'],
         cpfCnpj: parsedJson['cpf_cnpj'],
         email: parsedJson['email'],
