@@ -11,7 +11,6 @@ class EnderecoController {
     List<dynamic> stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
-      print(element);
       var endereco = new EnderecoModel.fromJson(element);
       colecaoDeEnderecos.add(endereco);
     });
@@ -19,11 +18,10 @@ class EnderecoController {
     return colecaoDeEnderecos;
   }
 
-  Future<EnderecoModel> obtenhaPorId(String id) async {
-    final resposta = await new Api().obtenha('enderecos?id=' + id);
+  Future<EnderecoModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('enderecos/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
-    print(json.decode(resposta.body));
 
     return new EnderecoModel.fromJson(stringJson.single);
   }
