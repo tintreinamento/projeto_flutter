@@ -26,15 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-<<<<<<< HEAD
-      initialRoute: '/',
-      routes: {
-        '/': (context) => Pedido(),
-        '/login': (context) => Login(),
-      },
-=======
       home: MySplashPage(),
->>>>>>> remotes/origin/splash
     );
   }
 }
