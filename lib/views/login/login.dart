@@ -148,11 +148,7 @@ class _LoginState extends State<Login> {
                                                 Text('Processando dados...'))),
 
                                     //Executa rota para a página inicial
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                MyHomePage(title: 'Sistema '))),
+                                    Navigator.pushNamed(context, '/login'),
                                   }
                               },
                           child: Text(
