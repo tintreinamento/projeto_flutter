@@ -18,14 +18,14 @@ class PedidoModel {
         id: parsedJson['id'],
         idFuncionario: parsedJson['id_funcionario'],
         idCliente: parsedJson['id_cliente'],
-        total: parsedJson['total'],
-        data: parsedJson['data']);
+        total: parsedJson['valor_total'],
+        data: parsedJson['data_entrada']);
   }
 
   Map<String, dynamic> toJson() => {
         'id_funcionario': idFuncionario,
         'id_cliente': idCliente,
-        'total': total,
-        'data': data
+        'valor_total': total,
+        'data_entrada': data
       };
 }
