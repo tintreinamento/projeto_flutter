@@ -18,6 +18,7 @@ class FornecedorModel {
   });
 
   factory FornecedorModel.fromJson(Map<String, dynamic> parsedJson) {
+    
     return FornecedorModel(
         nome: parsedJson['nome'],
         cpf_cnpj: parsedJson['cpf_cnpj'],

@@ -7,7 +7,6 @@ class FornecedorController {
     final resposta = await new Api().obtenha('fornecedors');
     
     List<FornecedorModel> colecaoDeFornecedores = new List.empty(growable: true);
-
     List<dynamic> stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
