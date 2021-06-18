@@ -48,13 +48,18 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     print(nomeController.text);
   }
 
-  validarVazio(value) {
+  isVazio(value) {
     if (value == null || value.isEmpty) {
-      return 'Campo CPF/CNPJ vazio !';
+      return true;
+    } else {
+      return false;
     }
   }
 
   String validarCpfCnpj(cpfCnpj) {
+    if (!isVazio(cpfCnpj)) {
+      return 'Campo CPF/CNPJ vazio';
+    }
     if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 11) {
       if (UtilBrasilFields.isCPFValido(
           UtilBrasilFields.removeCaracteres(cpfCnpj))) {
