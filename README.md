@@ -17,6 +17,11 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Apresentação
 
+### Splash
+<p align="center">
+    <img src='./apresentacao/apresentacao_splashgit.gif'>
+</p>
+
 ### Login
 <p align="center">
     <img src='./apresentacao/apresentacao_login.gif'>
