@@ -19,6 +19,14 @@ class PedidoController {
     return colecaoDePedidos;
   }
 
+  Future<PedidoModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('pedidos/' + id.toString());
+
+    var stringJson = json.decode(resposta.body);
+
+    return new PedidoModel.fromJson(stringJson.single);
+  }
+
   Future<PedidoModel> crie(PedidoModel pedido) async {
     final resposta = await new Api().crie('pedidos', json.encode(pedido));
 
