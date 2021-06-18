@@ -1,24 +1,34 @@
 class ItemPedidoModel {
   var id;
+  var idPedido;
+  var idProduto;
   var quantidade;
-  var valorUnidade;
+  var valorUnitario;
   var valorTotal;
 
   ItemPedidoModel(
-      {this.id, this.quantidade, this.valorUnidade, this.valorTotal});
+      {this.id,
+      this.idPedido,
+      this.idProduto,
+      this.quantidade,
+      this.valorUnitario,
+      this.valorTotal});
 
   factory ItemPedidoModel.fromJson(Map<String, dynamic> parsedJson) {
     return ItemPedidoModel(
         id: parsedJson['id'],
+        idPedido: parsedJson['id_pedido'],
+        idProduto: parsedJson['id_produto'],
         quantidade: parsedJson['quantidade'],
-        valorUnidade: parsedJson['valor_unidade'],
+        valorUnitario: parsedJson['valor_unidade'],
         valorTotal: parsedJson['valor_total']);
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
+        'id_pedido': idPedido,
+        'id_produto': idProduto,
         'quantidade': quantidade,
-        'valor_unidade': valorUnidade,
+        'valor_unidade': valorUnitario,
         'valor_total': valorTotal,
       };
 }
