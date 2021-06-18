@@ -143,7 +143,7 @@ class _LoginState extends State<Login> {
                                 if (_formKey.currentState!.validate())
                                   {
                                     //Executa rota para a página inicial
-                                    Navigator.pushNamed(context, '/login')
+                                    Navigator.pushNamed(context, '/pedido')
                                   }
                               },
                           child: Text(
