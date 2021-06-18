@@ -142,13 +142,8 @@ class _LoginState extends State<Login> {
                           onPressed: () => {
                                 if (_formKey.currentState!.validate())
                                   {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content:
-                                                Text('Processando dados...'))),
-
                                     //Executa rota para a página inicial
-                                    Navigator.pushNamed(context, '/login'),
+                                    Navigator.pushNamed(context, '/login')
                                   }
                               },
                           child: Text(
