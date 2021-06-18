@@ -16,7 +16,16 @@ class _CardComponentState extends State<CardComponent> {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      overflow: Overflow.visible,
       children: [
+        Container(
+          width: 320.0,
+          padding: EdgeInsets.only(left: 20, top: 20, right: 20),
+          decoration: boxDecorationComponent,
+          child: Center(
+            child: widget.content,
+          ),
+        ),
         Positioned(
             top: -5,
             left: 30,
@@ -26,14 +35,6 @@ class _CardComponentState extends State<CardComponent> {
                 label: widget.label!.toUpperCase(),
               ),
             )),
-        Container(
-          width: 320.0,
-          padding: EdgeInsets.only(left: 20, top: 20, right: 20),
-          decoration: boxDecorationComponent,
-          child: Center(
-            child: widget.content,
-          ),
-        )
       ],
     );
   }

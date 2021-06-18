@@ -3,8 +3,9 @@ import 'package:projeto_flutter/componentes/TextComponent.dart';
 
 class ButtonComponent extends StatefulWidget {
   var label;
+  var onPressed;
 
-  ButtonComponent({Key? key, this.label}) : super(key: key);
+  ButtonComponent({Key? key, this.label, this.onPressed}) : super(key: key);
 
   @override
   _ButtonComponentState createState() => _ButtonComponentState();
@@ -25,7 +26,9 @@ class _ButtonComponentState extends State<ButtonComponent> {
                   RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100),
               ))),
-          onPressed: () {},
+          onPressed: () {
+            widget.onPressed();
+          },
           child: TextComponent(
             label: widget.label,
           ),
