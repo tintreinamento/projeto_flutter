@@ -8,7 +8,6 @@ class PaisController {
     final resposta = await new Api().obtenha('pais?id=' + id);
 
     var stringJson = json.decode(resposta.body);
-    print(json.decode(resposta.body));
 
     return new PaisModel.fromJson(stringJson.single);
   }
