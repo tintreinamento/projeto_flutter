@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/views/pedido/pedido.dart';
+import 'package:projeto_flutter/views/cliente/cadastro_cliente.dart';
+import 'package:projeto_flutter/views/splash/splash_screen.dart';
 import './views/login/login.dart';
-import './views/pedido/pedido.dart';
 
 void main() {
   runApp(MyApp());
@@ -26,11 +26,15 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
+<<<<<<< HEAD
       initialRoute: '/',
       routes: {
         '/': (context) => Pedido(),
         '/login': (context) => Login(),
       },
+=======
+      home: MySplashPage(),
+>>>>>>> remotes/origin/splash
     );
   }
 }
