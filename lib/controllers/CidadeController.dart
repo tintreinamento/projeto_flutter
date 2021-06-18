@@ -3,8 +3,8 @@ import 'package:projeto_flutter/models/CidadeModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
 class CidadeController {
-  Future<CidadeModel> obtenhaPorId(String id) async {
-    final resposta = await new Api().obtenha('cidades?id=' + id);
+  Future<CidadeModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('cidades/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
     return new CidadeModel.fromJson(stringJson.single);
