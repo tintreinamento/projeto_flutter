@@ -19,7 +19,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ### Splash
 <p align="center">
-    <img src='./apresentacao/apresentacao_splashgit.gif'>
+    <img src='./apresentacao/apresentacao_splash.gif'>
 </p>
 
 ### Login
