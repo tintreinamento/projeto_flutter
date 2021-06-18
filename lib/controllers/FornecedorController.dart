@@ -5,8 +5,9 @@ import 'package:projeto_flutter/services/Api.dart';
 class FornecedorController {
   Future<List<FornecedorModel>> obtenhaTodos() async {
     final resposta = await new Api().obtenha('fornecedors');
-    
-    List<FornecedorModel> colecaoDeFornecedores = new List.empty(growable: true);
+
+    List<FornecedorModel> colecaoDeFornecedores =
+        new List.empty(growable: true);
     List<dynamic> stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
@@ -25,7 +26,8 @@ class FornecedorController {
   }
 
   Future<FornecedorModel> crie(FornecedorModel fornecedor) async {
-    final resposta = await new Api().crie('fornecedors', json.encode(fornecedor));
+    final resposta =
+        await new Api().crie('fornecedors', json.encode(fornecedor));
 
     var stringJson = json.decode(resposta.body);
 
@@ -42,8 +44,8 @@ class FornecedorController {
   }
 
   Future<FornecedorModel> atualize(FornecedorModel fornecedor) async {
-    final resposta = await new Api()
-        .atualize('fornecedors/' + fornecedor.nome.toString(), json.encode(fornecedor));
+    final resposta = await new Api().atualize(
+        'fornecedors/' + fornecedor.nome.toString(), json.encode(fornecedor));
 
     var stringJson = json.decode(resposta.body);
 

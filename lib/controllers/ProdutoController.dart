@@ -11,7 +11,6 @@ class ProdutoController {
     List<dynamic> stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
-      print(json.encode(element));
       var produto = new ProdutoModel.fromJson(element);
       colecaoDeProdutos.add(produto);
     });
@@ -21,6 +20,14 @@ class ProdutoController {
 
   Future<ProdutoModel> obtenhaPorNome(String nome) async {
     final resposta = await new Api().obtenha('produtos?nome=' + nome);
+
+    var stringJson = json.decode(resposta.body);
+
+    return new ProdutoModel.fromJson(stringJson.single);
+  }
+
+  Future<ProdutoModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('produtos/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
 
