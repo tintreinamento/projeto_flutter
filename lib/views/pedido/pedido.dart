@@ -6,8 +6,8 @@ import 'package:projeto_flutter/componentes/inputdecoration.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/produto.dart';
 import 'package:projeto_flutter/views/pedido/buscarproduto.dart';
-import '../../componentes/appbar.dart';
-import '../../componentes/drawer.dart';
+import '../../componentes/AppBarComponent.dart';
+import '../../componentes/DrawerComponent.dart';
 
 import '../pedido/endereco.dart';
 
@@ -496,7 +496,7 @@ class _PedidoState extends State<Pedido> {
             ),
           ),
           preferredSize: Size.fromHeight(73.0)),
-      drawer: DrawerComponente(),
+      drawer: DrawerComponent(),
       body: Column(
         children: [
           Flexible(

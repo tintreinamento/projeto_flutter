@@ -16,7 +16,7 @@ final fontLargura = FontWeight.w700;
 
 //Input Decoration
 
-final inputDecorationComponente = InputDecoration(
+final inputDecorationComponent = InputDecoration(
     enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Color.fromRGBO(191, 188, 188, 1))),
     focusedBorder: OutlineInputBorder(
@@ -24,3 +24,7 @@ final inputDecorationComponente = InputDecoration(
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(5),
     ));
+
+final boxDecorationComponent = BoxDecoration(
+    border: Border.all(color: Color.fromRGBO(191, 188, 188, 1), width: 1),
+    borderRadius: BorderRadius.circular(25));

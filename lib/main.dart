@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/views/cliente/Cadastro.dart';
-import 'package:projeto_flutter/views/pedido/pedido.dart';
+import 'package:projeto_flutter/views/cliente/CadastroClienteView.dart';
+// import 'package:projeto_flutter/views/pedido/pedido.dart';
 import './views/login/login.dart';
-import './views/pedido/pedido.dart';
+// import './views/pedido/pedido.dart';
+import 'package:projeto_flutter/views/cliente/CadastroClienteView.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,8 +30,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => ClienteCadastro(),
+        '/': (context) => ClienteCadastroView(),
         '/login': (context) => Login(),
+        '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
       },
     );
   }

@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
 
-class TextLabel extends StatefulWidget {
+class TextComponent extends StatefulWidget {
   var label;
   Color? cor = colorPreto;
   double? tamanho = fontTamanho;
 
-  TextLabel({Key? key, this.label, this.tamanho, this.cor}) : super(key: key);
+  TextComponent({Key? key, this.label, this.tamanho, this.cor})
+      : super(key: key);
 
   @override
-  _TextLabelState createState() => _TextLabelState();
+  _TextComponentState createState() => _TextComponentState();
 }
 
-class _TextLabelState extends State<TextLabel> {
+class _TextComponentState extends State<TextComponent> {
   @override
   Widget build(BuildContext context) {
     return Text(
