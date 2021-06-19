@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/views/login/login.dart';
 
-class MySplashPage extends StatefulWidget {
+class SplashPage extends StatefulWidget {
   @override
-  _MySplashPageState createState() => _MySplashPageState();
+  _SplashPageState createState() => _SplashPageState();
 }
 
-class _MySplashPageState extends State<MySplashPage> {
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     // set time to load the new page
