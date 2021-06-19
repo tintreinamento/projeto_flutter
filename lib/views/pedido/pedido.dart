@@ -5,6 +5,7 @@ import 'package:projeto_flutter/componentes/boxdecoration.dart';
 import 'package:projeto_flutter/componentes/inputdecoration.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/produto.dart';
+import 'package:projeto_flutter/services/apicorreios.dart';
 import 'package:projeto_flutter/views/pedido/buscarproduto.dart';
 import '../../componentes/AppBarComponent.dart';
 import '../../componentes/DrawerComponent.dart';
@@ -133,15 +134,13 @@ class _PedidoState extends State<Pedido> {
   }
 
   consultarEndereco(String cep) async {
-    EnderecoController enderecoController = new EnderecoController();
-
-    final endereco = await enderecoController
-        .obtenhaEnderecoPorCep(UtilBrasilFields.removeCaracteres(cep));
+    final endereco = await new ApiCorreios()
+        .obtenhaEndereco(UtilBrasilFields.removeCaracteres(cep));
 
     logradouroController.text = endereco.logradouro;
-    numeroController.text = '';
+    numeroController.clear();
     bairroController.text = endereco.bairro;
-    cidadeController.text = endereco.cidade;
+    cidadeController.text = endereco.localidade;
     estadoController.text = endereco.uf;
   }
 
@@ -156,7 +155,7 @@ class _PedidoState extends State<Pedido> {
     setState(() {
       precoTotal = 0.0;
       for (var itemPedido in this.listaItemPedido) {
-        precoTotal += itemPedido.subtotal;
+        precoTotal += itemPedido.valorTotal;
       }
     });
   }
@@ -193,16 +192,18 @@ class _PedidoState extends State<Pedido> {
   adicionarItemPedido(ProdutoModel produto) {
     setState(() {
       int index = listaItemPedido.indexWhere((itemPedido) {
-        return itemPedido.produto!.id == produto.id;
+        return itemPedido.idPedido == produto.id;
       });
 
       if (index < 0) {
         ItemPedidoModel itemPedido = new ItemPedidoModel(
-            produto: produto, quantidade: 1, subtotal: produto.valorVenda);
+            idProduto: produto.id,
+            quantidade: 1,
+            valorTotal: produto.valorVenda);
         listaItemPedido.add(itemPedido);
       } else {
         listaItemPedido[index].quantidade++;
-        listaItemPedido[index].subtotal += produto.valorVenda;
+        listaItemPedido[index].valorTotal += produto.valorVenda;
       }
       getPrecoTotal();
     });
@@ -211,7 +212,7 @@ class _PedidoState extends State<Pedido> {
   removerItemPedido(ProdutoModel produto) {
     setState(() {
       int index = listaItemPedido.indexWhere((itemPedido) {
-        return itemPedido.produto!.id == produto.id;
+        return itemPedido.idPedido == produto.id;
       });
 
       if (index < 0) {
@@ -221,7 +222,7 @@ class _PedidoState extends State<Pedido> {
           listaItemPedido.removeAt(index);
         } else {
           listaItemPedido[index].quantidade--;
-          listaItemPedido[index].subtotal -= produto.valorVenda;
+          listaItemPedido[index].valorTotal -= produto.valorVenda;
         }
       }
       getPrecoTotal();
@@ -230,7 +231,7 @@ class _PedidoState extends State<Pedido> {
 
   getQuantidade(produto) {
     int index = listaItemPedido.indexWhere((itemPedido) {
-      return itemPedido.produto!.id == produto.id;
+      return itemPedido.idPedido == produto.id;
     });
 
     if (index < 0) {
@@ -240,8 +241,13 @@ class _PedidoState extends State<Pedido> {
     return listaItemPedido[index].quantidade;
   }
 
-  void _showDialog(BuildContext context, PedidoModel pedido) {
+  void _showDialog(BuildContext context, PedidoModel pedido) async {
+    var produtos = await new ProdutoController().obtenhaTodos();
+
     final listaItem = listaItemPedido.map((itemPedido) {
+      var produto =
+          produtos.firstWhere((element) => element.id = itemPedido.idProduto);
+
       return Column(
         children: [
           Container(
@@ -270,7 +276,7 @@ class _PedidoState extends State<Pedido> {
                             ),
                           ),
                           Text(
-                            itemPedido.produto!.nome,
+                            produto.nome,
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontStyle: FontStyle.normal,
@@ -316,7 +322,7 @@ class _PedidoState extends State<Pedido> {
                             ),
                           ),
                           Text(
-                            itemPedido.produto!.valorVenda.toString(),
+                            produto.valorVenda.toString(),
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontStyle: FontStyle.normal,
@@ -338,15 +344,14 @@ class _PedidoState extends State<Pedido> {
                         width: 46,
                         height: 45,
                         alignment: Alignment.center,
-                        child:
-                            Text(getQuantidade(itemPedido.produto!).toString(),
-                                style: TextStyle(
-                                  fontFamily: 'Roboto',
-                                  fontStyle: FontStyle.normal,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 18,
-                                  color: Color.fromRGBO(0, 0, 0, 1),
-                                )),
+                        child: Text(getQuantidade(produto).toString(),
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
+                              color: Color.fromRGBO(0, 0, 0, 1),
+                            )),
                       ),
                     ],
                   ),
