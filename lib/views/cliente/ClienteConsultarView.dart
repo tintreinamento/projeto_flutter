@@ -39,6 +39,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
   consultarCliente() {
     if (_formKeyConsultaCliente.currentState!.validate()) {
       //consulta
+      setState(() {});
     }
   }
 
@@ -51,6 +52,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
   @override
   Widget build(BuildContext context) {
     final formConsulta = Form(
+      key: _formKeyConsultaCliente,
       child: Column(
         children: [
           InputComponent(
@@ -77,7 +79,14 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
         builder:
             (BuildContext context, AsyncSnapshot<List<ClienteModel>> snapshot) {
           if (snapshot.hasData) {
-            final listaClientes = snapshot.data!.map((cliente) {
+            //Ordena consulta
+            final listaOrdenada = snapshot.data!.where((cliente) {
+              return cliente.nome
+                  .toLowerCase()
+                  .startsWith(nomeController.text.toLowerCase());
+            });
+
+            final listaClientes = listaOrdenada.map((cliente) {
               return SingleChildScrollView(
                 child: Column(
                   children: [
