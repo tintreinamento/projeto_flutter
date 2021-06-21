@@ -124,10 +124,6 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
                     label: 'Cliente',
                     content: formConsulta,
                   ),
-                  ButtonComponent(
-                    label: 'Consultar',
-                    onPressed: consultarCliente,
-                  ),
                   FormComponent(
                     label: 'Clientes',
                     content: lista,
