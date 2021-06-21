@@ -308,7 +308,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                   child: SingleChildScrollView(
                 child: Container(
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height,
+                  // height: MediaQuery.of(context).size.height,
                   margin: EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: Column(
                     children: [
