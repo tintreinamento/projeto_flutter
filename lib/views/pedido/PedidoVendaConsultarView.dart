@@ -9,7 +9,9 @@ import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
+import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
 import 'package:projeto_flutter/controllers/PedidoController.dart';
+import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 
 class PedidoVendaConsultarView extends StatefulWidget {
@@ -28,8 +30,10 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
   final dataController = TextEditingController();
   final valorController = TextEditingController();
 
+  ItemPedidoController itemPedidoController = new ItemPedidoController();
   PedidoController pedidoController = new PedidoController();
-  late Future<List<PedidoModel>> listaPedidos;
+  late Future<List<ItemPedidoModel>> listaItemPedidos;
+  late Future<List<PedidoModel>> buscaPedido;
 
   bool isVazio(value) {
     if (value == null || value.isEmpty) {
@@ -39,7 +43,7 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
     }
   }
 
-  consultarPedido() {
+  consultarItensPedidos() {
     if (_formKeyConsultaPedido.currentState!.validate()) {
       //consulta
     }
@@ -48,7 +52,8 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
   @override
   void initState() {
     super.initState();
-    listaPedidos = pedidoController.obtenhaTodos();
+    listaItemPedidos = itemPedidoController.obtenhaTodos();
+    //buscaPedido = pedidoController.obtenhaPorId();
   }
 
   @override
@@ -68,7 +73,7 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
           ),
           ButtonComponent(
             label: 'Consultar',
-            onPressed: consultarPedido,
+            onPressed: consultarItensPedidos,
           ),
         ],
       ),
@@ -99,15 +104,15 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
 
     //Map
     var lista = FutureBuilder(
-        future: listaPedidos,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<PedidoModel>> snapshot) {
+        future: listaItemPedidos,
+        builder: (BuildContext context,
+            AsyncSnapshot<List<ItemPedidoModel>> snapshot) {
           if (snapshot.hasData) {
-            final listaPedidos = snapshot.data!.map((pedido) {
+            final listaItemPedidos = snapshot.data!.map((itemPedido) {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    cardPedido(pedido),
+                    cardPedido(itemPedido),
                     SizedBox(
                       height: 10,
                     ),
@@ -118,7 +123,7 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
 
             return Column(
               children: [
-                ...listaPedidos,
+                ...listaItemPedidos,
               ],
             );
           } else if (snapshot.hasError) {
@@ -234,30 +239,50 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
   }
 }
 
-Widget cardPedido(PedidoModel pedidoModel) {
+Widget cardPedido(ItemPedidoModel itemPedidoModel) {
   return ConstrainedBox(
     constraints: BoxConstraints(minWidth: 340.0),
-    child: Container(
+    child: Row(children: [
+      Container(
         padding: EdgeInsets.all(10),
         color: Color.fromRGBO(235, 231, 231, 1),
         child: Stack(
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [],
-            ),
-            Positioned(
-              top: 50,
-              right: -10,
-              child: FlatButton(
-                  onPressed: () {
-                    // Navigator.pushNamed(context, '/login');
-                  },
-                  child: Container(
-                      child:
-                          Image(image: AssetImage('assets/images/edit.png')))),
+              children: [
+                Row(
+                  children: [
+                    TextComponent(
+                      label: 'Nome: ',
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  children: [
+                    TextComponent(
+                      label: 'Categoria: ',
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  children: [
+                    TextComponent(
+                      label: 'Valor Compra: ',
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
-        )),
+        ),
+      ),
+    ]),
   );
 }
