@@ -49,7 +49,7 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
             padding: EdgeInsets.only(left: 20),
             child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, widget.segundaRota);
+                  Navigator.of(context).pushNamed(widget.segundaRota);
                 },
                 child: TextComponent(
                   label: widget.tituloSegundaRota,

@@ -17,6 +17,7 @@ final fontLargura = FontWeight.w700;
 //Input Decoration
 
 final inputDecorationComponent = InputDecoration(
+    contentPadding: EdgeInsets.only(left: 10, top: 15, bottom: 15),
     enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Color.fromRGBO(191, 188, 188, 1))),
     focusedBorder: OutlineInputBorder(

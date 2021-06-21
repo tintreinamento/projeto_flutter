@@ -1192,7 +1192,7 @@ class _PedidoState extends State<Pedido> {
                                   ));
                             } else if (snapshot.hasError) {
                               // If something went wrong
-                              return Text('Something went wrong...');
+                              return Text('Falha ao obter os dados da API');
                             }
 
                             // While fetching, show a loading spinner.

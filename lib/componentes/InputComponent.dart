@@ -29,17 +29,15 @@ class InputComponent extends StatefulWidget {
 class _InputComponentState extends State<InputComponent> {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ConstrainedBox(
+      constraints: BoxConstraints(minWidth: 260.0, minHeight: 30),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Flexible(
-              child: TextComponent(
+          TextComponent(
             label: widget.label,
-          )),
-          Flexible(
-              child: Padding(
-            padding: EdgeInsets.only(top: 5),
+          ),
+          Expanded(
             child: TextFormFieldComponent(
               inputFormatter: widget.inputFormatter,
               controller: widget.controller,
@@ -47,7 +45,7 @@ class _InputComponentState extends State<InputComponent> {
               onFieldSubmitted: widget.onFieldSubmitted,
               validator: widget.validator,
             ),
-          ))
+          )
         ],
       ),
     );

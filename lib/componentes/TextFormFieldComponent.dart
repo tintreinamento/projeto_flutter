@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
 
 class TextFormFieldComponent extends StatefulWidget {
@@ -25,19 +26,17 @@ class TextFormFieldComponent extends StatefulWidget {
 class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: TextFormField(
-        inputFormatters: widget.inputFormatter,
-        controller: widget.controller,
-        decoration: inputDecorationComponent,
-        onFieldSubmitted: widget.onFieldSubmitted,
-        onChanged: (value) {
-          if (widget.onChange != null) {
-            widget.onChange!();
-          }
-        },
-        validator: widget.validator,
-      ),
+    return TextFormField(
+      inputFormatters: widget.inputFormatter,
+      controller: widget.controller,
+      decoration: inputDecorationComponent,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      onChanged: (value) {
+        if (widget.onChange != null) {
+          widget.onChange!();
+        }
+      },
+      validator: widget.validator,
     );
   }
 }
