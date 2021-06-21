@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:projeto_flutter/views/pedido/PedidoVendaConsultarView.dart';
 import 'package:projeto_flutter/views/splash/splash_screen.dart';
 // import 'package:projeto_flutter/views/pedido/pedido.dart';
 import './views/login/login.dart';
