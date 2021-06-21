@@ -1,30 +1,30 @@
-class PedidoModel {
+class PedidoFornecedorModel {
   var id;
-  var idCliente;
+  var idFornecedor;
   var idFuncionario;
   var total;
   var data;
 
-  PedidoModel({
+  PedidoFornecedorModel({
     this.id,
-    this.idCliente,
+    this.idFornecedor,
     this.idFuncionario,
     this.total,
     this.data,
   });
 
-  factory PedidoModel.fromJson(Map<String, dynamic> parsedJson) {
-    return PedidoModel(
+  factory PedidoFornecedorModel.fromJson(Map<String, dynamic> parsedJson) {
+    return PedidoFornecedorModel(
         id: parsedJson['id'],
         idFuncionario: parsedJson['id_funcionario'],
-        idCliente: parsedJson['id_cliente'],
+        idFornecedor: parsedJson['id_fornecedor'],
         total: parsedJson['valor_total'],
         data: parsedJson['data_entrada']);
   }
 
   Map<String, dynamic> toJson() => {
         'id_funcionario': idFuncionario,
-        'id_cliente': idCliente,
+        'id_fornecedor': idFornecedor,
         'valor_total': total,
         'data_entrada': data
       };

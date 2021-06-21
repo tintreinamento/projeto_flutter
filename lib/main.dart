@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/views/pedido/pedido.dart';
+
+import 'package:projeto_flutter/views/splash/splash_screen.dart';
+// import 'package:projeto_flutter/views/pedido/pedido.dart';
 import './views/login/login.dart';
-import './views/pedido/pedido.dart';
+// import './views/pedido/pedido.dart';
+import 'package:projeto_flutter/views/cliente/ClienteCadastrarView.dart';
+import 'package:projeto_flutter/views/cliente/ClienteConsultarView.dart';
+import 'package:projeto_flutter/views/pedido/pedido.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,8 +33,11 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => Pedido(),
+        '/': (context) => SplashPage(),
         '/login': (context) => Login(),
+        '/pedido': (context) => Pedido(),
+        '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
+        '/consultar_cliente': (contexto) => ClienteConsultarView(),
       },
     );
   }

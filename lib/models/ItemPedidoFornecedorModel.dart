@@ -1,4 +1,4 @@
-class ItemPedidoModel {
+class ItemPedidoFornecedorModel {
   var id;
   var idPedido;
   var idProduto;
@@ -6,7 +6,7 @@ class ItemPedidoModel {
   var valorUnitario;
   var valorTotal;
 
-  ItemPedidoModel(
+  ItemPedidoFornecedorModel(
       {this.id,
       this.idPedido,
       this.idProduto,
@@ -14,8 +14,8 @@ class ItemPedidoModel {
       this.valorUnitario,
       this.valorTotal});
 
-  factory ItemPedidoModel.fromJson(Map<String, dynamic> parsedJson) {
-    return ItemPedidoModel(
+  factory ItemPedidoFornecedorModel.fromJson(Map<String, dynamic> parsedJson) {
+    return ItemPedidoFornecedorModel(
         id: parsedJson['id'],
         idPedido: parsedJson['id_pedido'],
         idProduto: parsedJson['id_produto'],

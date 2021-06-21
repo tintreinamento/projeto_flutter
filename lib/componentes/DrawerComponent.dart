@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/views/pedido/pedido.dart';
-import '../views/pedido/pedido.dart';
+//import 'package:projeto_flutter/views/pedido/pedido.dart';
+//import '../views/pedido/pedido.dart';
 
-class DrawerComponente extends StatelessWidget {
-  Widget headerMenu() {
+class DrawerComponent extends StatelessWidget {
+  Widget headerMenu(BuildContext context) {
     return Container(
         width: 368,
         height: 73,
@@ -25,16 +25,17 @@ class DrawerComponente extends StatelessWidget {
                   height: 31,
                   child: Stack(children: <Widget>[
                     Positioned(
-                        top: 2,
-                        left: 0,
-                        child: Container(
-                            width: 26,
-                            height: 26,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage('assets/images/return.png'),
-                                  fit: BoxFit.fitWidth),
-                            ))),
+                      top: 2,
+                      left: -20,
+                      child: FlatButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/login');
+                          },
+                          child: Container(
+                              child: Image(
+                                  image:
+                                      AssetImage('assets/images/return.png')))),
+                    ),
                     Positioned(
                         top: 0,
                         left: 38,
@@ -67,14 +68,19 @@ class DrawerComponente extends StatelessWidget {
                         )),
                     Positioned(
                         top: 1,
-                        left: 320,
-                        child: Icon(Icons.arrow_back_ios, color: Colors.grey)),
+                        left: 290,
+                        child: FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Icon(Icons.arrow_back_ios, color: Colors.grey),
+                        )),
                   ]))),
         ]));
   }
 
   //Item do menu
-  Widget itemMenu(String titulo, BuildContext context) {
+  Widget itemMenu(String titulo, BuildContext context, String rota) {
     return Container(
       margin: EdgeInsets.fromLTRB(0.0, 32.0, 0.0, 0.0),
       child: ListTile(
@@ -95,12 +101,7 @@ class DrawerComponente extends StatelessWidget {
           ],
         ),
         onTap: () {
-          // Update the state of the app
-          // ...
-          // Then close the drawer
-          //navigator.pop(context);
-
-          Navigator.pushNamed(context, '/login');
+          Navigator.pushNamed(context, rota);
         },
       ),
     );
@@ -119,14 +120,14 @@ class DrawerComponente extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             // Figma Flutter Generator Group62Widget - GROUP
-            headerMenu(),
-            itemMenu('Fornecedor', context),
-            itemMenu('Produto', context),
-            itemMenu('Precificação', context),
-            itemMenu('Estoque', context),
-            itemMenu('Pedido de compras', context),
-            itemMenu('Cliente', context),
-            itemMenu('Pedido de venda', context),
+            headerMenu(context),
+            // itemMenu('Fornecedor', context),
+            // itemMenu('Produto', context),
+            //  itemMenu('Precificação', context),
+            // itemMenu('Estoque', context),
+            // itemMenu('Pedido de compras', context),
+            itemMenu('Cliente', context, '/cadastrar_cliente'),
+            itemMenu('Pedido de venda', context, '/pedido'),
           ],
         ),
       ),

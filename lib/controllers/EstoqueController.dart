@@ -5,17 +5,24 @@ import 'package:projeto_flutter/services/Api.dart';
 class EstoqueController {
   Future<List<EstoqueModel>> obtenhaTodos() async {
     final resposta = await new Api().obtenha('estoques');
-    
+
     List<EstoqueModel> colecaoDeEstoques = new List.empty(growable: true);
 
     List<dynamic> stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
-      print(element);
       var estoque = new EstoqueModel.fromJson(element);
       colecaoDeEstoques.add(estoque);
     });
     return colecaoDeEstoques;
+  }
+
+  Future<EstoqueModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('estoques/' + id.toString());
+
+    var stringJson = json.decode(resposta.body);
+
+    return new EstoqueModel.fromJson(stringJson.single);
   }
 
   Future<EstoqueModel> obtenhaPorNome(String nome) async {
