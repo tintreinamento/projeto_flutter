@@ -26,6 +26,14 @@ class ProdutoController {
     return new ProdutoModel.fromJson(stringJson.single);
   }
 
+  Future<ProdutoModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('produtos/' + id.toString());
+
+    var stringJson = json.decode(resposta.body);
+
+    return new ProdutoModel.fromJson(stringJson.single);
+  }
+
   Future<ProdutoModel> crie(ProdutoModel produto) async {
     final resposta = await new Api().crie('produtos', json.encode(produto));
 

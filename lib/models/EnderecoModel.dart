@@ -1,38 +1,46 @@
 class EnderecoModel {
   var id;
-  var cep;
+  var idFornecedor;
+  var idPais;
+  var idCidade;
+  var idEstado;
   var logradouro;
   var numero;
   var bairro;
-  var cidade;
-  var uf;
+  var cep;
 
   EnderecoModel(
       {this.id,
+      this.idFornecedor,
+      this.idPais,
+      this.idCidade,
+      this.idEstado,
       this.logradouro,
       this.numero,
       this.bairro,
-      this.cidade,
-      this.cep,
-      this.uf});
+      this.cep});
 
   factory EnderecoModel.fromJson(Map<String, dynamic> parsedJson) {
     return EnderecoModel(
         id: parsedJson['id'],
+        idFornecedor: parsedJson['id_fornecedor'],
+        idPais: parsedJson['id_pais'],
+        idCidade: parsedJson['id_cidade'],
+        idEstado: parsedJson['id_estado'],
         logradouro: parsedJson['logradouro'],
         numero: parsedJson['numero'],
         bairro: parsedJson['bairro'],
-        cidade: parsedJson['localidade'],
-        cep: parsedJson['cep'],
-        uf: parsedJson['uf']);
+        cep: parsedJson['cep']);
   }
 
   Map<String, dynamic> toJson() => {
-        'cep': cep,
+        'id_fornecedor': idFornecedor,
+        'id_pais': idPais,
+        'id_cidade': idCidade,
+        'id_estado': idEstado,
         'logradouro': logradouro,
         'numero': numero,
         'bairro': bairro,
-        'cidade': cidade,
-        'uf': uf,
+        'cep': cep,
       };
 }

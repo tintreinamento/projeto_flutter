@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 //import 'package:projeto_flutter/views/pedido/pedido.dart';
 //import '../views/pedido/pedido.dart';

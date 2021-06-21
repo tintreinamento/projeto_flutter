@@ -1,8 +1,10 @@
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+import 'dart:convert';
 
-class Api {
-  Future<Response> obtenha(String query) async {
+import 'package:http/http.dart' as http;
+import 'package:projeto_flutter/models/EnderecoCorreiosModel.dart';
+
+class ApiCorreios {
+  Future<EnderecoCorreiosModel> obtenhaEndereco(String query) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json'
@@ -12,6 +14,6 @@ class Api {
         Uri.parse('https://viacep.com.br/ws/' + query + '/json/'),
         headers: headers);
 
-    return resposta;
+    return EnderecoCorreiosModel.fromJson(json.decode(resposta.body));
   }
 }
