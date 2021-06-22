@@ -17,7 +17,9 @@ import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:flutter/services.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
+import 'package:projeto_flutter/controllers/EnderecoCorreioController.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
+import 'package:projeto_flutter/models/EnderecoCorreioModel.dart';
 
 class ClienteCadastroView extends StatefulWidget {
   const ClienteCadastroView({Key? key}) : super(key: key);
@@ -84,6 +86,33 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
 
   selectEstadoCivel(value) {
     estadoCivilController.text = value;
+  }
+
+  carregarEndereco() async {
+    EnderecoCorreioController enderecoCorreioController =
+        new EnderecoCorreioController();
+    final enderecoCorreioModel =
+        await enderecoCorreioController.obtenhaEnderecoPorCep(
+            UtilBrasilFields.removeCaracteres(cepController.text));
+
+    //Carrega os dados de endereço
+    logradouroController.text = enderecoCorreioModel.logradouro;
+    bairroController.text = enderecoCorreioModel.bairro;
+    cidadeController.text = enderecoCorreioModel.localidade;
+    estadoController.text = enderecoCorreioModel.uf;
+  }
+
+  exibirData() {
+    showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now())
+        .then((value) {
+      setState(() {
+        dataNascimentoController.text = value.toString();
+      });
+    });
   }
 
   cadastrarCliente() {
@@ -157,18 +186,32 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                     items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
                     onChanged: selectEstadoCivel,
                   )),
-              Expanded(
-                child: InputComponent(
-                  label: 'Data de nascimento: ',
-                  controller: dataNascimentoController,
-                  validator: (value) {
-                    if (isVazio(value)) {
-                      return 'Campo data de nascimento vazio !';
-                    }
-                    return null;
-                  },
-                ),
-              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InputComponent(
+                      label: 'Data de nascimento: ',
+                      inputFormatter: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        DataInputFormatter()
+                      ],
+                      controller: dataNascimentoController,
+                      validator: (value) {
+                        if (isVazio(value)) {
+                          return 'Campo data de nascimento vazio !';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  FlatButton(
+                      onPressed: exibirData,
+                      child: Icon(
+                        Icons.calendar_today,
+                        color: colorAzul,
+                      ))
+                ],
+              )
             ],
           ),
           SizedBox(
@@ -193,7 +236,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               TelefoneInputFormatter()
             ],
             label: 'Telefone: ',
-            controller: emailController,
+            controller: telefoneController,
             validator: (value) {
               if (isVazio(value)) {
                 return 'Campo telefone vazio !';
@@ -213,6 +256,11 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
           children: [
             InputComponent(
               label: 'CEP: ',
+              inputFormatter: [
+                FilteringTextInputFormatter.digitsOnly,
+                CepInputFormatter()
+              ],
+              onFieldSubmitted: carregarEndereco,
               controller: cepController,
               validator: (value) {
                 if (isVazio(value)) {

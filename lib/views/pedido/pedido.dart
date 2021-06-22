@@ -5,7 +5,7 @@ import 'package:projeto_flutter/componentes/boxdecoration.dart';
 import 'package:projeto_flutter/componentes/inputdecoration.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/produto.dart';
-import 'package:projeto_flutter/services/apicorreios.dart';
+import 'package:projeto_flutter/services/ApiCorreios.dart';
 import 'package:projeto_flutter/views/pedido/buscarproduto.dart';
 import '../../componentes/AppBarComponent.dart';
 import '../../componentes/DrawerComponent.dart';
@@ -134,14 +134,14 @@ class _PedidoState extends State<Pedido> {
   }
 
   consultarEndereco(String cep) async {
-    final endereco = await new ApiCorreios()
-        .obtenhaEndereco(UtilBrasilFields.removeCaracteres(cep));
+    // final endereco = await new ApiCorreios()
+    //     .obtenhaEndereco(UtilBrasilFields.removeCaracteres(cep));
 
-    logradouroController.text = endereco.logradouro;
-    numeroController.clear();
-    bairroController.text = endereco.bairro;
-    cidadeController.text = endereco.localidade;
-    estadoController.text = endereco.uf;
+    // logradouroController.text = endereco.logradouro;
+    // numeroController.clear();
+    // bairroController.text = endereco.bairro;
+    // cidadeController.text = endereco.localidade;
+    // estadoController.text = endereco.uf;
   }
 
   carregarListaItemPedido(listaItemPedido) {

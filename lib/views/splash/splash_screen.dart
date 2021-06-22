@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/views/login/login.dart';
+import 'package:projeto_flutter/views/login/LoginView.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -12,7 +12,7 @@ class _SplashPageState extends State<SplashPage> {
     // set time to load the new page
     Future.delayed(Duration(seconds: 3), () {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Login()));
+          context, MaterialPageRoute(builder: (context) => LoginView()));
     });
     super.initState();
   }
