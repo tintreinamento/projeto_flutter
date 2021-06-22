@@ -27,6 +27,23 @@ class ItemPedidoController {
     return new ItemPedidoModel.fromJson(stringJson.single);
   }
 
+  Future<List<ItemPedidoModel>> obtenhaTodosItensPedidosPorIdPedido(
+      int id) async {
+    final resposta =
+        await new Api().obtenha('item-pedidos?id_pedido=' + id.toString());
+
+    List<ItemPedidoModel> colecaoDeItemPedido = new List.empty(growable: true);
+
+    List<dynamic> stringJson = json.decode(resposta.body);
+
+    stringJson.forEach((element) {
+      var pedido = new ItemPedidoModel.fromJson(element);
+      colecaoDeItemPedido.add(pedido);
+    });
+
+    return colecaoDeItemPedido;
+  }
+
   Future<ItemPedidoModel> crie(ItemPedidoModel pedido) async {
     final resposta = await new Api().crie('item-pedidos', json.encode(pedido));
 
