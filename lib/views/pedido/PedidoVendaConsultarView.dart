@@ -9,8 +9,11 @@ import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
+import 'package:projeto_flutter/controllers/CategoriaController.dart';
+import 'package:projeto_flutter/controllers/ClienteController.dart';
 import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
 import 'package:projeto_flutter/controllers/PedidoController.dart';
+import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 
@@ -22,6 +25,15 @@ class PedidoVendaConsultarView extends StatefulWidget {
       _PedidoVendaConsultarViewState();
 }
 
+class ProdutoModelLista {
+  var nome;
+  var valor;
+  var categoria;
+  var quantidade;
+
+  ProdutoModelLista({this.nome, this.valor, this.categoria, this.quantidade});
+}
+
 class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
   final _formKeyConsultaPedido = GlobalKey<FormState>();
   final idController = TextEditingController();
@@ -30,9 +42,10 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
   final dataController = TextEditingController();
   final valorController = TextEditingController();
 
+  final List<ProdutoModelLista> produtosCard = new List.empty(growable: false);
+
   ItemPedidoController itemPedidoController = new ItemPedidoController();
   PedidoController pedidoController = new PedidoController();
-  late Future<List<ItemPedidoModel>> listaItemPedidos;
   late Future<List<PedidoModel>> buscaPedido;
 
   bool isVazio(value) {
@@ -43,16 +56,43 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
     }
   }
 
-  consultarItensPedidos() {
-    if (_formKeyConsultaPedido.currentState!.validate()) {
-      //consulta
-    }
+  consultarItensPedidos() async {
+    //consulta
+    var itemPedido =
+        await new ItemPedidoController().obtenhaTodosItensPedidosPorIdPedido(1);
+
+    //produtosCard.clear();
+
+    itemPedido.forEach((element) async {
+      var produto =
+          await new ProdutoController().obtenhaPorId(element.idProduto);
+      var categoria =
+          await new CategoriaController().obtenhaPorId(produto.idCategoria);
+
+      var produtoModel = new ProdutoModelLista(
+          nome: produto.nome,
+          valor: produto.valorCompra,
+          categoria: categoria.nome,
+          quantidade: element.quantidade);
+      produtosCard.add(produtoModel);
+    });
+
+    var pedido = await new PedidoController().obtenhaPorId(1);
+    var cliente = await new ClienteController().obtenhaPorId(pedido.idCliente);
+    var funcionario = "Vitão delas";
+
+    setState(() {
+      nomeClienteController.text = cliente.nome;
+      nomeFuncionarioController.text = funcionario;
+      dataController.text = pedido.data;
+      valorController.text = pedido.total;
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    listaItemPedidos = itemPedidoController.obtenhaTodos();
+    consultarItensPedidos();
     //buscaPedido = pedidoController.obtenhaPorId();
   }
 
@@ -103,35 +143,31 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
     );
 
     //Map
-    var lista = FutureBuilder(
-        future: listaItemPedidos,
-        builder: (BuildContext context,
-            AsyncSnapshot<List<ItemPedidoModel>> snapshot) {
-          if (snapshot.hasData) {
-            final listaItemPedidos = snapshot.data!.map((itemPedido) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    cardPedido(itemPedido),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
-              );
-            }).toList();
-
-            return Column(
-              children: [
-                ...listaItemPedidos,
-              ],
-            );
-          } else if (snapshot.hasError) {
-            // If something went wrong
-            return Text('Falha ao obter os dados da API ');
-          }
-          return CircularProgressIndicator();
+    var lista = ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: produtosCard.length,
+        itemBuilder: (context, index) {
+          return Container(child: cardProduto(produtosCard[index]));
         });
+    //   final listaProdutos = produtosCard.map((produto) {
+    //     return SingleChildScrollView(
+    //       child: Column(
+    //         children: [
+    //           cardProduto(produto),
+    //           SizedBox(
+    //             height: 10,
+    //           ),
+    //         ],
+    //       ),
+    //     );
+    //   }).toList();
+
+    //   return Column(
+    //     children: [
+    //       ...listaProdutos,
+    //     ],
+    //   );
+    // });
 
     final layoutVertical = Container(
       child: Column(
@@ -165,10 +201,11 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
                   SizedBox(
                     width: 10,
                   ),
-                  FormComponent(
+                  Expanded(
+                      child: FormComponent(
                     label: 'Pedidos',
                     content: lista,
-                  ),
+                  )),
                 ],
               ),
             ),
@@ -239,50 +276,82 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
   }
 }
 
-Widget cardPedido(ItemPedidoModel itemPedidoModel) {
+Widget cardProduto(ProdutoModelLista produto) {
   return ConstrainedBox(
     constraints: BoxConstraints(minWidth: 340.0),
     child: Row(children: [
       Container(
         padding: EdgeInsets.all(10),
         color: Color.fromRGBO(235, 231, 231, 1),
-        child: Stack(
+        child: Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  TextComponent(
+                    label: 'Nome: ',
+                  ),
+                  TextComponent(
+                    label: produto.nome,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Row(
+                children: [
+                  TextComponent(
+                    label: 'Categoria: ',
+                  ),
+                  TextComponent(
+                    label: produto.categoria,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Row(
+                children: [
+                  TextComponent(
+                    label: 'Valor Compra: ',
+                  ),
+                  TextComponent(
+                    label: produto.valor,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      Container(
+        padding: EdgeInsets.all(10),
+        child: Row(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    TextComponent(
-                      label: 'Nome: ',
-                    ),
-                  ],
-                ),
                 SizedBox(
-                  height: 4,
-                ),
-                Row(
-                  children: [
-                    TextComponent(
-                      label: 'Categoria: ',
+                  child: Text(
+                    produto.quantidade,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: "Roboto",
+                      fontWeight: FontWeight.w700,
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Row(
-                  children: [
-                    TextComponent(
-                      label: 'Valor Compra: ',
-                    ),
-                  ],
+                  ),
                 ),
               ],
             ),
           ],
         ),
-      ),
+      )
     ]),
   );
 }
