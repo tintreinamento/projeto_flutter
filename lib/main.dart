@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/views/produto/consulta_produto.dart';
 
 import 'package:projeto_flutter/views/splash/splash_screen.dart';
 // import 'package:projeto_flutter/views/pedido/pedido.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         '/pedido': (context) => Pedido(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
+        '/consultar_produto': (context) => ProdutoConsultarView(),
       },
     );
   }
