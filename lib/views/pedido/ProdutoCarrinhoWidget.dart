@@ -17,7 +17,7 @@ class _ProdutoCarrinhoWidgetState extends State<ProdutoCarrinhoWidget> {
     return AnimatedPositioned(
         child: Container(
           decoration: BoxDecoration(
-              border: Border.all(color: colorCinza, width: 1),
+              border: Border.all(width: 1),
               borderRadius: BorderRadius.circular(25)),
           width: MediaQuery.of(context).size.width * 0.95,
           height: MediaQuery.of(context).size.height * 0.70,

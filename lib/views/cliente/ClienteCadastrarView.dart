@@ -186,7 +186,8 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                     items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
                     onChanged: selectEstadoCivel,
                   )),
-              Row(
+              Expanded(
+                  child: Row(
                 children: [
                   Expanded(
                     child: InputComponent(
@@ -211,7 +212,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                         color: colorAzul,
                       ))
                 ],
-              )
+              ))
             ],
           ),
           SizedBox(
