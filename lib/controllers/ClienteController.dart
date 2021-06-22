@@ -26,6 +26,14 @@ class ClienteController {
     return new ClienteModel.fromJson(stringJson.single);
   }
 
+  Future<ClienteModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('clientes/' + id.toString());
+
+    var stringJson = json.decode(resposta.body);
+
+    return new ClienteModel.fromJson(stringJson.single);
+  }
+
   Future<ClienteModel> crie(ClienteModel cliente) async {
     final resposta = await new Api().crie('clientes', json.encode(cliente));
 
