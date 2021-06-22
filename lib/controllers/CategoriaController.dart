@@ -7,7 +7,7 @@ class CategoriaController {
     final resposta = await new Api().obtenha('categorias/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
-    return new CategoriaModel.fromJson(stringJson.single);
+    return new CategoriaModel.fromJson(stringJson);
   }
 
   Future<CategoriaModel> crie(CategoriaModel cidade) async {

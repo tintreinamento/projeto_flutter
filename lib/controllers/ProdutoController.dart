@@ -31,7 +31,7 @@ class ProdutoController {
 
     var stringJson = json.decode(resposta.body);
 
-    return new ProdutoModel.fromJson(stringJson.single);
+    return new ProdutoModel.fromJson(stringJson);
   }
 
   Future<ProdutoModel> crie(ProdutoModel produto) async {
