@@ -13,40 +13,50 @@ import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:flutter/services.dart';
 import 'package:brasil_fields/brasil_fields.dart';
-import 'package:projeto_flutter/controllers/ClienteController.dart';
-import 'package:projeto_flutter/models/ClienteModel.dart';
+import 'package:projeto_flutter/controllers/FornecedorController.dart';
+import 'package:projeto_flutter/controllers/ProdutoController.dart';
+import 'package:projeto_flutter/models/ProdutoModel.dart';
+import 'package:projeto_flutter/models/Produto.dart';
+import 'package:projeto_flutter/models/FornecedorModel.dart';
+import 'package:flutter/src/widgets/navigator.dart';
 
-class ClienteCadastroView extends StatefulWidget {
-  const ClienteCadastroView({Key? key}) : super(key: key);
+class ProdutoCadastrarView extends StatefulWidget {
+  const ProdutoCadastrarView({Key? key}) : super(key: key);
 
   @override
-  _ClienteCadastroViewState createState() => _ClienteCadastroViewState();
+  _ProdutoCadastrarViewState createState() => _ProdutoCadastrarViewState();
 }
 
-class _ClienteCadastroViewState extends State<ClienteCadastroView> {
-  final _formKeyCliente = GlobalKey<FormState>();
-  final _formKeyEndereco = GlobalKey<FormState>();
+class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
+  final _formKeyFornecedor = GlobalKey<FormState>();
+  final _formKeyProduto = GlobalKey<FormState>();
 
-  //Dados de cliente
+  //dados Fornecedor
   final nomeController = TextEditingController();
   final cpfCnpjController = TextEditingController();
-  final estadoCivilController = TextEditingController();
-  final dataNascimentoController = TextEditingController();
   final emailController = TextEditingController();
-  final sexoController = TextEditingController();
-  final dddController = TextEditingController();
   final telefoneController = TextEditingController();
 
-  //Dados de endereço
-  final cepController = TextEditingController();
-  final logradouroController = TextEditingController();
-  final numeroController = TextEditingController();
-  final bairroController = TextEditingController();
-  final cidadeController = TextEditingController();
-  final estadoController = TextEditingController();
+  //dados Produto
+  final nomeProdutoController = TextEditingController();
+  final descricaoController = TextEditingController();
+  final categoriaController = TextEditingController();
+  final valorCompraController = TextEditingController();
+  //final idFornecedorController =TextEditingController(); //armazenar ID do Fornecedor para o produto
 
   pegarNome() {
     print(nomeController.text);
+  }
+
+  limparCampos() {
+    nomeController.text = '';
+    cpfCnpjController.text = '';
+    emailController.text = '';
+    telefoneController.text = '';
+    nomeProdutoController.text = '';
+    descricaoController.text = '';
+    categoriaController.text = '';
+    valorCompraController.text = '';
   }
 
   pegaraNome(text) {
@@ -61,7 +71,31 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     }
   }
 
-  String validarCpfCnpj(cpfCnpj) {
+  //Alerta
+  showAlertDialog1(BuildContext context) {
+    // configura o button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {},
+    );
+    // configura o  AlertDialog
+    AlertDialog alerta = AlertDialog(
+      title: Text("Cadastro concluido!"),
+      actions: [
+        okButton,
+      ],
+    );
+    // exibe o dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
+  //validador de cpf/cnpj
+  /*String validarCpfCnpj(cpfCnpj) {
     if (isVazio(cpfCnpj)) {
       return 'Campo CPF/CNPJ vazio';
     }
@@ -77,46 +111,46 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
       }
     }
     return "";
+  }*/
+
+  consultarFornecedor() async {
+    //Consultando dados do cliente através da API
+    FornecedorController fornecedorController = new FornecedorController();
+    final fornecedor =
+        await fornecedorController.obtenhaPorNome(nomeController.text);
+
+    //Caso exista o cliente cadastrado, preencha os campos com as respectivas informações
+    //nomeConsultaController = nomeController.text;
+    cpfCnpjController.text = fornecedor.cpfCnpj;
+    emailController.text = fornecedor.email;
+    telefoneController.text = fornecedor.telefone;
+    //idFornecedorController.text = fornecedor.id;
   }
 
-  selectEstadoCivel(value) {
-    estadoCivilController.text = value;
-  }
-
-  cadastrarCliente() {
-    if (_formKeyCliente.currentState!.validate()) {
-      if (_formKeyEndereco.currentState!.validate()) {
+  //Botão para inserção do produto usando a API
+  cadastrarProduto() {
+    if (_formKeyFornecedor.currentState!.validate()) {
+      if (_formKeyProduto.currentState!.validate()) {
         //Cadastrar os dados na API
 
-        ClienteModel clienteModel = ClienteModel(
-            nome: nomeController.text,
-            cpf: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
-            email: emailController.text,
-            dataNascimento: UtilBrasilFields.removeCaracteres(
-                dataNascimentoController.text),
-            estadoCivil: estadoCivilController.text,
-            sexo: sexoController.text,
-            ddd: dddController.text,
-            numeroTelefone:
-                UtilBrasilFields.removeCaracteres(telefoneController.text),
-            cep: UtilBrasilFields.removeCaracteres(cepController.text),
-            logradouro: logradouroController.text,
-            numero: numeroController.text,
-            bairro: bairroController.text,
-            cidade: cidadeController.text,
-            uf: estadoController.text);
+        ProdutoModel produtoModel = ProdutoModel(
+            nome: nomeProdutoController.text,
+            descricao: descricaoController.text,
+            idCategoria: categoriaController.text,
+            valorCompra: valorCompraController.text
+            /*idFornecedor: idFornecedorController.text*/);
 
-        ClienteController clienteController = ClienteController();
+        ProdutoController produtoController = ProdutoController();
 
-        clienteController.crie(clienteModel);
+        produtoController.crie(produtoModel);
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final formCliente = Form(
-      key: _formKeyCliente,
+    final formFornecedor = Form(
+      key: _formKeyFornecedor,
       child: Column(
         children: [
           InputComponent(
@@ -139,34 +173,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               CpfOuCnpjFormatter()
             ],
             controller: cpfCnpjController,
-            validator: validarCpfCnpj,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 260.0),
-                  child: InputDropDownComponent(
-                    label: 'Estado cível: ',
-                    labelDropDown: 'Selecione o estado cível',
-                    items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
-                    onChanged: selectEstadoCivel,
-                  )),
-              Expanded(
-                child: InputComponent(
-                  label: 'Data de nascimento: ',
-                  controller: dataNascimentoController,
-                  validator: (value) {
-                    if (isVazio(value)) {
-                      return 'Campo data de nascimento vazio !';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ],
+            //validator: validarCpfCnpj,
           ),
           SizedBox(
             height: 10,
@@ -201,19 +208,19 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
         ],
       ),
     );
-
-    final formEndereco = Container(
+////////////////////////////////////////////////////// 2 form ////////////////////////////////////////////////////
+    final formProduto = Container(
       child: Form(
-        key: _formKeyEndereco,
+        key: _formKeyProduto,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             InputComponent(
-              label: 'CEP: ',
-              controller: cepController,
+              label: 'Nome: ',
+              controller: nomeProdutoController,
               validator: (value) {
                 if (isVazio(value)) {
-                  return 'Campo CEP vazio !';
+                  return 'Campo nome vazio !';
                 }
                 return null;
               },
@@ -222,11 +229,11 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               height: 10,
             ),
             InputComponent(
-              label: 'Logradouro: ',
-              controller: logradouroController,
+              label: 'Descricão: ',
+              controller: descricaoController,
               validator: (value) {
                 if (isVazio(value)) {
-                  return 'Campo logradouro vazio !';
+                  return 'Campo descrição vazio !';
                 }
                 return null;
               },
@@ -235,11 +242,11 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               height: 10,
             ),
             InputComponent(
-              label: 'Número: ',
-              controller: numeroController,
+              label: 'Categoria: ',
+              controller: categoriaController,
               validator: (value) {
                 if (isVazio(value)) {
-                  return 'Campo número vazio !';
+                  return 'Campo categoria vazio !';
                 }
                 return null;
               },
@@ -248,37 +255,11 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               height: 10,
             ),
             InputComponent(
-              label: 'Bairro: ',
-              controller: bairroController,
+              label: 'Valor de compra: ',
+              controller: valorCompraController,
               validator: (value) {
                 if (isVazio(value)) {
-                  return 'Campo bairro vazio !';
-                }
-                return null;
-              },
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            InputComponent(
-              label: 'Cidade: ',
-              controller: cidadeController,
-              validator: (value) {
-                if (isVazio(value)) {
-                  return 'Campo cidade vazio !';
-                }
-                return null;
-              },
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            InputComponent(
-              label: 'Estado: ',
-              controller: estadoController,
-              validator: (value) {
-                if (isVazio(value)) {
-                  return 'Campo estado vazio !';
+                  return 'Campo valor de compra vazio !';
                 }
                 return null;
               },
@@ -295,11 +276,11 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
           child: Column(
             children: [
               SubMenuComponent(
-                titulo: 'Cliente',
+                titulo: 'Produto',
                 tituloPrimeiraRota: 'Cadastro',
-                primeiraRota: '/cadastrar_cliente',
+                primeiraRota: '/cadastrar_produto',
                 tituloSegundaRota: 'Consultar',
-                segundaRota: '/consultar_cliente',
+                segundaRota: '/consultar_produto',
               ),
               Expanded(
                   child: SingleChildScrollView(
@@ -310,16 +291,22 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                   child: Column(
                     children: [
                       FormComponent(
-                        label: 'Cliente',
-                        content: formCliente,
+                        label: 'Fornecedor',
+                        content: formFornecedor,
+                      ),
+                      ButtonComponent(
+                        label: 'Consultar',
+                        onPressed: consultarFornecedor,
                       ),
                       FormComponent(
-                        label: 'Endereco',
-                        content: formEndereco,
+                        label: 'Produto',
+                        content: formProduto,
                       ),
                       ButtonComponent(
                         label: 'Cadastrar',
-                        onPressed: cadastrarCliente,
+                        onPressed: cadastrarProduto,
+
+                        //{Navigator.of(context).pop();}
                       ),
                     ],
                   ),
