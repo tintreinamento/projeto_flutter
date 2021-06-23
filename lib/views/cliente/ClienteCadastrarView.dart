@@ -9,11 +9,8 @@ import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/TextFormFieldComponent.dart';
 import 'package:projeto_flutter/componentes/inputDropDownComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
-
 import 'package:projeto_flutter/componentes/TextComponent.dart';
-
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
-
 import 'package:flutter/services.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
