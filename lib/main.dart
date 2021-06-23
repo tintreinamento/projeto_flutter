@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:projeto_flutter/views/produto/ProdutoCadastrarView.dart';
-=======
 import 'package:projeto_flutter/views/login/LoginView.dart';
 import 'package:projeto_flutter/views/pedido/PedidoView.dart';
->>>>>>> master
+import 'package:projeto_flutter/views/produto/ProdutoCadastrarView.dart';
 
 import 'package:projeto_flutter/views/splash/splash_screen.dart';
 // import 'package:projeto_flutter/views/pedido/pedido.dart';
