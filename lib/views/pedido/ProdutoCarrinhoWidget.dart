@@ -17,11 +17,11 @@ class _ProdutoCarrinhoWidgetState extends State<ProdutoCarrinhoWidget> {
     return AnimatedPositioned(
         child: Container(
           decoration: BoxDecoration(
+              color: colorCinza,
               border: Border.all(width: 1),
-              borderRadius: BorderRadius.circular(25)),
+              borderRadius: BorderRadius.circular(16)),
           width: MediaQuery.of(context).size.width * 0.95,
           height: MediaQuery.of(context).size.height * 0.70,
-          color: colorCinza,
           padding: EdgeInsets.all(10),
           child: Text('text'),
         ),

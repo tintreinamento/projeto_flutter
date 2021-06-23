@@ -50,6 +50,26 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
   final cidadeController = TextEditingController();
   final estadoController = TextEditingController();
 
+  limparCampos() {
+    //Dados de cliente
+    nomeController.text = '';
+    cpfCnpjController.text = '';
+    estadoCivilController.text = '';
+    dataNascimentoController.text = '';
+    emailController.text = '';
+    sexoController.text = '';
+    dddController.text = '';
+    telefoneController.text = '';
+
+    //Dados de endereço
+    cepController.text = '';
+    logradouroController.text = '';
+    numeroController.text = '';
+    bairroController.text = '';
+    cidadeController.text = '';
+    estadoController.text = '';
+  }
+
   pegarNome() {
     print(nomeController.text);
   }
@@ -141,8 +161,45 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
         ClienteController clienteController = ClienteController();
 
         clienteController.crie(clienteModel);
+        limparCampos();
       }
     }
+  }
+
+  showDialog() {
+    return AlertDialog(
+      actions: [
+        Column(children: [
+          Text('Cliente cadastrado com sucesso !'),
+          Container(
+            width: 241,
+            height: 31,
+            margin: EdgeInsets.only(top: 18, bottom: 13),
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Color.fromRGBO(0, 94, 181, 1)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ))),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Confirmar pedido',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: Color.fromRGBO(255, 255, 255, 1),
+                  ),
+                )),
+          )
+        ])
+      ],
+    );
   }
 
   @override
