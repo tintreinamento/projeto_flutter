@@ -8,11 +8,14 @@ import 'package:projeto_flutter/componentes/InputComponent.dart';
 
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 
-import 'package:flutter/services.dart';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:projeto_flutter/controllers/CidadeController.dart';
 import 'package:projeto_flutter/controllers/EnderecoController.dart';
+import 'package:projeto_flutter/controllers/EstadoController.dart';
 import 'package:projeto_flutter/controllers/FornecedorController.dart';
+import 'package:projeto_flutter/models/CidadeModel.dart';
 import 'package:projeto_flutter/models/EnderecoModel.dart';
+import 'package:projeto_flutter/models/EstadoModel.dart';
 import 'package:projeto_flutter/models/FornecedorModel.dart';
 
 class FornecedorCadastrarView extends StatefulWidget {
@@ -27,7 +30,7 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
   final _formKeyFornecedor = GlobalKey<FormState>();
   final _formKeyEndereco = GlobalKey<FormState>();
 
-  //Dados de cliente
+  //Dados de fornecedor
   final nomeController = TextEditingController();
   final cpfCnpjController = TextEditingController();
   final emailController = TextEditingController();
@@ -61,41 +64,61 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
     if (isVazio(cpfCnpj)) {
       return 'Campo CPF/CNPJ vazio';
     }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 11) {
-      if (UtilBrasilFields.isCPFValido(
-          UtilBrasilFields.removeCaracteres(cpfCnpj))) {
-        return 'CPF inválido !';
+
+    var cpfLimpo = UtilBrasilFields.removeCaracteres(cpfCnpj);
+
+    if (cpfLimpo.length == 11) {
+      if (!UtilBrasilFields.isCPFValido(cpfLimpo)) {
+        return 'CPF inválido!';
       }
-    }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 14) {
-      if (UtilBrasilFields.isCNPJValido(cpfCnpj)) {
-        return 'CNPJ inválido !';
+    } else if (cpfLimpo.length == 14) {
+      if (!UtilBrasilFields.isCNPJValido(cpfLimpo)) {
+        return 'CNPJ inválido!';
       }
+    } else {
+      return 'CPF/CNPJ inválido!';
     }
+
     return "";
   }
 
-  cadastrarFornecedor() {
+  cadastrarFornecedor() async {
     if (_formKeyFornecedor.currentState!.validate()) {
       if (_formKeyEndereco.currentState!.validate()) {
         //Cadastrar os dados na API
 
-        FornecedorModel fornecedorModel = FornecedorModel(
+        var fornecedorModel = FornecedorModel(
             nome: nomeController.text,
             cpfCnpj: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
             email: emailController.text,
             telefone:
                 UtilBrasilFields.removeCaracteres(telefoneController.text));
-        EnderecoModel enderecoModel = EnderecoModel(
+
+        var fornecedorControllerApi = FornecedorController();
+        var fornecedor = await fornecedorControllerApi.crie(fornecedorModel);
+
+        var estadoModel = EstadoModel(idPais: 1, nome: estadoController.text);
+        var estadoControllerApi = EstadoController();
+        var estado = await estadoControllerApi.crie(estadoModel);
+
+        var cidadeModel =
+            new CidadeModel(idEstado: estado.id, nome: cidadeController.text);
+
+        var cidadeControllerApi = CidadeController();
+        var cidade = await cidadeControllerApi.crie(cidadeModel);
+
+        var enderecoModel = EnderecoModel(
+            idCidade: cidade.id,
+            idEstado: estado.id,
+            idFornecedor: fornecedor.id,
+            idPais: 1,
             cep: UtilBrasilFields.removeCaracteres(cepController.text),
             logradouro: logradouroController.text,
             numero: numeroController.text,
             bairro: bairroController.text);
 
-        FornecedorController fornecedorController = FornecedorController();
-        fornecedorController.crie(fornecedorModel);
-        EnderecoController enderecoController = EnderecoController();
-        enderecoController.crie(enderecoModel);
+        var enderecoControllerApi = EnderecoController();
+        await enderecoControllerApi.crie(enderecoModel);
       }
     }
   }
@@ -153,7 +176,7 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
               TelefoneInputFormatter()
             ],
             label: 'Telefone: ',
-            controller: emailController,
+            controller: telefoneController,
             validator: (value) {
               if (isVazio(value)) {
                 return 'Campo telefone vazio !';
@@ -252,44 +275,45 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
     );
 
     return Scaffold(
-        appBar: AppBarComponent(),
-        drawer: DrawerComponent(),
-        body: Container(
-          child: Column(
-            children: [
-              SubMenuComponent(
-                titulo: 'Fornecedor',
-                tituloPrimeiraRota: 'Cadastro',
-                primeiraRota: '/cadastrar_fornecedor',
-                tituloSegundaRota: 'Consultar',
-                segundaRota: '/consultar_fornecedor',
-              ),
-              Expanded(
-                  child: SingleChildScrollView(
-                child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height,
-                  margin: EdgeInsets.only(left: 20, top: 20, right: 20),
-                  child: Column(
-                    children: [
-                      FormComponent(
-                        label: 'Fornecedor',
-                        content: formFornecedor,
-                      ),
-                      FormComponent(
-                        label: 'Endereço',
-                        content: formEndereco,
-                      ),
-                      ButtonComponent(
-                        label: 'Cadastrar',
-                        onPressed: cadastrarFornecedor,
-                      ),
-                    ],
-                  ),
+      appBar: AppBarComponent(),
+      drawer: DrawerComponent(),
+      body: Container(
+        child: Column(
+          children: [
+            SubMenuComponent(
+              titulo: 'Fornecedor',
+              tituloPrimeiraRota: 'Cadastro',
+              primeiraRota: '/cadastrar_fornecedor',
+              tituloSegundaRota: 'Consultar',
+              segundaRota: '/consultar_fornecedor',
+            ),
+            Expanded(
+                child: SingleChildScrollView(
+              child: Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height,
+                margin: EdgeInsets.only(left: 20, top: 20, right: 20),
+                child: Column(
+                  children: [
+                    FormComponent(
+                      label: 'Fornecedor',
+                      content: formFornecedor,
+                    ),
+                    FormComponent(
+                      label: 'Endereço',
+                      content: formEndereco,
+                    ),
+                    ButtonComponent(
+                      label: 'Cadastrar',
+                      onPressed: cadastrarFornecedor,
+                    ),
+                  ],
                 ),
-              ))
-            ],
-          ),
-        ));
+              ),
+            ))
+          ],
+        ),
+      ),
+    );
   }
 }
