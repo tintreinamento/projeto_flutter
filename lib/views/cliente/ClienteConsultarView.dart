@@ -39,6 +39,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
   consultarCliente() {
     if (_formKeyConsultaCliente.currentState!.validate()) {
       //consulta
+      setState(() {});
     }
   }
 
@@ -51,6 +52,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
   @override
   Widget build(BuildContext context) {
     final formConsulta = Form(
+      key: _formKeyConsultaCliente,
       child: Column(
         children: [
           InputComponent(
@@ -62,7 +64,11 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
               }
               return null;
             },
-          )
+          ),
+          ButtonComponent(
+            label: 'Consultar',
+            onPressed: consultarCliente,
+          ),
         ],
       ),
     );
@@ -73,14 +79,23 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
         builder:
             (BuildContext context, AsyncSnapshot<List<ClienteModel>> snapshot) {
           if (snapshot.hasData) {
-            final listaClientes = snapshot.data!.map((cliente) {
-              return Column(
-                children: [
-                  cardCliente(cliente),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+            //Ordena consulta
+            final listaOrdenada = snapshot.data!.where((cliente) {
+              return cliente.nome
+                  .toLowerCase()
+                  .startsWith(nomeController.text.toLowerCase());
+            });
+
+            final listaClientes = listaOrdenada.map((cliente) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    cardCliente(cliente),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               );
             }).toList();
 
@@ -118,10 +133,6 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
                     label: 'Cliente',
                     content: formConsulta,
                   ),
-                  ButtonComponent(
-                    label: 'Consultar',
-                    onPressed: consultarCliente,
-                  ),
                   FormComponent(
                     label: 'Clientes',
                     content: lista,
@@ -145,28 +156,31 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
             segundaRota: '/consultar_cliente',
           ),
           Expanded(
-              child: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height,
-              margin: EdgeInsets.only(left: 20, top: 20, right: 20),
+              margin: EdgeInsets.all(10),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FormComponent(
-                    label: 'Cliente',
-                    content: formConsulta,
+                  Expanded(
+                    child: FormComponent(
+                      label: 'Cliente',
+                      content: formConsulta,
+                    ),
                   ),
-                  ButtonComponent(
-                    label: 'Consultar',
-                    onPressed: consultarCliente,
+                  SizedBox(
+                    width: 10,
                   ),
-                  FormComponent(
-                    label: 'Clientes',
-                    content: lista,
-                  ),
+                  Expanded(
+                      child: SingleChildScrollView(
+                    child: FormComponent(
+                      label: 'Clientes',
+                      content: lista,
+                    ),
+                  ))
                 ],
               ),
             ),
-          ))
+          )
         ],
       ),
     );
@@ -176,7 +190,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
         drawer: DrawerComponent(),
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxHeight < 600) {
+            if (constraints.maxHeight > 600) {
               return layoutVertical;
             } else {
               return layoutHorizontal;
@@ -187,74 +201,79 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
 }
 
 Widget cardCliente(ClienteModel clienteModel) {
-  return Container(
-      padding: EdgeInsets.all(16),
-      color: Color.fromRGBO(235, 231, 231, 1),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Row(
-                children: [
-                  TextComponent(
-                    label: 'Nome: ',
-                  ),
-                  TextComponent(
-                    label: clienteModel.nome,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 3,
-              ),
-              Row(
-                children: [
-                  TextComponent(
-                    label: 'CPF/CNPJ: ',
-                  ),
-                  TextComponent(
-                    label: clienteModel.cpf,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 3,
-              ),
-              Row(
-                children: [
-                  TextComponent(
-                    label: 'Telefone: ',
-                  ),
-                  TextComponent(
-                    label: clienteModel.numeroTelefone,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 3,
-              ),
-              Row(
-                children: [
-                  TextComponent(
-                    label: 'E-mail: ',
-                  ),
-                  TextComponent(
-                    label: clienteModel.email,
-                  ),
-                ],
-              )
-            ],
-          ),
-          Positioned(
-            top: 50,
-            right: 0,
-            child: FlatButton(
-                onPressed: () {
-                  // Navigator.pushNamed(context, '/login');
-                },
-                child: Container(
-                    child: Image(image: AssetImage('assets/images/edit.png')))),
-          ),
-        ],
-      ));
+  return ConstrainedBox(
+    constraints: BoxConstraints(minWidth: 340.0),
+    child: Container(
+        padding: EdgeInsets.all(10),
+        color: Color.fromRGBO(235, 231, 231, 1),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    TextComponent(
+                      label: 'Nome: ',
+                    ),
+                    TextComponent(
+                      label: clienteModel.nome,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Row(
+                  children: [
+                    TextComponent(
+                      label: 'CPF/CNPJ: ',
+                    ),
+                    TextComponent(
+                      label: clienteModel.cpf,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Row(
+                  children: [
+                    TextComponent(
+                      label: 'Telefone: ',
+                    ),
+                    TextComponent(
+                      label: clienteModel.numeroTelefone,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Row(
+                  children: [
+                    TextComponent(
+                      label: 'E-mail: ',
+                    ),
+                    TextComponent(
+                      label: clienteModel.email,
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Positioned(
+              top: 50,
+              right: -10,
+              child: FlatButton(
+                  onPressed: () {
+                    // Navigator.pushNamed(context, '/login');
+                  },
+                  child: Container(
+                      child:
+                          Image(image: AssetImage('assets/images/edit.png')))),
+            ),
+          ],
+        )),
+  );
 }

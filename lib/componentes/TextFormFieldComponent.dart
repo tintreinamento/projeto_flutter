@@ -7,7 +7,7 @@ class TextFormFieldComponent extends StatefulWidget {
   List<TextInputFormatter>? inputFormatter;
   TextEditingController? controller;
   Function? onChange;
-  ValueChanged<String>? onFieldSubmitted;
+  Function? onFieldSubmitted;
   FormFieldValidator<String>? validator;
 
   TextFormFieldComponent(
@@ -30,7 +30,11 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
       inputFormatters: widget.inputFormatter,
       controller: widget.controller,
       decoration: inputDecorationComponent,
-      onFieldSubmitted: widget.onFieldSubmitted,
+      onFieldSubmitted: (value) {
+        if (widget.onFieldSubmitted != null) {
+          widget.onFieldSubmitted!();
+        }
+      },
       onChanged: (value) {
         if (widget.onChange != null) {
           widget.onChange!();
