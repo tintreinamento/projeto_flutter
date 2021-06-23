@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => PedidoView(),
-        //'/': (context) => SplashPage(),
+        //'/': (context) => PedidoView(),
+        '/': (context) => SplashPage(),
         '/login': (context) => LoginView(),
         '/pedido': (context) => Pedido(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
