@@ -27,11 +27,11 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-      height: 40.0,
+      height: 48.0,
       color: colorVermelho,
       child: Row(
         children: [
-          TextComponent(label: widget.titulo, cor: colorBranco, tamanho: 18.0),
+          TextComponent(label: widget.titulo, cor: colorBranco, tamanho: 17.0),
           Flexible(
               child: Padding(
             padding: EdgeInsets.only(left: 20),
