@@ -129,6 +129,7 @@ class DrawerComponent extends StatelessWidget {
             itemMenu('Fornecedor', context, '/cadastrar_fornecedor'),
             itemMenu('Cliente', context, '/cadastrar_cliente'),
             itemMenu('Pedido de venda', context, '/pedido'),
+            itemMenu('Produto', context, '/cadastrar_produto'),
           ],
         ),
       ),

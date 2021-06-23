@@ -16,7 +16,7 @@ class _FormComponentState extends State<FormComponent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: double.infinity,
+      // width: double.infinity,
       child: Stack(
         overflow: Overflow.visible,
         children: [
