@@ -42,7 +42,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
   final descricaoController = TextEditingController();
   final categoriaController = TextEditingController();
   final valorCompraController = TextEditingController();
-  //final idFornecedorController =TextEditingController(); //armazenar ID do Fornecedor para o produto
+  int idFornecedorController = 0; //armazenar ID do Fornecedor para o produto
 
   pegarNome() {
     print(nomeController.text);
@@ -76,7 +76,9 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
     // configura o button
     Widget okButton = FlatButton(
       child: Text("OK"),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
     );
     // configura o  AlertDialog
     AlertDialog alerta = AlertDialog(
@@ -124,7 +126,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
     cpfCnpjController.text = fornecedor.cpfCnpj;
     emailController.text = fornecedor.email;
     telefoneController.text = fornecedor.telefone;
-    //idFornecedorController.text = fornecedor.id;
+    idFornecedorController = fornecedor.id;
   }
 
   //Botão para inserção do produto usando a API
@@ -137,12 +139,14 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
             nome: nomeProdutoController.text,
             descricao: descricaoController.text,
             idCategoria: categoriaController.text,
-            valorCompra: valorCompraController.text
-            /*idFornecedor: idFornecedorController.text*/);
+            valorCompra: valorCompraController.text,
+            idFornecedor: idFornecedorController);
 
         ProdutoController produtoController = ProdutoController();
 
         produtoController.crie(produtoModel);
+        limparCampos();
+        showAlertDialog1(context);
       }
     }
   }
@@ -305,8 +309,6 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
                       ButtonComponent(
                         label: 'Cadastrar',
                         onPressed: cadastrarProduto,
-
-                        //{Navigator.of(context).pop();}
                       ),
                     ],
                   ),
