@@ -92,7 +92,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
             );
           } else if (snapshot.hasError) {
             // If something went wrong
-            return Text('Falha ao obter os dados... ');
+            return Text('Falha ao obter os dados...');
           }
           return CircularProgressIndicator();
         });
