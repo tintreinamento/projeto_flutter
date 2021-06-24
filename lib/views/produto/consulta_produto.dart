@@ -197,9 +197,11 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Nome: '),
-                    Text(produtoModel.nome)
+                    Expanded(child: Text(produtoModel.nome))
                   ],
                 ),
                 Row(
@@ -211,9 +213,11 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Categoria: '),
-                    Text(produtoModel.idCategoria.toString())
+                    Expanded(child: Text(produtoModel.idCategoria.toString()))
                   ],
                 ),
                 Row(
