@@ -46,7 +46,7 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
 
   ItemPedidoController itemPedidoController = new ItemPedidoController();
   PedidoController pedidoController = new PedidoController();
-  late Future<List<PedidoModel>> buscaPedido;
+  late Future<List<ProdutoModelLista>> listaItensPedidos;
 
   bool isVazio(value) {
     if (value == null || value.isEmpty) {
@@ -57,9 +57,18 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
   }
 
   consultarItensPedidos() async {
+    var pedido =
+        await new PedidoController().obtenhaPorId(int.parse(idController.text));
+    var cliente = await new ClienteController().obtenhaPorId(pedido.idCliente);
+    setState(() {
+      nomeClienteController.text = cliente.nome;
+      dataController.text = pedido.data;
+      valorController.text = pedido.total.toString();
+    });
+
     //consulta
-    var itemPedido =
-        await new ItemPedidoController().obtenhaTodosItensPedidosPorIdPedido(1);
+    var itemPedido = await new ItemPedidoController()
+        .obtenhaTodosItensPedidosPorIdPedido(int.parse(idController.text));
 
     //produtosCard.clear();
 
@@ -76,24 +85,13 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
           quantidade: element.quantidade);
       produtosCard.add(produtoModel);
     });
-
-    var pedido = await new PedidoController().obtenhaPorId(1);
-    var cliente = await new ClienteController().obtenhaPorId(pedido.idCliente);
-    var funcionario = "Vitão delas";
-
-    setState(() {
-      nomeClienteController.text = cliente.nome;
-      nomeFuncionarioController.text = funcionario;
-      dataController.text = pedido.data;
-      valorController.text = pedido.total;
-    });
+    //listaItensPedidos = Future.value(produtosCard);
   }
 
   @override
   void initState() {
     super.initState();
-    consultarItensPedidos();
-    //buscaPedido = pedidoController.obtenhaPorId();
+    // buscaPedido = pedidoController().obtenhaPorId();
   }
 
   @override
@@ -123,10 +121,6 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
       child: Column(
         children: [
           InputComponent(
-            label: 'Funcionário:',
-            controller: nomeFuncionarioController,
-          ),
-          InputComponent(
             label: 'Cliente:',
             controller: nomeClienteController,
           ),
@@ -142,32 +136,31 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
       ),
     );
 
-    //Map
-    var lista = ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: produtosCard.length,
-        itemBuilder: (context, index) {
-          return Container(child: cardProduto(produtosCard[index]));
-        });
-    //   final listaProdutos = produtosCard.map((produto) {
-    //     return SingleChildScrollView(
-    //       child: Column(
-    //         children: [
-    //           cardProduto(produto),
-    //           SizedBox(
-    //             height: 10,
-    //           ),
-    //         ],
-    //       ),
-    //     );
-    //   }).toList();
-
-    //   return Column(
-    //     children: [
-    //       ...listaProdutos,
-    //     ],
+    // //Map
+    // var lista = ListView.builder(
+    //     scrollDirection: Axis.vertical,
+    //     itemCount: produtosCard.length,
+    //     itemBuilder: (context, index) {
+    //       return Container(child: cardProduto(produtosCard[index]));
+    //     });
+    // final listaProdutos = produtosCard.map((produto) {
+    //   return SingleChildScrollView(
+    //     child: Column(
+    //       children: [
+    //         cardProduto(produto),
+    //         SizedBox(
+    //           height: 10,
+    //         ),
+    //       ],
+    //     ),
     //   );
-    // });
+    // }).toList();
+
+    // return Column(
+    //   children: [
+    //     ...listaProdutos,
+    //   ],
+    // );
 
     final layoutVertical = Container(
       child: Column(
@@ -204,7 +197,7 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
                   Expanded(
                       child: FormComponent(
                     label: 'Pedidos',
-                    content: lista,
+                    //content: lista,
                   )),
                 ],
               ),
@@ -250,7 +243,7 @@ class _PedidoVendaConsultarViewState extends State<PedidoVendaConsultarView> {
                       child: SingleChildScrollView(
                     child: FormComponent(
                       label: 'Pedidos',
-                      content: lista,
+                      //content: lista,
                     ),
                   ))
                 ],

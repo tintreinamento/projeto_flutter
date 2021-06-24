@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => SplashPage(),
+        '/': (context) => PedidoVendaConsultarView(),
         '/login': (context) => Login(),
         '/pedido': (context) => Pedido(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
