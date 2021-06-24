@@ -60,9 +60,9 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
     }
   }
 
-  String validarCpfCnpj(cpfCnpj) {
+  String? validarCpfCnpj(cpfCnpj) {
     if (isVazio(cpfCnpj)) {
-      return 'Campo CPF/CNPJ vazio';
+      return 'Campo CPF/CNPJ vazio!';
     }
 
     var cpfLimpo = UtilBrasilFields.removeCaracteres(cpfCnpj);
@@ -79,7 +79,20 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
       return 'CPF/CNPJ inválido!';
     }
 
-    return "";
+    return null;
+  }
+
+  limpaCampos() {
+    nomeController.text = "";
+    cpfCnpjController.text = "";
+    emailController.text = "";
+    telefoneController.text = "";
+    cepController.text = "";
+    logradouroController.text = "";
+    numeroController.text = "";
+    bairroController.text = "";
+    cidadeController.text = "";
+    estadoController.text = "";
   }
 
   cadastrarFornecedor() async {
@@ -119,6 +132,7 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
 
         var enderecoControllerApi = EnderecoController();
         await enderecoControllerApi.crie(enderecoModel);
+        limpaCampos();
       }
     }
   }
