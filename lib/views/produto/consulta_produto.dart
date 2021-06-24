@@ -112,7 +112,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
           Expanded(
               child: SingleChildScrollView(
             child: Container(
-              width: double.infinity,
+              width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               margin: EdgeInsets.only(left: 20, top: 20, right: 20),
               child: Column(
@@ -188,67 +188,47 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
       constraints: BoxConstraints(minWidth: 340.0),
       child: Container(
         padding: EdgeInsets.all(10.0),
+        width: MediaQuery.of(context).size.width,
         color: Color.fromRGBO(235, 231, 231, 1),
         child: Stack(
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    TextComponent(
-                      label: 'ID Produto: ',
-                    ),
-                    TextComponent(
-                      label: produtoModel.id.toString(),
-                    ),
+                    TextComponent(label: 'ID Produto: '),
+                    Text(produtoModel.id.toString()),
                   ],
-                ),
-                SizedBox(
-                  height: 3.0,
                 ),
                 Row(
                   children: [
-                    TextComponent(
-                      label: 'Nome: ',
-                    ),
-                    TextComponent(label: produtoModel.nome),
+                    TextComponent(label: 'Nome: '),
+                    Text(produtoModel.nome)
                   ],
-                ),
-                SizedBox(
-                  height: 3.0,
                 ),
                 Row(
                   children: [
                     TextComponent(label: 'Descrição: '),
-                    TextComponent(label: produtoModel.descricao)
+                    Text(produtoModel.descricao)
                   ],
-                ),
-                SizedBox(
-                  height: 3.0,
                 ),
                 Row(
                   children: [
                     TextComponent(label: 'Categoria: '),
-                    TextComponent(label: produtoModel.idCategoria.toString())
+                    Text(produtoModel.idCategoria.toString())
                   ],
-                ),
-                SizedBox(
-                  height: 3.0,
                 ),
                 Row(
                   children: [
                     TextComponent(label: 'Valor Compra: '),
-                    TextComponent(label: produtoModel.valorCompra.toString())
+                    Text(produtoModel.valorCompra.toString())
                   ],
-                ),
-                SizedBox(
-                  height: 3.0,
                 ),
                 Row(
                   children: [
                     TextComponent(label: 'Valor Venda: '),
-                    TextComponent(label: produtoModel.valorVenda.toString())
+                    Text(produtoModel.valorVenda.toString())
                   ],
                 )
               ],
