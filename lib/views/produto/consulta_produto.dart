@@ -4,10 +4,7 @@ import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
-import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/FormComponent.dart';
-import 'package:projeto_flutter/componentes/DrawerComponent.dart';
-import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
@@ -66,7 +63,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
           ButtonComponent(
             label: 'Consultar',
             onPressed: consultarProduto,
-          )
+          ),
         ],
       ),
     );
@@ -95,7 +92,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
             );
           } else if (snapshot.hasError) {
             // If something went wrong
-            return Text('Falha ao obter os dados da API ');
+            return Text('Falha ao obter os dados... ');
           }
           return CircularProgressIndicator();
         });
@@ -112,8 +109,6 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
           Expanded(
               child: SingleChildScrollView(
             child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
               margin: EdgeInsets.only(left: 20, top: 20, right: 20),
               child: Column(
                 children: [
@@ -150,7 +145,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
               children: [
                 Expanded(
                   child: FormComponent(
-                    label: 'Produto',
+                    label: 'Consulta',
                     content: formConsulta,
                   ),
                 ),
@@ -160,7 +155,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
                 Expanded(
                     child: SingleChildScrollView(
                   child: FormComponent(
-                    label: 'Produtos',
+                    label: 'Produto',
                     content: lista,
                   ),
                 ))
@@ -208,9 +203,11 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
                   ],
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Descrição: '),
-                    Text(produtoModel.descricao)
+                    Expanded(child: Text(produtoModel.descricao))
                   ],
                 ),
                 Row(
