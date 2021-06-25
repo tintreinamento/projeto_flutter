@@ -9,7 +9,7 @@ class InputComponent extends StatefulWidget {
   List<TextInputFormatter>? inputFormatter;
   TextEditingController? controller;
   Function? onChange;
-  ValueChanged<String>? onFieldSubmitted;
+  Function? onFieldSubmitted;
   FormFieldValidator<String>? validator;
 
   InputComponent(

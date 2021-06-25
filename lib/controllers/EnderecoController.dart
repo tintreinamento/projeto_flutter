@@ -38,6 +38,15 @@ class EnderecoController {
     return new EnderecoModel.fromJson(stringJson.single);
   }
 
+  Future<EnderecoModel> obtenhaPorIdFornecedor(int id) async {
+    final resposta =
+        await new Api().obtenha('enderecos?id_fornecedor=' + id.toString());
+
+    var stringJson = json.decode(resposta.body);
+
+    return new EnderecoModel.fromJson(stringJson.single);
+  }
+
   Future<EnderecoModel> crie(EnderecoModel endereco) async {
     final resposta = await new Api().crie('enderecos', json.encode(endereco));
 

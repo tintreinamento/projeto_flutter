@@ -103,9 +103,9 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
           SubMenuComponent(
               titulo: 'Produto',
               tituloPrimeiraRota: 'Cadastro',
-              primeiraRota: '/consulta_cliente',
-              tituloSegundaRota: 'Consulta',
-              segundaRota: '/consulta_cliente'),
+              primeiraRota: '/cadastrar_produto',
+              tituloSegundaRota: 'Consultar',
+              segundaRota: '/consultar_produto'),
           Expanded(
               child: SingleChildScrollView(
             child: Container(
@@ -134,9 +134,9 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
           SubMenuComponent(
               titulo: 'Produto',
               tituloPrimeiraRota: 'Cadastro',
-              primeiraRota: '/consulta_cliente',
-              tituloSegundaRota: 'Consulta',
-              segundaRota: '/consulta_cliente'),
+              primeiraRota: '/cadastrar_produto',
+              tituloSegundaRota: 'Consultar',
+              segundaRota: '/consultar_produto'),
           Expanded(
               child: Container(
             margin: EdgeInsets.all(10.0),
