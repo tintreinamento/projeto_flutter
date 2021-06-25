@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+//Padding
+
+final paddingPadrao = EdgeInsets.all(10);
+final marginPadrao = EdgeInsets.all(10);
+
 //Colors
 final colorAzul = Color.fromRGBO(0, 94, 181, 1);
 final colorVermelho = Color.fromRGBO(206, 5, 5, 1);

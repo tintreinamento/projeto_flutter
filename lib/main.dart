@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/util/CarrinhoCompra.dart';
 import 'package:projeto_flutter/views/login/LoginView.dart';
+import 'package:projeto_flutter/views/pedido/PedidoTesteView.dart';
 import 'package:projeto_flutter/views/pedido/PedidoView.dart';
 import 'package:projeto_flutter/views/produto/ProdutoCadastrarView.dart';
 
@@ -10,9 +12,15 @@ import 'package:projeto_flutter/views/splash/splash_screen.dart';
 import 'package:projeto_flutter/views/cliente/ClienteCadastrarView.dart';
 import 'package:projeto_flutter/views/cliente/ClienteConsultarView.dart';
 import 'package:projeto_flutter/views/pedido/pedido.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => CarrinhoCompra()),
+    ],
+    child: MyApp(),
+  ));
   //runApp(MyApp());
 }
 
@@ -36,7 +44,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => SplashPage(),
+        '/': (context) => PedidoTesteView(),
+        // '/': (context) => SplashPage(),
         '/login': (context) => LoginView(),
         '/pedido': (context) => Pedido(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),

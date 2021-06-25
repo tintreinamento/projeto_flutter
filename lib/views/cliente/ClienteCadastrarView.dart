@@ -132,35 +132,37 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     });
   }
 
-  cadastrarCliente() {
-    if (_formKeyCliente.currentState!.validate()) {
-      if (_formKeyEndereco.currentState!.validate()) {
-        //Cadastrar os dados na API
+  cadastrarCliente() async {
+    // if (_formKeyCliente.currentState!.validate()) {
+    //  if (_formKeyEndereco.currentState!.validate()) {
+    //Cadastrar os dados na API
 
-        ClienteModel clienteModel = ClienteModel(
-            nome: nomeController.text,
-            cpf: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
-            email: emailController.text,
-            dataNascimento: UtilBrasilFields.removeCaracteres(
-                dataNascimentoController.text),
-            estadoCivil: estadoCivilController.text,
-            sexo: sexoController.text,
-            ddd: dddController.text,
-            numeroTelefone:
-                UtilBrasilFields.removeCaracteres(telefoneController.text),
-            cep: UtilBrasilFields.removeCaracteres(cepController.text),
-            logradouro: logradouroController.text,
-            numero: numeroController.text,
-            bairro: bairroController.text,
-            cidade: cidadeController.text,
-            uf: estadoController.text);
+    ClienteModel clienteModel = ClienteModel(
+        nome: nomeController.text,
+        cpf: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
+        email: emailController.text,
+        //dataNascimento:
+        // UtilBrasilFields.removeCaracteres(dataNascimentoController.text),
+        estadoCivil: estadoCivilController.text,
+        sexo: sexoController.text,
+        ddd: dddController.text,
+        numeroTelefone:
+            UtilBrasilFields.removeCaracteres(telefoneController.text),
+        cep: UtilBrasilFields.removeCaracteres(cepController.text),
+        logradouro: logradouroController.text,
+        numero: numeroController.text,
+        bairro: bairroController.text,
+        cidade: cidadeController.text,
+        uf: estadoController.text);
 
-        ClienteController clienteController = ClienteController();
+    ClienteController clienteController = ClienteController();
 
-        clienteController.crie(clienteModel);
-        limparCampos();
-      }
-    }
+    var teste = await clienteController.crie(clienteModel);
+    print(teste);
+    limparCampos();
+    showDialog();
+    // }
+    //}
   }
 
   showDialog() {

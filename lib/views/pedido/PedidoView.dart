@@ -431,6 +431,8 @@ class _PedidoViewState extends State<PedidoView> {
         appBar: AppBarComponent(),
         drawer: DrawerComponent(),
         body: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           child: Column(
             children: [
               SubMenuComponent(
@@ -439,7 +441,8 @@ class _PedidoViewState extends State<PedidoView> {
                   primeiraRota: '/pedido_cadastrar',
                   tituloSegundaRota: 'Consultar',
                   segundaRota: '/pedido_consultar'),
-              Expanded(
+              Container(
+                height: MediaQuery.of(context).size.height * 0.70,
                 child: Stack(
                   children: <Widget>[
                     Expanded(

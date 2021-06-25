@@ -26,15 +26,15 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-      height: 40.0,
       color: colorVermelho,
+      padding: paddingPadrao,
       child: Row(
         children: [
-          TextComponent(label: widget.titulo, cor: colorBranco, tamanho: 18.0),
           Flexible(
-              child: Padding(
-            padding: EdgeInsets.only(left: 20),
+            child: TextComponent(
+                label: widget.titulo, cor: colorBranco, tamanho: 18.0),
+          ),
+          Expanded(
             child: TextButton(
                 onPressed: () {
                   Navigator.pushNamed(context, widget.primeiraRota);
@@ -43,10 +43,8 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
                   label: widget.tituloPrimeiraRota,
                   cor: colorBranco,
                 )),
-          )),
-          Flexible(
-              child: Padding(
-            padding: EdgeInsets.only(left: 20),
+          ),
+          Expanded(
             child: TextButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(widget.segundaRota);
@@ -55,7 +53,7 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
                   label: widget.tituloSegundaRota,
                   cor: colorBranco,
                 )),
-          )),
+          ),
         ],
       ),
     );

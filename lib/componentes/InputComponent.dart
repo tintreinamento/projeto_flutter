@@ -3,6 +3,7 @@ import 'package:projeto_flutter/componentes/TextFormFieldComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:flutter/services.dart';
+import 'package:projeto_flutter/componentes/styles.dart';
 
 class InputComponent extends StatefulWidget {
   var label;
@@ -29,15 +30,19 @@ class InputComponent extends StatefulWidget {
 class _InputComponentState extends State<InputComponent> {
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: 260.0, minHeight: 30),
+    return Container(
+      padding: paddingPadrao,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextComponent(
-            label: widget.label,
+          Expanded(
+            flex: 2,
+            child: TextComponent(
+              label: widget.label,
+            ),
           ),
           Expanded(
+            flex: 4,
             child: TextFormFieldComponent(
               inputFormatter: widget.inputFormatter,
               controller: widget.controller,
