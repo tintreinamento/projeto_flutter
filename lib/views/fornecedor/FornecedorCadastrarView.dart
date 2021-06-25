@@ -209,6 +209,10 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             InputComponent(
+              inputFormatter: [
+                FilteringTextInputFormatter.digitsOnly,
+                CepInputFormatter()
+              ],
               label: 'CEP: ',
               controller: cepController,
               validator: (value) {
@@ -303,25 +307,27 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             ),
             Expanded(
                 child: SingleChildScrollView(
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height,
-                margin: EdgeInsets.only(left: 20, top: 20, right: 20),
-                child: Column(
-                  children: [
-                    FormComponent(
-                      label: 'Fornecedor',
-                      content: formFornecedor,
-                    ),
-                    FormComponent(
-                      label: 'Endereço',
-                      content: formEndereco,
-                    ),
-                    ButtonComponent(
-                      label: 'Cadastrar',
-                      onPressed: cadastrarFornecedor,
-                    ),
-                  ],
+              child: Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  height: 900,
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      FormComponent(
+                        label: 'Fornecedor',
+                        content: formFornecedor,
+                      ),
+                      FormComponent(
+                        label: 'Endereço',
+                        content: formEndereco,
+                      ),
+                      ButtonComponent(
+                        label: 'Cadastrar',
+                        onPressed: cadastrarFornecedor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ))
