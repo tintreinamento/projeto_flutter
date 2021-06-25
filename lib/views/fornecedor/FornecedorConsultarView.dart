@@ -18,7 +18,8 @@ class FornecedorConsultarView extends StatefulWidget {
   const FornecedorConsultarView({Key? key}) : super(key: key);
 
   @override
-  _FornecedorConsultarViewState createState() => _FornecedorConsultarViewState();
+  _FornecedorConsultarViewState createState() =>
+      _FornecedorConsultarViewState();
 }
 
 class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
@@ -76,8 +77,8 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
     //Map
     var lista = FutureBuilder(
         future: listaFornecedores,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<FornecedorModel>> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<List<FornecedorModel>> snapshot) {
           if (snapshot.hasData) {
             //Ordena consulta
             final listaOrdenada = snapshot.data!.where((fornecedor) {
@@ -115,11 +116,11 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
       child: Column(
         children: [
           SubMenuComponent(
-            titulo: 'Cliente',
+            titulo: 'Fornecedor',
             tituloPrimeiraRota: 'Cadastro',
-            primeiraRota: '/cadastrar_cliente',
+            primeiraRota: '/cadastrar_fornecedor',
             tituloSegundaRota: 'Consultar',
-            segundaRota: '/consultar_cliente',
+            segundaRota: '/consultar_fornecedor',
           ),
           Expanded(
               child: SingleChildScrollView(
@@ -202,8 +203,8 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
 
 Widget cardFornecedor(FornecedorModel fornecedorModel) {
   return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: 340.0),
-      child: Container(
+    constraints: BoxConstraints(minWidth: 340.0),
+    child: Container(
         padding: EdgeInsets.all(10),
         color: Color.fromRGBO(235, 231, 231, 1),
         child: Stack(
@@ -232,8 +233,8 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: fornecedorModel.cpfCnpj,
                     ),
-                 ],
-               ),
+                  ],
+                ),
                 SizedBox(
                   height: 3,
                 ),
@@ -241,10 +242,10 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                   children: [
                     TextComponent(
                       label: 'Telefone: ',
-                   ),
+                    ),
                     TextComponent(
                       label: fornecedorModel.telefone,
-                   ),
+                    ),
                   ],
                 ),
                 SizedBox(
@@ -270,7 +271,8 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     // Navigator.pushNamed(context, '/login');
                   },
                   child: Container(
-                      child: Image(image: AssetImage('assets/images/edit.png')))),
+                      child:
+                          Image(image: AssetImage('assets/images/edit.png')))),
             ),
           ],
         )),
