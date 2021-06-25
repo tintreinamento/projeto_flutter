@@ -36,7 +36,7 @@ class ClienteModel {
     return ClienteModel(
         id: parsedJson['id'],
         nome: parsedJson['nome'],
-        cpf: parsedJson['cpf'],
+        cpf: parsedJson['cpf'].toString(),
         email: parsedJson['email'],
         dataNascimento: parsedJson['data_de_nascimento'],
         estadoCivil: parsedJson['estado_civil'],
@@ -53,7 +53,7 @@ class ClienteModel {
 
   Map<String, dynamic> toJson() => {
         'nome': nome,
-        'cpf': cpf,
+        'cpf': cpf.toString(),
         'email': email,
         'data_de_nascimento': dataNascimento,
         'estado_civil': estadoCivil,
