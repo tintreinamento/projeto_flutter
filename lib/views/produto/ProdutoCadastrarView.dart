@@ -95,23 +95,27 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
   }
 
   //validador de cpf/cnpj
-  /*String validarCpfCnpj(cpfCnpj) {
+  String? validarCpfCnpj(cpfCnpj) {
     if (isVazio(cpfCnpj)) {
       return 'Campo CPF/CNPJ vazio';
     }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 11) {
-      if (UtilBrasilFields.isCPFValido(
-          UtilBrasilFields.removeCaracteres(cpfCnpj))) {
-        return 'CPF inválido !';
+
+    var cpfLimpo = UtilBrasilFields.removeCaracteres(cpfCnpj);
+
+    if (cpfLimpo.length == 11) {
+      if (!UtilBrasilFields.isCPFValido(cpfLimpo)) {
+        return 'CPF inválido';
       }
-    }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 14) {
-      if (UtilBrasilFields.isCNPJValido(cpfCnpj)) {
-        return 'CNPJ inválido !';
+    } else if (cpfLimpo.length == 14) {
+      if (!UtilBrasilFields.isCNPJValido(cpfLimpo)) {
+        return 'CNPJ inválido!';
       }
+    } else {
+      return 'CPF/CNPJ inválido!';
     }
-    return "";
-  }*/
+
+    return null;
+  }
 
   consultarFornecedor() async {
     //Consultando dados do cliente através da API
@@ -121,7 +125,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
 
     //Caso exista o cliente cadastrado, preencha os campos com as respectivas informações
     //nomeConsultaController = nomeController.text;
-    cpfCnpjController.text = fornecedor.cpfCnpj;
+    cpfCnpjController.text = UtilBrasilFields.obterCnpj(fornecedor.cpfCnpj);
     emailController.text = fornecedor.email;
     telefoneController.text = fornecedor.telefone;
     //idFornecedorController.text = fornecedor.id;
@@ -197,7 +201,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
               TelefoneInputFormatter()
             ],
             label: 'Telefone: ',
-            controller: emailController,
+            controller: telefoneController,
             validator: (value) {
               if (isVazio(value)) {
                 return 'Campo telefone vazio !';
