@@ -1,21 +1,36 @@
 import 'dart:convert';
 
+import 'package:projeto_flutter/models/EstoqueModel.dart';
+import 'package:projeto_flutter/models/FornecedorModel.dart';
+
 class ProdutoModel {
   String? nome;
   String? descricao;
-  String? preco;
+  String? precoCompra;
+  String? categoria;
+  String? margem;
+  FornecedorModel? fornecedorModel;
+  EstoqueModel? estoqueModel;
 
   ProdutoModel({
     this.nome,
     this.descricao,
-    this.preco,
+    this.precoCompra,
+    this.categoria,
+    this.margem,
+    this.fornecedorModel,
+    this.estoqueModel,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'nome': nome,
       'descricao': descricao,
-      'preco': preco,
+      'precoCompra': precoCompra,
+      'categoria': categoria,
+      'margem': margem,
+      'fornecedorModel': fornecedorModel?.toMap(),
+      'estoqueModel': estoqueModel?.toMap(),
     };
   }
 
@@ -23,7 +38,11 @@ class ProdutoModel {
     return ProdutoModel(
       nome: map['nome'],
       descricao: map['descricao'],
-      preco: map['preco'],
+      precoCompra: map['precoCompra'],
+      categoria: map['categoria'],
+      margem: map['margem'],
+      fornecedorModel: FornecedorModel.fromMap(map['fornecedorModel']),
+      estoqueModel: EstoqueModel.fromMap(map['estoqueModel']),
     );
   }
 
