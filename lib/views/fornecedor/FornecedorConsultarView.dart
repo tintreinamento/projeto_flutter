@@ -125,8 +125,8 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
           Expanded(
               child: SingleChildScrollView(
             child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height,
+              //width: double.infinity,
+              //height: MediaQuery.of(context).size.height,
               margin: EdgeInsets.only(left: 20, top: 20, right: 20),
               child: Column(
                 children: [
@@ -213,10 +213,13 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(
                       label: 'Nome: ',
                     ),
+                    /*Expanded(child: Text( fornecedorModel.nome)),*/
                     TextComponent(
                       label: fornecedorModel.nome,
                     ),
@@ -226,6 +229,8 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                   height: 3,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(
                       label: 'CPF/CNPJ: ',
@@ -239,6 +244,8 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                   height: 3,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(
                       label: 'Telefone: ',
@@ -252,6 +259,8 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                   height: 3,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(
                       label: 'E-mail: ',
