@@ -19,7 +19,8 @@ import 'package:projeto_flutter/models/ClienteModel.dart';
 import 'package:projeto_flutter/models/EnderecoCorreioModel.dart';
 
 class ClienteCadastroView extends StatefulWidget {
-  const ClienteCadastroView({Key? key}) : super(key: key);
+  BuildContext? context;
+  ClienteCadastroView({Key? key}) : super(key: key);
 
   @override
   _ClienteCadastroViewState createState() => _ClienteCadastroViewState();
@@ -83,34 +84,31 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     }
   }
 
-  String validarCpfCnpj(cpfCnpj) {
-    if (isVazio(cpfCnpj)) {
-      return 'Campo CPF/CNPJ vazio';
-    }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 11) {
-      if (UtilBrasilFields.isCPFValido(
-          UtilBrasilFields.removeCaracteres(cpfCnpj))) {
+  isCpfCnpjValidator(cpfCnpj) {
+    if (cpfCnpj == null || cpfCnpj.isEmpty) {
+      return 'Campo vazio !';
+    } else {
+      var auxCpfCnpj = UtilBrasilFields.removeCaracteres(cpfCnpj);
+      if (auxCpfCnpj.length == 11 &&
+          !UtilBrasilFields.isCPFValido(auxCpfCnpj)) {
         return 'CPF inválido !';
       }
-    }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 14) {
-      if (UtilBrasilFields.isCNPJValido(cpfCnpj)) {
+      if (auxCpfCnpj.length == 14 &&
+          !UtilBrasilFields.isCNPJValido(auxCpfCnpj)) {
         return 'CNPJ inválido !';
       }
     }
-    return "";
   }
 
   selectEstadoCivel(value) {
     estadoCivilController.text = value;
   }
 
-  carregarEndereco() async {
+  carregarEndereco(cep) async {
     EnderecoCorreioController enderecoCorreioController =
         new EnderecoCorreioController();
-    final enderecoCorreioModel =
-        await enderecoCorreioController.obtenhaEnderecoPorCep(
-            UtilBrasilFields.removeCaracteres(cepController.text));
+    final enderecoCorreioModel = await enderecoCorreioController
+        .obtenhaEnderecoPorCep(UtilBrasilFields.removeCaracteres(cep));
 
     //Carrega os dados de endereço
     logradouroController.text = enderecoCorreioModel.logradouro;
@@ -133,16 +131,16 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
   }
 
   cadastrarCliente() async {
-    // if (_formKeyCliente.currentState!.validate()) {
-    //  if (_formKeyEndereco.currentState!.validate()) {
+    //  if (_formKeyCliente.currentState!.validate() &&
+    // _formKeyEndereco.currentState!.validate()) {
     //Cadastrar os dados na API
 
     ClienteModel clienteModel = ClienteModel(
         nome: nomeController.text,
         cpf: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
         email: emailController.text,
-        //dataNascimento:
-        // UtilBrasilFields.removeCaracteres(dataNascimentoController.text),
+        dataNascimento:
+            UtilBrasilFields.removeCaracteres(dataNascimentoController.text),
         estadoCivil: estadoCivilController.text,
         sexo: sexoController.text,
         ddd: dddController.text,
@@ -158,51 +156,41 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     ClienteController clienteController = ClienteController();
 
     var teste = await clienteController.crie(clienteModel);
-    print(teste);
-    limparCampos();
-    showDialog();
-    // }
+    print(teste.nome);
+    // _formKeyCliente.currentState!.reset();
+    /// _formKeyEndereco.currentState!.reset();
+
+    _showDialog(widget.context!);
     //}
   }
 
-  showDialog() {
-    return AlertDialog(
-      actions: [
-        Column(children: [
-          Text('Cliente cadastrado com sucesso !'),
-          Container(
-            width: 241,
-            height: 31,
-            margin: EdgeInsets.only(top: 18, bottom: 13),
-            child: ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromRGBO(0, 94, 181, 1)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ))),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  'Confirmar pedido',
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                    color: Color.fromRGBO(255, 255, 255, 1),
-                  ),
-                )),
-          )
-        ])
-      ],
+  void _showDialog(BuildContext context) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: new Text("Pedido"),
+          actions: <Widget>[
+            Column(
+              children: [
+                TextComponent(label: 'Cliente cadastrado com sucesso !'),
+                ButtonComponent(
+                  label: 'Confimar pedido',
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            )
+          ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    widget.context = context;
     final formCliente = Form(
       key: _formKeyCliente,
       child: Column(
@@ -227,48 +215,43 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               CpfOuCnpjFormatter()
             ],
             controller: cpfCnpjController,
-            validator: validarCpfCnpj,
+            validator: (cpfCnpj) {
+              return isCpfCnpjValidator(cpfCnpj);
+            },
           ),
           SizedBox(
             height: 10,
           ),
+          InputDropDownComponent(
+            label: 'Estado cível: ',
+            labelDropDown: 'Selecione o estado cível',
+            items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
+            onChanged: selectEstadoCivel,
+          ),
           Row(
             children: [
-              ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 260.0),
-                  child: InputDropDownComponent(
-                    label: 'Estado cível: ',
-                    labelDropDown: 'Selecione o estado cível',
-                    items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
-                    onChanged: selectEstadoCivel,
-                  )),
               Expanded(
-                  child: Row(
-                children: [
-                  Expanded(
-                    child: InputComponent(
-                      label: 'Data de nascimento: ',
-                      inputFormatter: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        DataInputFormatter()
-                      ],
-                      controller: dataNascimentoController,
-                      validator: (value) {
-                        if (isVazio(value)) {
-                          return 'Campo data de nascimento vazio !';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  FlatButton(
-                      onPressed: exibirData,
-                      child: Icon(
-                        Icons.calendar_today,
-                        color: colorAzul,
-                      ))
-                ],
-              ))
+                child: InputComponent(
+                  label: 'Data de nascimento: ',
+                  inputFormatter: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    DataInputFormatter()
+                  ],
+                  controller: dataNascimentoController,
+                  validator: (value) {
+                    if (isVazio(value)) {
+                      return 'Campo data de nascimento vazio !';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              FlatButton(
+                  onPressed: exibirData,
+                  child: Icon(
+                    Icons.calendar_today,
+                    color: colorAzul,
+                  ))
             ],
           ),
           SizedBox(
@@ -412,7 +395,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               Expanded(
                   child: SingleChildScrollView(
                 child: Container(
-                  width: double.infinity,
+                  width: MediaQuery.of(context).size.width * 0.90,
                   // height: MediaQuery.of(context).size.height,
                   margin: EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: Column(

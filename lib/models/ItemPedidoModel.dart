@@ -20,7 +20,7 @@ class ItemPedidoModel {
         idPedido: parsedJson['id_pedido'],
         idProduto: parsedJson['id_produto'],
         quantidade: parsedJson['quantidade'],
-        valorUnitario: parsedJson['valor_unidade'],
+        valorUnitario: parsedJson['valor_unitario'],
         valorTotal: parsedJson['valor_total']);
   }
 
@@ -28,7 +28,7 @@ class ItemPedidoModel {
         'id_pedido': idPedido,
         'id_produto': idProduto,
         'quantidade': quantidade,
-        'valor_unidade': valorUnitario,
+        'valor_unitario': valorUnitario,
         'valor_total': valorTotal,
       };
 }

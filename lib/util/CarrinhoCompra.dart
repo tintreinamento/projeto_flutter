@@ -29,11 +29,12 @@ class CarrinhoCompra extends ChangeNotifier {
     if (index != -1) {
       if (itemCarrinho![index].quantidade > 1) {
         itemCarrinho![index].quantidade--;
-      }
-      if (itemCarrinho![index].quantidade == 1) {
-        itemCarrinho!.removeWhere((item) {
-          return item.produto!.id == produto.id;
-        });
+      } else {
+        if (itemCarrinho![index].quantidade == 1) {
+          itemCarrinho!.removeWhere((item) {
+            return item.produto!.id == produto.id;
+          });
+        }
       }
     }
     notifyListeners();
@@ -57,5 +58,11 @@ class CarrinhoCompra extends ChangeNotifier {
     }
 
     return total;
+  }
+
+  void limpar() {
+    cliente = null;
+    itemCarrinho!.clear();
+    notifyListeners();
   }
 }

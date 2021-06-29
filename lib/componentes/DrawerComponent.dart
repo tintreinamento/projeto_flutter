@@ -101,7 +101,7 @@ class DrawerComponent extends StatelessWidget {
           ],
         ),
         onTap: () {
-          Navigator.pushNamed(context, rota);
+          Navigator.of(context).pushNamed(rota);
         },
       ),
     );

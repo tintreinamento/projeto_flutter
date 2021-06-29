@@ -16,7 +16,10 @@ class Api {
   }
 
   Future<Response> crie(String query, Object body) async {
-    Map<String, String> headers = {'Content-Type': 'application/json'};
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+    };
+
     var resposta = await http.post(Uri.parse(URL_API + query),
         headers: headers, body: body);
 

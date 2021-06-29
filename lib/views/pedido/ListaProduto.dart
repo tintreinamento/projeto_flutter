@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/componentes/FormComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/Responsive.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
@@ -193,17 +194,20 @@ class _ListaProdutoState extends State<ListaProduto> {
     return Container(
       width: size.height,
       margin: marginPadrao,
-      child: Column(
-        children: [
-          Expanded(
-              child: FormBuscarProduto(
-            onChanged: onChangeNomeProduto,
-          )),
-          Expanded(
-            flex: 8,
-            child: layoutListaProduto,
-          )
-        ],
+      child: FormComponent(
+        label: 'Produtos',
+        content: Column(
+          children: [
+            Expanded(
+                child: FormBuscarProduto(
+              onChanged: onChangeNomeProduto,
+            )),
+            Expanded(
+              flex: 8,
+              child: layoutListaProduto,
+            )
+          ],
+        ),
       ),
     );
   }

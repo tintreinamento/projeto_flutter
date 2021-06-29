@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/componentes/FormComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/Responsive.dart';
 import 'package:brasil_fields/brasil_fields.dart';
@@ -10,13 +11,14 @@ import 'package:projeto_flutter/models/ClienteModel.dart';
 import 'package:projeto_flutter/models/EnderecoCorreioModel.dart';
 import 'package:projeto_flutter/util/CarrinhoCompra.dart';
 import 'package:provider/provider.dart';
+import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 
 class FormCliente extends StatelessWidget {
   BuildContext? context;
-  static final formKeyCliente = GlobalKey<FormState>();
+  GlobalKey<FormState> formKeyCliente;
   ClienteModel cliente = new ClienteModel();
 //   ClienteModel? cliente;
-  FormCliente({Key? key}) : super(key: key);
+  FormCliente({Key? key, required this.formKeyCliente}) : super(key: key);
 
   TextEditingController cpfCnpjController = TextEditingController();
   TextEditingController nomeClienteController = TextEditingController();
@@ -30,10 +32,10 @@ class FormCliente extends StatelessWidget {
   TextEditingController cidadeController = TextEditingController();
   TextEditingController estadoController = TextEditingController();
 
-  carregarCliente(cpfCnpj) async {
+  carregarCliente() async {
     ClienteController clienteController = new ClienteController();
-    cliente = await clienteController
-        .obtenhaPorCpf(UtilBrasilFields.removeCaracteres(cpfCnpj));
+    cliente = await clienteController.obtenhaPorCpf(
+        UtilBrasilFields.removeCaracteres(cpfCnpjController.text.toString()));
     //Preenche o nome do cliente
     nomeClienteController.text = cliente!.nome;
 
@@ -106,79 +108,104 @@ class FormCliente extends StatelessWidget {
       key: formKeyCliente,
       child: Column(
         children: [
-          InputComponent(
-            label: 'CPF/CNPJ: ',
-            controller: cpfCnpjController,
-            onFieldSubmitted: carregarCliente,
-            validator: (cpfCnpj) {
-              return isCpfCnpjValidator(cpfCnpj);
-            },
-            inputFormatter: [
-              FilteringTextInputFormatter.digitsOnly,
-              CpfOuCnpjFormatter()
-            ],
+          FormComponent(
+            label: 'Consultar',
+            content: Column(
+              children: [
+                InputComponent(
+                  label: 'CPF/CNPJ: ',
+                  controller: cpfCnpjController,
+                  onFieldSubmitted: carregarCliente,
+                  validator: (cpfCnpj) {
+                    return isCpfCnpjValidator(cpfCnpj);
+                  },
+                  inputFormatter: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CpfOuCnpjFormatter()
+                  ],
+                ),
+                ButtonComponent(
+                  label: 'Consultar',
+                  onPressed: carregarCliente,
+                ),
+              ],
+            ),
           ),
-          InputComponent(
-            label: 'Nome: ',
-            controller: nomeClienteController,
-            validator: (value) {
-              return isEmpty(value);
-            },
+          FormComponent(
+            label: 'Cliente',
+            content: Column(
+              children: [
+                InputComponent(
+                  label: 'Nome: ',
+                  controller: nomeClienteController,
+                  validator: (value) {
+                    return isEmpty(value);
+                  },
+                ),
+              ],
+            ),
           ),
-          InputComponent(
-            label: 'CEP: ',
-            controller: cepController,
-            onFieldSubmitted: carregarEndereco,
-            validator: (value) {
-              return isEmpty(value);
-            },
-            inputFormatter: [
-              FilteringTextInputFormatter.digitsOnly,
-              CepInputFormatter()
-            ],
-          ),
-          InputComponent(
-            label: 'Logradouro: ',
-            controller: logradouroController,
-            validator: (value) {
-              return isEmpty(value);
-            },
-          ),
-          InputComponent(
-            label: 'Complemento: ',
-            controller: complementoController,
-            validator: (value) {
-              return isEmpty(value);
-            },
-          ),
-          InputComponent(
-            label: 'Número: ',
-            controller: numeroController,
-            validator: (value) {
-              return isEmpty(value);
-            },
-          ),
-          InputComponent(
-            label: 'Bairro: ',
-            controller: bairroController,
-            validator: (value) {
-              return isEmpty(value);
-            },
-          ),
-          InputComponent(
-            label: 'Cidade: ',
-            controller: cidadeController,
-            validator: (value) {
-              return isEmpty(value);
-            },
-          ),
-          InputComponent(
-            label: 'Estado: ',
-            controller: estadoController,
-            validator: (value) {
-              return isEmpty(value);
-            },
-          ),
+          FormComponent(
+            label: 'Endereço',
+            content: Column(
+              children: [
+                InputComponent(
+                  label: 'CEP: ',
+                  controller: cepController,
+                  onFieldSubmitted: carregarEndereco,
+                  validator: (value) {
+                    return isEmpty(value);
+                  },
+                  inputFormatter: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    CepInputFormatter()
+                  ],
+                ),
+                InputComponent(
+                  label: 'Logradouro: ',
+                  controller: logradouroController,
+                  validator: (value) {
+                    return isEmpty(value);
+                  },
+                ),
+                InputComponent(
+                  label: 'Complemento: ',
+                  controller: complementoController,
+                  validator: (value) {
+                    return isEmpty(value);
+                  },
+                ),
+                InputComponent(
+                  label: 'Número: ',
+                  controller: numeroController,
+                  validator: (value) {
+                    return isEmpty(value);
+                  },
+                ),
+                InputComponent(
+                  label: 'Bairro: ',
+                  controller: bairroController,
+                  validator: (value) {
+                    return isEmpty(value);
+                  },
+                ),
+                InputComponent(
+                  label: 'Cidade: ',
+                  controller: cidadeController,
+                  validator: (value) {
+                    return isEmpty(value);
+                  },
+                ),
+                InputComponent(
+                  label: 'Estado: ',
+                  controller: estadoController,
+                  validator: (value) {
+                    return isEmpty(value);
+                  },
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

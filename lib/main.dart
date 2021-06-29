@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => PedidoTesteView(),
         // '/': (context) => SplashPage(),
         '/login': (context) => LoginView(),
-        '/pedido': (context) => Pedido(),
+        '/pedido': (context) => PedidoTesteView(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
         '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
