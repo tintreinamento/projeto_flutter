@@ -22,7 +22,7 @@ class _PedidoConsultaViewState extends State<PedidoConsultaView> {
     PedidoModel pedidoModel = await 
         pedidoController.obtenhaPorId(idPedidoController.text);
 
-    print(pedidoModel.)
+    print(pedidoModel)
   }
 
   @override

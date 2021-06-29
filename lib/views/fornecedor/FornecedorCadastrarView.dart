@@ -121,17 +121,17 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
         var cidade = await cidadeControllerApi.crie(cidadeModel);
 
         var enderecoModel = EnderecoModel(
-            idCidade: cidade.id,
-            idEstado: estado.id,
-            idFornecedor: fornecedor.id,
-            idPais: 1,
+            // idCidade: cidade.id,
+            // idEstado: estado.id,
+            // idFornecedor: fornecedor.id,
+            // idPais: 1,
             cep: UtilBrasilFields.removeCaracteres(cepController.text),
             logradouro: logradouroController.text,
-            numero: numeroController.text,
+            // numero: numeroController.text,
             bairro: bairroController.text);
 
-        var enderecoControllerApi = EnderecoController();
-        await enderecoControllerApi.crie(enderecoModel);
+        // var enderecoControllerApi = EnderecoController();
+        // await enderecoControllerApi.crie(enderecoModel);
         limpaCampos();
       }
     }

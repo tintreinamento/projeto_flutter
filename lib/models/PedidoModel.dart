@@ -1,31 +1,46 @@
+import 'dart:convert';
+
+import 'package:projeto_flutter/models/EnderecoModel.dart';
+import 'package:projeto_flutter/models/ItemPedidoModel.dart';
+
 class PedidoModel {
-  var id;
-  var idCliente;
-  var idFuncionario;
-  var total;
-  var data;
+  int? id;
+  String? dataPedido;
+  String? totalPedido;
+  List<ItemPedidoModel>? itemPedido;
+  EnderecoModel? endereco;
 
   PedidoModel({
     this.id,
-    this.idCliente,
-    this.idFuncionario,
-    this.total,
-    this.data,
+    this.dataPedido,
+    this.totalPedido,
+    this.itemPedido,
+    this.endereco,
   });
 
-  factory PedidoModel.fromJson(Map<String, dynamic> parsedJson) {
-    return PedidoModel(
-        id: parsedJson['id'],
-        idFuncionario: parsedJson['id_funcionario'],
-        idCliente: parsedJson['id_cliente'],
-        total: parsedJson['total'],
-        data: parsedJson['data']);
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'dataPedido': dataPedido,
+      'totalPedido': totalPedido,
+      'itemPedido': itemPedido?.map((x) => x.toMap()).toList(),
+      'endereco': endereco?.toMap(),
+    };
   }
 
-  Map<String, dynamic> toJson() => {
-        'id_funcionario': idFuncionario,
-        'id_cliente': idCliente,
-        'total': total,
-        'data': data
-      };
+  factory PedidoModel.fromMap(Map<String, dynamic> map) {
+    return PedidoModel(
+      id: map['id'],
+      dataPedido: map['dataPedido'],
+      totalPedido: map['totalPedido'],
+      itemPedido: List<ItemPedidoModel>.from(
+          map['itemPedido']?.map((x) => ItemPedidoModel.fromMap(x))),
+      endereco: EnderecoModel.fromMap(map['endereco']),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory PedidoModel.fromJson(String source) =>
+      PedidoModel.fromMap(json.decode(source));
 }

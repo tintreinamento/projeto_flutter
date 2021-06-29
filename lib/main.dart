@@ -42,11 +42,11 @@ class MyApp extends StatelessWidget {
         '/': (context) => PedidoConsultaView(),
         //'/': (context) => SplashPage(),
         '/login': (context) => LoginView(),
-        '/pedido': (context) => Pedido(),
+        // '/pedido': (context) => Pedido(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
-        '/consultar_produto': (context) => ProdutoConsultarView(),
-        '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
+        // '/consultar_produto': (context) => ProdutoConsultarView(),
+        // '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
       },
     );
   }
