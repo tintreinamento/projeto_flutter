@@ -10,7 +10,7 @@ class ProdutoModel {
   String? categoria;
   String? margem;
   FornecedorModel? fornecedorModel;
-  EstoqueModel? estoqueModel;
+  List<EstoqueModel>? estoqueModel;
 
   ProdutoModel({
     this.nome,
@@ -30,7 +30,7 @@ class ProdutoModel {
       'categoria': categoria,
       'margem': margem,
       'fornecedorModel': fornecedorModel?.toMap(),
-      'estoqueModel': estoqueModel?.toMap(),
+      'estoqueModel': estoqueModel?.map((x) => x?.toMap())?.toList(),
     };
   }
 
@@ -42,7 +42,8 @@ class ProdutoModel {
       categoria: map['categoria'],
       margem: map['margem'],
       fornecedorModel: FornecedorModel.fromMap(map['fornecedorModel']),
-      estoqueModel: EstoqueModel.fromMap(map['estoqueModel']),
+      estoqueModel: List<EstoqueModel>.from(
+          map['estoqueModel']?.map((x) => EstoqueModel.fromMap(x))),
     );
   }
 
