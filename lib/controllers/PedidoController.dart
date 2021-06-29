@@ -9,10 +9,10 @@ class PedidoController {
 
     List<PedidoModel> colecaoDePedidos = new List.empty(growable: true);
 
-    List<dynamic> stringJson = json.decode(resposta.body);
+    var stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
-      var pedido = new PedidoModel.fromJson(element);
+      var pedido = new PedidoModel.fromMap(element);
       colecaoDePedidos.add(pedido);
     });
 

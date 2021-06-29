@@ -1,42 +1,34 @@
+import 'dart:convert';
+
 class ProdutoModel {
-  var id;
-  var idCategoria;
-  var idFornecedor;
-  var nome;
-  var descricao;
-  var valorCompra;
-  var valorVenda;
+  String? nome;
+  String? descricao;
+  String? preco;
 
-  ProdutoModel(
-      {this.id,
-      this.nome,
-      this.idCategoria,
-      this.idFornecedor,
-      this.descricao,
-      this.valorCompra,
-      this.valorVenda});
+  ProdutoModel({
+    this.nome,
+    this.descricao,
+    this.preco,
+  });
 
-  String getNome() {
-    return this.nome;
+  Map<String, dynamic> toMap() {
+    return {
+      'nome': nome,
+      'descricao': descricao,
+      'preco': preco,
+    };
   }
 
-  factory ProdutoModel.fromJson(Map<String, dynamic> parsedJson) {
+  factory ProdutoModel.fromMap(Map<String, dynamic> map) {
     return ProdutoModel(
-        id: parsedJson['id'],
-        nome: parsedJson['nome'],
-        idCategoria: parsedJson['id_categoria'],
-        idFornecedor: parsedJson['id_fornecedor'],
-        descricao: parsedJson['descricao'],
-        valorCompra: parsedJson['valor_compra'],
-        valorVenda: parsedJson['valor_venda']);
+      nome: map['nome'],
+      descricao: map['descricao'],
+      preco: map['preco'],
+    );
   }
 
-  Map<String, dynamic> toJson() => {
-        'nome': nome,
-        'id_categoria': idCategoria,
-        'id_fornecedor': idFornecedor,
-        'descricao': descricao,
-        'valor_compra': valorCompra,
-        'valor_venda': valorVenda
-      };
+  String toJson() => json.encode(toMap());
+
+  factory ProdutoModel.fromJson(String source) =>
+      ProdutoModel.fromMap(json.decode(source));
 }
