@@ -24,7 +24,7 @@ class PedidoController {
 
     var stringJson = json.decode(resposta.body);
 
-    return new PedidoModel.fromJson(stringJson.single);
+    return new PedidoModel.fromMap(stringJson);
   }
 
   Future<PedidoModel> crie(PedidoModel pedido) async {
