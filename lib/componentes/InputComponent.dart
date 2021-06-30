@@ -31,8 +31,8 @@ class InputComponent extends StatefulWidget {
 class _InputComponentState extends State<InputComponent> {
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: 260.0, minHeight: 30),
+    return Container(
+      margin: EdgeInsets.only(bottom: 5.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

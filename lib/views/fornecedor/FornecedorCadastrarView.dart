@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-import 'package:projeto_flutter/componentes/FormComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 
@@ -314,11 +314,11 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
                   width: double.infinity,
                   child: Column(
                     children: [
-                      FormComponent(
+                      MolduraComponent(
                         label: 'Fornecedor',
                         content: formFornecedor,
                       ),
-                      FormComponent(
+                      MolduraComponent(
                         label: 'Endereço',
                         content: formEndereco,
                       ),

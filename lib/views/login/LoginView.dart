@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-import 'package:projeto_flutter/componentes/FormComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/AutenticacaoController.dart';
@@ -64,7 +64,7 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
 
-    final cardAutenticacao = FormComponent(
+    final cardAutenticacao = MolduraComponent(
       label: 'Login',
       content: formAutenticacao,
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-import 'package:projeto_flutter/componentes/FormComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
@@ -52,14 +52,14 @@ class _PedidoConsultaViewState extends State<PedidoConsultaView> {
             onPressed: consultarPedido,
           ),
           if (pedidoModel != null)
-            FormComponent(
+            MolduraComponent(
               label: 'Detalhe',
               content: DetalhePedido(
                 pedidoModel: pedidoModel,
               ),
             ),
           if (pedidoModel != null)
-            FormComponent(
+            MolduraComponent(
               label: 'Itens pedido',
               content: Column(
                 children: [...listaItemPedido],

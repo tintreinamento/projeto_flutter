@@ -41,9 +41,9 @@ class ProdutoModel {
       precoCompra: map['precoCompra'],
       categoria: map['categoria'],
       margem: map['margem'],
-      fornecedorModel: FornecedorModel.fromMap(map['fornecedorModel']),
-      estoqueModel: List<EstoqueModel>.from(
-          map['estoqueModel']?.map((x) => EstoqueModel.fromMap(x))),
+      // fornecedorModel: FornecedorModel.fromMap(map['fornecedorModel']),
+      // estoqueModel: List<EstoqueModel>.from(
+      //     map['estoqueModel']?.map((x) => EstoqueModel.fromMap(x))),
     );
   }
 

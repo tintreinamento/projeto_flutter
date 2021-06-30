@@ -46,7 +46,7 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
       },
       onChanged: (value) {
         if (widget.onChange != null) {
-          widget.onChange!();
+          widget.onChange!(value);
         }
       },
       validator: widget.validator,
