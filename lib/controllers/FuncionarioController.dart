@@ -28,21 +28,21 @@ class FuncionarioController {
     return new FuncionarioModel.fromJson(stringJson);
   }
 
-  Future<FuncionarioModel> delete(FuncionarioModel funcionario) async {
-    final resposta =
-        await new Api().delete('funcionarios/' + funcionario.id.toString());
+  // Future<FuncionarioModel> delete(FuncionarioModel funcionario) async {
+  //   final resposta =
+  //       await new Api().delete('funcionarios/' + funcionario.id.toString());
 
-    var stringJson = json.decode(resposta.body);
+  //   var stringJson = json.decode(resposta.body);
 
-    return new FuncionarioModel.fromJson(stringJson);
-  }
+  //   return new FuncionarioModel.fromJson(stringJson);
+  // }
 
-  Future<FuncionarioModel> atualize(FuncionarioModel funcionario) async {
-    final resposta = await new Api().atualize(
-        'funcionarios/' + funcionario.id.toString(), json.encode(funcionario));
+  // Future<FuncionarioModel> atualize(FuncionarioModel funcionario) async {
+  //   final resposta = await new Api().atualize(
+  //       'funcionarios/' + funcionario.id.toString(), json.encode(funcionario));
 
-    var stringJson = json.decode(resposta.body);
+  //   var stringJson = json.decode(resposta.body);
 
-    return new FuncionarioModel.fromJson(stringJson);
-  }
+  //   return new FuncionarioModel.fromJson(stringJson);
+  // }
 }
