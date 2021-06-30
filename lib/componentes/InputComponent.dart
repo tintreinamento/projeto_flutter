@@ -11,6 +11,7 @@ class InputComponent extends StatefulWidget {
   Function? onChange;
   Function? onFieldSubmitted;
   FormFieldValidator<String>? validator;
+  bool? obscureText;
 
   InputComponent(
       {Key? key,
@@ -19,7 +20,8 @@ class InputComponent extends StatefulWidget {
       this.controller,
       this.onChange,
       this.onFieldSubmitted,
-      this.validator})
+      this.validator,
+      this.obscureText})
       : super(key: key);
 
   @override
@@ -34,11 +36,16 @@ class _InputComponentState extends State<InputComponent> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextComponent(
-            label: widget.label,
+          Expanded(
+            flex: 1,
+            child: TextComponent(
+              label: widget.label,
+            ),
           ),
           Expanded(
+            flex: 5,
             child: TextFormFieldComponent(
+              obscureText: widget.obscureText,
               inputFormatter: widget.inputFormatter,
               controller: widget.controller,
               onChange: widget.onChange,

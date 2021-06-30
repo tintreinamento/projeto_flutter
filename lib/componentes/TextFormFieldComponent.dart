@@ -9,6 +9,7 @@ class TextFormFieldComponent extends StatefulWidget {
   Function? onChange;
   Function? onFieldSubmitted;
   FormFieldValidator<String>? validator;
+  bool? obscureText;
 
   TextFormFieldComponent(
       {Key? key,
@@ -16,7 +17,8 @@ class TextFormFieldComponent extends StatefulWidget {
       this.controller,
       this.onFieldSubmitted,
       this.onChange,
-      this.validator})
+      this.validator,
+      this.obscureText})
       : super(key: key);
 
   @override
@@ -26,7 +28,14 @@ class TextFormFieldComponent extends StatefulWidget {
 class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
   @override
   Widget build(BuildContext context) {
+    bool obscureText = false;
+
+    if (widget.obscureText != null) {
+      obscureText = widget.obscureText!;
+    }
+
     return TextFormField(
+      obscureText: obscureText,
       inputFormatters: widget.inputFormatter,
       controller: widget.controller,
       decoration: inputDecorationComponent,

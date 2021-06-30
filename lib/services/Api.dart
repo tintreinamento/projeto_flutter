@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:projeto_flutter/services/Auth.dart';
 
 class Api {
   static const URL_API = 'http://10.66.8.160:1337/';
@@ -7,7 +8,9 @@ class Api {
   Future<Response> obtenha(String query) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      'Accept': 'application/json',
+      'Authorization':
+          Auth.isAuthenticated() ? 'Bearer ${Auth.getToken()}' : '',
     };
 
     var resposta = await http.get(Uri.parse(URL_API + query), headers: headers);
@@ -16,7 +19,11 @@ class Api {
   }
 
   Future<Response> crie(String query, Object body) async {
-    Map<String, String> headers = {'Content-Type': 'application/json'};
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization':
+          Auth.isAuthenticated() ? 'Bearer ${Auth.getToken()}' : '',
+    };
     var resposta = await http.post(Uri.parse(URL_API + query),
         headers: headers, body: body);
 

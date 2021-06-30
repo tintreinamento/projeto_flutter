@@ -30,7 +30,7 @@ class ProdutoModel {
       'categoria': categoria,
       'margem': margem,
       'fornecedorModel': fornecedorModel?.toMap(),
-      'estoqueModel': estoqueModel?.map((x) => x?.toMap())?.toList(),
+      'estoqueModel': estoqueModel?.map((x) => x.toMap()).toList(),
     };
   }
 
