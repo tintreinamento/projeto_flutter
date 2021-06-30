@@ -150,7 +150,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
       child: Column(
         children: [
           SubMenuComponent(
-            titulo: 'Cliente',
+            titulo: 'Fornecedor',
             tituloPrimeiraRota: 'Cadastro',
             primeiraRota: '/cadastrar_cliente',
             tituloSegundaRota: 'Consultar',
