@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:projeto_flutter/models/ClienteModel.dart';
 import 'package:projeto_flutter/models/EnderecoModel.dart';
+import 'package:projeto_flutter/models/FuncionarioModel.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 
 class PedidoModel {
@@ -10,14 +11,15 @@ class PedidoModel {
   String? totalPedido;
   ClienteModel? cliente;
   List<ItemPedidoModel>? itemPedido;
-  EnderecoModel? endereco;
+  FuncionarioModel? funcionario;
+
   PedidoModel({
     this.id,
     this.dataPedido,
     this.totalPedido,
     this.cliente,
     this.itemPedido,
-    this.endereco,
+    this.funcionario,
   });
 
   Map<String, dynamic> toMap() {
@@ -27,7 +29,7 @@ class PedidoModel {
       'totalPedido': totalPedido,
       'cliente': cliente?.toMap(),
       'itemPedido': itemPedido?.map((x) => x.toMap()).toList(),
-      'endereco': endereco?.toMap(),
+      'funcionario': funcionario?.toMap(),
     };
   }
 
@@ -39,7 +41,7 @@ class PedidoModel {
       cliente: ClienteModel.fromMap(map['cliente']),
       itemPedido: List<ItemPedidoModel>.from(
           map['itemPedido']?.map((x) => ItemPedidoModel.fromMap(x))),
-      endereco: EnderecoModel.fromMap(map['endereco']),
+      funcionario: FuncionarioModel.fromMap(map['funcionario']),
     );
   }
 

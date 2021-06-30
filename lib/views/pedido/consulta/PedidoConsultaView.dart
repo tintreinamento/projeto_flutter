@@ -25,7 +25,6 @@ class _PedidoConsultaViewState extends State<PedidoConsultaView> {
   consultarPedido() async {
     PedidoController pedidoController = new PedidoController();
     pedidoModel = await pedidoController.obtenhaPorId(idPedidoController.text);
-
     print(pedidoModel!.itemPedido![0].produto!.nome);
 
     setState(() {});

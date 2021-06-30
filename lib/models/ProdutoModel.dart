@@ -9,8 +9,8 @@ class ProdutoModel {
   String? precoCompra;
   String? categoria;
   String? margem;
-  FornecedorModel? fornecedorModel;
-  List<EstoqueModel>? estoqueModel;
+  FornecedorModel? fornecedor;
+  List<EstoqueModel>? estoque;
 
   ProdutoModel({
     this.nome,
@@ -18,8 +18,8 @@ class ProdutoModel {
     this.precoCompra,
     this.categoria,
     this.margem,
-    this.fornecedorModel,
-    this.estoqueModel,
+    this.fornecedor,
+    this.estoque,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,8 +29,8 @@ class ProdutoModel {
       'precoCompra': precoCompra,
       'categoria': categoria,
       'margem': margem,
-      'fornecedorModel': fornecedorModel?.toMap(),
-      'estoqueModel': estoqueModel?.map((x) => x.toMap()).toList(),
+      'fornecedor': fornecedor?.toMap(),
+      'estoque': estoque?.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -41,9 +41,9 @@ class ProdutoModel {
       precoCompra: map['precoCompra'],
       categoria: map['categoria'],
       margem: map['margem'],
-      fornecedorModel: FornecedorModel.fromMap(map['fornecedorModel']),
-      estoqueModel: List<EstoqueModel>.from(
-          map['estoqueModel']?.map((x) => EstoqueModel.fromMap(x))),
+      fornecedor: FornecedorModel.fromMap(map['fornecedor']),
+      estoque: List<EstoqueModel>.from(
+          map['estoque']?.map((x) => EstoqueModel.fromMap(x))),
     );
   }
 
