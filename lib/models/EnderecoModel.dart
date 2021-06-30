@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 class EnderecoModel {
-  String? cep;
-  String? logradouro;
-  String? complemento;
-  String? bairro;
-  String? cidade;
-  String? estado;
-  String? pais;
+  String? cep = "";
+  String? logradouro = "";
+  String? complemento = "";
+  String? bairro = "";
+  String? cidade = "";
+  String? estado = "";
+  String? pais = "";
 
   EnderecoModel({
     this.cep,

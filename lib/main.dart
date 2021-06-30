@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/views/pedido/cadastrar/PedidoCadastrarView.dart';
 import 'package:projeto_flutter/views/pedido/consulta/PedidoConsultaView.dart';
 import 'package:projeto_flutter/views/produto/consulta_produto.dart';
@@ -13,9 +14,13 @@ import 'package:projeto_flutter/views/splash/splash_screen.dart';
 import 'package:projeto_flutter/views/cliente/ClienteCadastrarView.dart';
 import 'package:projeto_flutter/views/cliente/ClienteConsultarView.dart';
 import 'package:projeto_flutter/views/pedido/pedido.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => PedidoModel())],
+    child: MyApp(),
+  ));
   //runApp(MyApp());
 }
 

@@ -4,7 +4,7 @@ import 'package:projeto_flutter/models/ProdutoModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 
 class ItemPedidoModel {
-  String? quantidade;
+  int? quantidade = 0;
   ProdutoModel? produto;
 
   ItemPedidoModel({
@@ -30,4 +30,8 @@ class ItemPedidoModel {
 
   factory ItemPedidoModel.fromJson(String source) =>
       ItemPedidoModel.fromMap(json.decode(source));
+
+  double getSubtotal() {
+    return (this.quantidade! * this.produto!.precoCompra!);
+  }
 }

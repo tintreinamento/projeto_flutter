@@ -4,15 +4,17 @@ import 'package:projeto_flutter/models/EstoqueModel.dart';
 import 'package:projeto_flutter/models/FornecedorModel.dart';
 
 class ProdutoModel {
+  int? id;
   String? nome;
   String? descricao;
-  String? precoCompra;
+  double? precoCompra = 0;
   String? categoria;
   String? margem;
   FornecedorModel? fornecedor;
   List<EstoqueModel>? estoque;
 
   ProdutoModel({
+    this.id,
     this.nome,
     this.descricao,
     this.precoCompra,
@@ -24,6 +26,7 @@ class ProdutoModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'nome': nome,
       'descricao': descricao,
       'precoCompra': precoCompra,
@@ -36,6 +39,7 @@ class ProdutoModel {
 
   factory ProdutoModel.fromMap(Map<String, dynamic> map) {
     return ProdutoModel(
+      id: map['id'],
       nome: map['nome'],
       descricao: map['descricao'],
       precoCompra: map['precoCompra'],

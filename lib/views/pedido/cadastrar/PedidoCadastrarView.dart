@@ -1,15 +1,22 @@
+import 'dart:js';
+
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
+import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/ResponsiveComponenet.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
+import 'package:projeto_flutter/controllers/ClienteController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
+import 'package:projeto_flutter/models/ClienteModel.dart';
+import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
+import 'package:provider/provider.dart';
 
 class PedidoCadastrarView extends StatefulWidget {
   const PedidoCadastrarView({Key? key}) : super(key: key);
@@ -103,6 +110,7 @@ class _PedidoCadastrarViewState extends State<PedidoCadastrarView> {
 }
 
 class FormCliente extends StatelessWidget {
+  BuildContext? context;
   GlobalKey<FormState> formCliente;
 
   TextEditingController cpfCnpjController = TextEditingController();
@@ -133,8 +141,21 @@ class FormCliente extends StatelessWidget {
     }
   }
 
+  carregarCliente() async {
+    ClienteController clienteController = new ClienteController();
+    ClienteModel cliente = await clienteController.obtenhaPorCpf(
+        UtilBrasilFields.removeCaracteres(cpfCnpjController.text));
+
+    //Carrega dados do cliente
+    nomeClienteController.text = cliente.nome!;
+    //Seta cliente no pedido
+
+    this.context!.read<PedidoModel>().setCliente(cliente);
+  }
+
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Container(
         child: Form(
       key: formCliente,
@@ -156,6 +177,10 @@ class FormCliente extends StatelessWidget {
                     CpfOuCnpjFormatter()
                   ],
                 ),
+                ButtonComponent(
+                  label: 'Consultar',
+                  onPressed: carregarCliente,
+                )
               ],
             ),
           ),
@@ -215,8 +240,14 @@ class FormEndereco extends StatelessWidget {
     }
   }
 
+  carregarEndereco() {
+    print('t');
+  }
+
   @override
   Widget build(BuildContext context) {
+    PedidoModel pedido = context.watch<PedidoModel>();
+
     return Container(
         child: Form(
       key: formEndereco,
@@ -404,12 +435,14 @@ class CardProduto extends StatelessWidget {
                       child: ButtonCustom(
                         isAdd: true,
                         isRemoved: false,
+                        produto: produto,
                       ),
                     ),
                     Expanded(
                       child: ButtonCustom(
                         isAdd: false,
                         isRemoved: true,
+                        produto: produto,
                       ),
                     )
                   ],
@@ -426,17 +459,26 @@ class CardProduto extends StatelessWidget {
 class ButtonCustom extends StatelessWidget {
   bool isAdd = false;
   bool isRemoved = false;
+  ProdutoModel? produto;
 
-  ButtonCustom({Key? key, required this.isAdd, required this.isRemoved})
+  ButtonCustom(
+      {Key? key, required this.isAdd, required this.isRemoved, this.produto})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var pedido = context.watch<PedidoModel>();
     GestureDetector gestureDetector = GestureDetector();
+
+    if (pedido != null) {
+      print('tesa');
+    }
 
     if (isAdd) {
       gestureDetector = GestureDetector(
-        onTap: () {},
+        onTap: () {
+          pedido.setItemPedido(produto!);
+        },
         child: Container(
           color: colorVerde,
           child: Align(
@@ -487,7 +529,7 @@ class Resumo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextComponent(
-                  label: '100.00',
+                  label: context.read<PedidoModel>().getTotal().toString(),
                   cor: colorAzul,
                 )
               ],

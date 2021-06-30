@@ -10,7 +10,7 @@ class ClienteModel {
   String? email;
   String? sexo;
   String? telefone;
-  EnderecoModel? endereco;
+  EnderecoModel? endereco = new EnderecoModel();
 
   ClienteModel({
     this.nome,

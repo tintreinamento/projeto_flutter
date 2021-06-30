@@ -1,16 +1,18 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
 import 'package:projeto_flutter/models/EnderecoModel.dart';
 import 'package:projeto_flutter/models/FuncionarioModel.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
+import 'package:projeto_flutter/models/ProdutoModel.dart';
 
-class PedidoModel {
+class PedidoModel extends ChangeNotifier {
   int? id;
   String? dataPedido;
-  String? totalPedido;
-  ClienteModel? cliente;
-  List<ItemPedidoModel>? itemPedido;
+  double? totalPedido = 0;
+  ClienteModel? cliente = new ClienteModel();
+  List<ItemPedidoModel>? itemPedido = [];
   FuncionarioModel? funcionario;
 
   PedidoModel({
@@ -49,4 +51,41 @@ class PedidoModel {
 
   factory PedidoModel.fromJson(String source) =>
       PedidoModel.fromMap(json.decode(source));
+
+  void setCliente(ClienteModel cliente) {
+    this.cliente = cliente;
+    notifyListeners();
+  }
+
+  void setClienteEndereco(EnderecoModel endereco) {
+    this.cliente!.endereco = endereco;
+    notifyListeners();
+  }
+
+  void setItemPedido(ProdutoModel produto) {
+    print('tes');
+    int index = itemPedido!.indexWhere((item) {
+      return item.produto!.id == produto.id;
+    });
+
+    if (index < 0) {
+      ItemPedidoModel item =
+          new ItemPedidoModel(produto: produto, quantidade: 1);
+      this.itemPedido!.add(item);
+    } else {
+      itemPedido![index].quantidade = itemPedido![index].quantidade! + 1;
+    }
+    notifyListeners();
+  }
+
+  double getTotal() {
+    if (this.itemPedido != null) {
+      this.itemPedido!.forEach((item) {
+        this.totalPedido = this.totalPedido! + item.getSubtotal();
+      });
+    }
+
+    print('t');
+    return this.totalPedido!;
+  }
 }
