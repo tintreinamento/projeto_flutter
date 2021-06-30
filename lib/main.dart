@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:projeto_flutter/util/CarrinhoCompra.dart';
+=======
+import 'package:projeto_flutter/views/produto/consulta_produto.dart';
+>>>>>>> 5c8ebd9a336cd3ff34117d5f285f6a181d8b0626
 import 'package:projeto_flutter/views/login/LoginView.dart';
 import 'package:projeto_flutter/views/pedido/PedidoTesteView.dart';
 import 'package:projeto_flutter/views/pedido/PedidoView.dart';
@@ -50,6 +54,7 @@ class MyApp extends StatelessWidget {
         '/pedido': (context) => Pedido(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
+        '/consultar_produto': (context) => ProdutoConsultarView(),
         '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
       },
     );

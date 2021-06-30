@@ -60,9 +60,9 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
     }
   }
 
-  String validarCpfCnpj(cpfCnpj) {
+  String? validarCpfCnpj(cpfCnpj) {
     if (isVazio(cpfCnpj)) {
-      return 'Campo CPF/CNPJ vazio';
+      return 'Campo CPF/CNPJ vazio!';
     }
 
     var cpfLimpo = UtilBrasilFields.removeCaracteres(cpfCnpj);
@@ -79,7 +79,20 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
       return 'CPF/CNPJ inválido!';
     }
 
-    return "";
+    return null;
+  }
+
+  limpaCampos() {
+    nomeController.text = "";
+    cpfCnpjController.text = "";
+    emailController.text = "";
+    telefoneController.text = "";
+    cepController.text = "";
+    logradouroController.text = "";
+    numeroController.text = "";
+    bairroController.text = "";
+    cidadeController.text = "";
+    estadoController.text = "";
   }
 
   cadastrarFornecedor() async {
@@ -119,6 +132,7 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
 
         var enderecoControllerApi = EnderecoController();
         await enderecoControllerApi.crie(enderecoModel);
+        limpaCampos();
       }
     }
   }
@@ -195,6 +209,10 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             InputComponent(
+              inputFormatter: [
+                FilteringTextInputFormatter.digitsOnly,
+                CepInputFormatter()
+              ],
               label: 'CEP: ',
               controller: cepController,
               validator: (value) {
@@ -289,25 +307,27 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             ),
             Expanded(
                 child: SingleChildScrollView(
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height,
-                margin: EdgeInsets.only(left: 20, top: 20, right: 20),
-                child: Column(
-                  children: [
-                    FormComponent(
-                      label: 'Fornecedor',
-                      content: formFornecedor,
-                    ),
-                    FormComponent(
-                      label: 'Endereço',
-                      content: formEndereco,
-                    ),
-                    ButtonComponent(
-                      label: 'Cadastrar',
-                      onPressed: cadastrarFornecedor,
-                    ),
-                  ],
+              child: Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  height: 900,
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      FormComponent(
+                        label: 'Fornecedor',
+                        content: formFornecedor,
+                      ),
+                      FormComponent(
+                        label: 'Endereço',
+                        content: formEndereco,
+                      ),
+                      ButtonComponent(
+                        label: 'Cadastrar',
+                        onPressed: cadastrarFornecedor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ))

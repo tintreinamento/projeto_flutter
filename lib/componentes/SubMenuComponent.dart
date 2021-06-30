@@ -26,10 +26,19 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
   @override
   Widget build(BuildContext context) {
     return Container(
+<<<<<<< HEAD
+=======
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      height: 48.0,
+>>>>>>> 5c8ebd9a336cd3ff34117d5f285f6a181d8b0626
       color: colorVermelho,
       padding: paddingPadrao,
       child: Row(
         children: [
+<<<<<<< HEAD
+=======
+          TextComponent(label: widget.titulo, cor: colorBranco, tamanho: 17.0),
+>>>>>>> 5c8ebd9a336cd3ff34117d5f285f6a181d8b0626
           Flexible(
             child: TextComponent(
                 label: widget.titulo, cor: colorBranco, tamanho: 18.0),
