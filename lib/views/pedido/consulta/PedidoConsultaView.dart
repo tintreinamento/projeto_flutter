@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
+import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/PedidoController.dart';
+import 'package:projeto_flutter/models/ClienteModel.dart';
+import 'package:projeto_flutter/models/FuncionarioModel.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 
@@ -24,8 +28,27 @@ class _PedidoConsultaViewState extends State<PedidoConsultaView> {
 
   consultarPedido() async {
     PedidoController pedidoController = new PedidoController();
-    pedidoModel = await pedidoController.obtenhaPorId(idPedidoController.text);
-    print(pedidoModel!.itemPedido![0].produto!.nome);
+    // pedidoModel = await pedidoController.obtenhaPorId(idPedidoController.text);
+    // print(pedidoModel!.itemPedido![0].produto!.nome);
+    List<ItemPedidoModel> listaDeItens = <ItemPedidoModel>[];
+    ItemPedidoModel item = new ItemPedidoModel();
+    pedidoModel = new PedidoModel(
+      id: 1,
+      dataPedido: '2021-06-19',
+      totalPedido: 2.300,
+      cliente: new ClienteModel(
+          nome: 'Vítor',
+          cpfCnpj: '04299121104',
+          dataNascimento: '1999-09-17',
+          estadoCivil: '1',
+          email: 'vitor@gmail.com',
+          sexo: '1',
+          telefone: '62991216763'),
+      funcionario: new FuncionarioModel(
+        nome: 'Teste',
+        cpfCnpj: '3273628136',
+      ),
+    );
 
     setState(() {});
   }
@@ -43,8 +66,13 @@ class _PedidoConsultaViewState extends State<PedidoConsultaView> {
     }
 
     return Scaffold(
+      appBar: AppBarComponent(),
+      drawer: DrawerComponent(),
       body: Container(
         child: Column(children: [
+          SizedBox(
+            height: 15,
+          ),
           FormConsulta(
             formKeyConsultar: formkeyConsulta,
             idPedidoController: idPedidoController,
@@ -85,9 +113,33 @@ class DetalhePedido extends StatelessWidget {
           Row(
             children: [
               TextComponent(
+                label: 'Funcionário: ',
+              ),
+              TextComponent(label: pedidoModel!.funcionario!.nome)
+            ],
+          ),
+          Row(
+            children: [
+              TextComponent(
                 label: 'Cliente: ',
               ),
               TextComponent(label: pedidoModel!.cliente!.nome)
+            ],
+          ),
+          Row(
+            children: [
+              TextComponent(
+                label: 'Data do Pedido: ',
+              ),
+              TextComponent(label: pedidoModel!.dataPedido)
+            ],
+          ),
+          Row(
+            children: [
+              TextComponent(
+                label: 'Valor do Pedido: ',
+              ),
+              TextComponent(label: pedidoModel!.totalPedido)
             ],
           )
         ],
@@ -130,10 +182,20 @@ class ItemPedido extends StatelessWidget {
                       Row(
                         children: [
                           TextComponent(
-                            label: 'Descrição:',
+                            label: 'Categoria:',
                           ),
                           TextComponent(
-                            label: itemPedidoModel!.produto!.descricao,
+                            label: itemPedidoModel!.produto!.categoria,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextComponent(
+                            label: 'Valor Compra:',
+                          ),
+                          TextComponent(
+                            label: itemPedidoModel!.produto!.precoCompra,
                           ),
                         ],
                       )

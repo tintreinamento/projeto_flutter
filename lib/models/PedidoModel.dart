@@ -13,7 +13,7 @@ class PedidoModel extends ChangeNotifier {
   double? totalPedido = 0;
   ClienteModel? cliente = new ClienteModel();
   List<ItemPedidoModel>? itemPedido = [];
-  FuncionarioModel? funcionario;
+  FuncionarioModel? funcionario = new FuncionarioModel();
 
   PedidoModel({
     this.id,
@@ -78,14 +78,14 @@ class PedidoModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  double getTotal() {
-    if (this.itemPedido != null) {
-      this.itemPedido!.forEach((item) {
-        this.totalPedido = this.totalPedido! + item.getSubtotal();
-      });
-    }
+  // double getTotal() {
+  //   if (this.itemPedido != null) {
+  //     this.itemPedido!.forEach((item) {
+  //       this.totalPedido = this.totalPedido! + item.getSubtotal();
+  //     });
+  //   }
 
-    print('t');
-    return this.totalPedido!;
-  }
+  //   print('t');
+  //   return this.totalPedido!;
+  // }
 }

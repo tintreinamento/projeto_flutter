@@ -529,7 +529,7 @@ class Resumo extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 TextComponent(
-                  label: context.read<PedidoModel>().getTotal().toString(),
+                  // label: context.read<PedidoModel>().getTotal().toString(),
                   cor: colorAzul,
                 )
               ],
