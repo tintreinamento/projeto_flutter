@@ -87,9 +87,9 @@ class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
                 SubMenuComponent(
                     titulo: 'Pedido Venda',
                     tituloPrimeiraRota: 'Cadastrar',
-                    primeiraRota: '/pedido_cadastrar',
+                    primeiraRota: '/pedido_venda_cadastrar',
                     tituloSegundaRota: 'Consultar',
-                    segundaRota: '/pedido_consultar'),
+                    segundaRota: '/pedido_venda_consultar'),
                 Expanded(
                   flex: 15,
                   child: Stack(

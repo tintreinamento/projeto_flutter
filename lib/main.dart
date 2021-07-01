@@ -3,6 +3,8 @@ import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/views/cliente/cadastrar/ClienteCadastrarView.dart';
 import 'package:projeto_flutter/views/cliente/consultar/ClienteConsultarView.dart';
+import 'package:projeto_flutter/views/fornecedor/FornecedorCadastrarView.dart';
+import 'package:projeto_flutter/views/fornecedor/FornecedorConsultarView.dart';
 import 'package:projeto_flutter/views/pedido_venda/cadastrar/PedidoVendaCadastrarView.dart';
 import 'package:projeto_flutter/views/pedido_venda/consulta/PedidoVendaConsultaView.dart';
 import 'package:projeto_flutter/views/produto/consulta_produto.dart';
@@ -46,15 +48,16 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         //'/': (context) => PedidoVendaConsultaView(),
-        '/': (context) => PedidoVendaConsultaView(), //ok
+        '/': (context) => SplashPage(), //ok
         '/login': (context) => LoginView(), // ok
         '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
         '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
-
+        '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
+        '/consultar_fornecedor': (context) => FornecedorConsultarView(),
         // '/consultar_produto': (context) => ProdutoConsultarView(),
-        // '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
+        '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
       },
     );
   }
