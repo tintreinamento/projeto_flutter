@@ -6,6 +6,7 @@ import 'package:projeto_flutter/componentes/DropDownComponent.dart';
 import 'package:projeto_flutter/componentes/FormComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/TextFormFieldComponent.dart';
 import 'package:projeto_flutter/componentes/inputDropDownComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
@@ -245,7 +246,7 @@ class _PedidoCompraCadastroViewState extends State<PedidoCompraCadastroView> {
                   margin: EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: Column(
                     children: [
-                      FormComponent(
+                      MolduraComponent(
                         label: 'Fornecedor',
                         content: formFornecedor,
                       ),
@@ -253,7 +254,7 @@ class _PedidoCompraCadastroViewState extends State<PedidoCompraCadastroView> {
                         label: 'Consultar',
                         onPressed: () {},
                       ),
-                      FormComponent(
+                      MolduraComponent(
                         label: 'Endereço',
                         content: formEndereco,
                       ),
