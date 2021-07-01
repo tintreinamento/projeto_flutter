@@ -6,8 +6,17 @@ class TextComponent extends StatefulWidget {
   Color? cor = colorPreto;
   double? tamanho = fontTamanho;
   double? height;
+  FontWeight? fontWeight;
+  double? fontSize;
 
-  TextComponent({Key? key, this.label, this.tamanho, this.cor, this.height})
+  TextComponent(
+      {Key? key,
+      this.label,
+      this.tamanho,
+      this.cor,
+      this.height,
+      this.fontWeight,
+      this.fontSize})
       : super(key: key);
 
   @override
@@ -22,7 +31,7 @@ class _TextComponentState extends State<TextComponent> {
       style: TextStyle(
           height: widget.height,
           fontFamily: fontFamilia,
-          fontWeight: fontLargura,
+          fontWeight: widget.fontWeight,
           fontSize: widget.tamanho,
           fontStyle: fontEstilo,
           color: widget.cor),

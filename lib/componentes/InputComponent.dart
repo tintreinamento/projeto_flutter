@@ -37,9 +37,10 @@ class _InputComponentState extends State<InputComponent> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 1,
+            flex: 2,
             child: TextComponent(
               label: widget.label,
+              fontWeight: FontWeight.bold,
             ),
           ),
           Expanded(

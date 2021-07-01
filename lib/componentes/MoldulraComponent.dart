@@ -27,6 +27,7 @@ class MolduraComponent extends StatelessWidget {
                 color: colorBranco,
                 child: TextComponent(
                   label: label!.toUpperCase(),
+                  fontWeight: FontWeight.bold,
                 ),
               )),
         ],

@@ -31,7 +31,7 @@ class _LoginViewState extends State<LoginView> {
     Auth.login(autenticacaoModel.jwt!);
 
     if (Auth.isAuthenticated()) {
-      Navigator.of(context).pushNamed('/pedido_consultar');
+      Navigator.of(context).pushNamed('/pedido_venda_cadastrar');
     }
   }
 

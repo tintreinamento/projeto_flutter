@@ -63,29 +63,24 @@ class PedidoModel extends ChangeNotifier {
   }
 
   void setItemPedido(ProdutoModel produto) {
-    print('tes');
-    int index = itemPedido!.indexWhere((item) {
-      return item.produto!.id == produto.id;
-    });
+    print(itemPedido);
 
-    if (index < 0) {
-      ItemPedidoModel item =
-          new ItemPedidoModel(produto: produto, quantidade: 1);
-      this.itemPedido!.add(item);
-    } else {
-      itemPedido![index].quantidade = itemPedido![index].quantidade! + 1;
-    }
+    ItemPedidoModel itemPedidoModel =
+        new ItemPedidoModel(produto: produto, quantidade: 1);
+    this.itemPedido!.add(itemPedidoModel);
+
     notifyListeners();
   }
 
-  // double getTotal() {
-  //   if (this.itemPedido != null) {
-  //     this.itemPedido!.forEach((item) {
-  //       this.totalPedido = this.totalPedido! + item.getSubtotal();
-  //     });
-  //   }
+  double getTotal() {
+    this.totalPedido = 0;
+    print(this.totalPedido);
+    if (this.itemPedido != null) {
+      this.itemPedido!.forEach((element) {
+        //this.totalPedido = this.totalPedido! + element.getSubtotal();
+      });
+    }
 
-  //   print('t');
-  //   return this.totalPedido!;
-  // }
+    return this.totalPedido!;
+  }
 }

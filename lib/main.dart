@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
-import 'package:projeto_flutter/views/pedido/cadastrar/PedidoCadastrarView.dart';
-import 'package:projeto_flutter/views/pedido/consulta/PedidoConsultaView.dart';
+import 'package:projeto_flutter/views/cliente/cadastrar/ClienteCadastrarView.dart';
+import 'package:projeto_flutter/views/cliente/consultar/ClienteConsultarView.dart';
+import 'package:projeto_flutter/views/pedido_venda/cadastrar/PedidoVendaCadastrarView.dart';
+import 'package:projeto_flutter/views/pedido_venda/consulta/PedidoVendaConsultaView.dart';
 import 'package:projeto_flutter/views/produto/consulta_produto.dart';
 import 'package:projeto_flutter/views/login/LoginView.dart';
-import 'package:projeto_flutter/views/pedido/PedidoView.dart';
 import 'package:projeto_flutter/views/produto/ProdutoCadastrarView.dart';
-
 import 'package:projeto_flutter/views/splash/splash_screen.dart';
 // import 'package:projeto_flutter/views/pedido/pedido.dart';
-
 // import './views/pedido/pedido.dart';
 import 'package:projeto_flutter/views/cliente/ClienteCadastrarView.dart';
 import 'package:projeto_flutter/views/cliente/ClienteConsultarView.dart';
-import 'package:projeto_flutter/views/pedido/pedido.dart';
+
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => PedidoModel())],
+    providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
     child: MyApp(),
   ));
   //runApp(MyApp());
@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -44,14 +45,14 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        //'/': (context) => PedidoView(),
-        '/': (context) => PedidoCadastrarView(),
-        // '/': (context) => SplashPage(),
-        '/login': (context) => LoginView(),
-        '/pedido_consultar': (context) => PedidoConsultaView(),
-        // '/pedido': (context) => Pedido(),
-        // '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
-        // '/consultar_cliente': (contexto) => ClienteConsultarView(),
+        //'/': (context) => PedidoVendaConsultaView(),
+        '/': (context) => PedidoVendaConsultaView(), //ok
+        '/login': (context) => LoginView(), // ok
+        '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
+        '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
+        '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
+        '/consultar_cliente': (contexto) => ClienteConsultarView(),
+
         // '/consultar_produto': (context) => ProdutoConsultarView(),
         // '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
       },
