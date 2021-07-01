@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
+import 'package:projeto_flutter/views/cliente/cadastrar/ClienteCadastrarView.dart';
+import 'package:projeto_flutter/views/cliente/consultar/ClienteConsultarView.dart';
 import 'package:projeto_flutter/views/pedido/cadastrar/PedidoCadastrarView.dart';
 import 'package:projeto_flutter/views/pedido/consulta/PedidoConsultaView.dart';
 import 'package:projeto_flutter/views/produto/consulta_produto.dart';
@@ -18,7 +21,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => PedidoModel())],
+    providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
     child: MyApp(),
   ));
   //runApp(MyApp());
@@ -44,14 +47,13 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        //'/': (context) => PedidoView(),
-        '/': (context) => PedidoCadastrarView(),
-        // '/': (context) => SplashPage(),
+        '/': (context) => SplashPage(),
         '/login': (context) => LoginView(),
+        '/pedido_cadastrar': (context) => PedidoCadastrarView(),
         '/pedido_consultar': (context) => PedidoConsultaView(),
-        // '/pedido': (context) => Pedido(),
-        // '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
-        // '/consultar_cliente': (contexto) => ClienteConsultarView(),
+
+        '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
+        '/consultar_cliente': (contexto) => ClienteConsultarView(),
         // '/consultar_produto': (context) => ProdutoConsultarView(),
         // '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
       },
