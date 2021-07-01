@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
 
-        // '/consultar_produto': (context) => ProdutoConsultarView(),
+        '/consultar_produto': (context) => ProdutoConsultarView(),
         // '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
       },
     );
