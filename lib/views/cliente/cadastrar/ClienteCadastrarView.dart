@@ -33,8 +33,9 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
   //Dados de cliente
   final nomeController = TextEditingController();
   final cpfCnpjController = TextEditingController();
-  final estadoCivilController = TextEditingController();
   final dataNascimentoController = TextEditingController();
+  final estadoCivilController = TextEditingController();
+
   final emailController = TextEditingController();
   final sexoController = TextEditingController();
   final dddController = TextEditingController();
@@ -54,6 +55,25 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     } else {
       return false;
     }
+  }
+
+  getSexo(value) {
+    int sexo = 0;
+    switch (value) {
+      case "Masculino":
+        sexo = 1;
+        break;
+      case "Feminino":
+        sexo = 2;
+        break;
+      default:
+    }
+  }
+
+  selectSexo(value) {
+    setState(() {
+      sexoController.text = value;
+    });
   }
 
   selectEstadoCivel(value) {
@@ -164,6 +184,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     super.initState();
 
     estadoCivilController.text = "Selecione o estado cívil";
+    sexoController.text = "Selecione o sexo";
   }
 
   @override
@@ -285,6 +306,16 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               return null;
             },
           ),
+          Expanded(
+              child: InputDropDownComponent(
+            label: 'Sexo: ',
+            labelDropDown: estadoCivilController.text,
+            items: [
+              'Masculino',
+              'Feminino',
+            ],
+            onChanged: selectEstadoCivel,
+          )),
           InputComponent(
             inputFormatter: [
               FilteringTextInputFormatter.digitsOnly,

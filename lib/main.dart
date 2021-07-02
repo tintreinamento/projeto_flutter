@@ -44,8 +44,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/cadastrar_cliente',
       routes: {
+        '/': (contexto) => ClienteCadastroView(),
         //'/': (context) => PedidoVendaConsultaView(),
         //'/': (context) => SplashPage(), //ok
         '/login': (context) => LoginView(), // ok
@@ -57,7 +58,7 @@ class MyApp extends StatelessWidget {
         '/consultar_fornecedor': (context) => FornecedorConsultarView(),
         // '/consultar_produto': (context) => ProdutoConsultarView(),
         '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
-        '/pedido_compra': (contexto) => PedidoCompraCadastroView()
+        // '/pedido_compra': (contexto) => PedidoCompraCadastroView()
       },
     );
   }
