@@ -14,13 +14,13 @@ import 'package:projeto_flutter/models/FuncionarioModel.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 
-class PedidoVendaConsultaView extends StatefulWidget {
+class EstoqueView extends StatefulWidget {
   @override
-  _PedidoVendaConsultaViewState createState() =>
-      _PedidoVendaConsultaViewState();
+  _EstoqueViewState createState() =>
+      _EstoqueViewState();
 }
 
-class _PedidoVendaConsultaViewState extends State<PedidoVendaConsultaView> {
+class _EstoqueViewState extends State<EstoqueView> {
   bool _active = false;
 
   GlobalKey<FormState> formkeyConsulta = GlobalKey<FormState>();
@@ -31,28 +31,7 @@ class _PedidoVendaConsultaViewState extends State<PedidoVendaConsultaView> {
   PedidoModel? pedidoModel;
 
   consultarPedido() async {
-    // PedidoController pedidoController = new PedidoController();
-    // // pedidoModel = await pedidoController.obtenhaPorId(idPedidoController.text);
-    // // print(pedidoModel!.itemPedido![0].produto!.nome);
-    // List<ItemPedidoModel> listaDeItens = <ItemPedidoModel>[];
-    // ItemPedidoModel item = new ItemPedidoModel();
-    // pedidoModel = new PedidoModel(
-    //   id: 1,
-    //   dataPedido: '2021-06-19',
-    //   totalPedido: 2.300,
-    //   cliente: new ClienteModel(
-    //       nome: 'Vítor',
-    //       cpfCnpj: '04299121104',
-    //       dataNascimento: '1999-09-17',
-    //       estadoCivil: '1',
-    //       email: 'vitor@gmail.com',
-    //       sexo: '1',
-    //       telefone: '62991216763'),
-    //   funcionario: new FuncionarioModel(
-    //     nome: 'Teste',
-    //     cpfCnpj: '3273628136',
-    //   ),
-    // );
+  
     _active = !_active;
     setState(() {});
   }
@@ -61,25 +40,17 @@ class _PedidoVendaConsultaViewState extends State<PedidoVendaConsultaView> {
   Widget build(BuildContext context) {
     List<ItemPedido>? listaItemPedido = [];
 
-    // if (pedidoModel != null) {
-    //   listaItemPedido = pedidoModel!.itemPedido!.map((itemPedido) {
-    //     return ItemPedido(
-    //       itemPedidoModel: itemPedido,
-    //     );
-    //   }).toList();
-    // }
-
     return Scaffold(
       appBar: AppBarComponent(),
       drawer: DrawerComponent(),
       body: Container(
         child: Column(children: [
           SubMenuComponent(
-              titulo: 'Pedido Venda',
-              tituloPrimeiraRota: 'Cadastrar',
-              primeiraRota: '/pedido_venda_cadastrar',
-              tituloSegundaRota: 'Consultar',
-              segundaRota: '/pedido_venda_consultar'),
+              titulo: 'Estoque',
+              tituloPrimeiraRota: '',
+              primeiraRota: '/estoque',
+              tituloSegundaRota: '',
+              segundaRota: ''),
           Expanded(
             child: Container(
                 padding: paddingPadrao,
@@ -96,6 +67,7 @@ class _PedidoVendaConsultaViewState extends State<PedidoVendaConsultaView> {
                             // pedidoModel: pedidoModel,
                             ),
                       if (_active) ItemPedido(),
+                      if (_active) Buttons(),
                     ],
                   ),
                 )),
@@ -120,12 +92,12 @@ class FormConsulta extends StatelessWidget {
       child: Form(
         key: formKeyConsultar,
         child: MolduraComponent(
-            label: 'PEDIDO',
+            label: 'Buscar Produto',
             content: Column(
               children: [
                 InputComponent(
-                  label: 'ID Pedido:',
-                  controller: idPedidoController,
+                  label: 'Nome:',
+                //  controller: idPedidoController,
                 ),
                 ButtonComponent(
                   label: 'Consultar',
@@ -147,23 +119,51 @@ class DetalhePedido extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: MolduraComponent(
-          label: 'DETALHE',
+          label: 'Produto',
           content: Column(
             children: [
               InputComponent(
-                label: 'Funcionário:',
+                label: 'Nome:',
               ),
               InputComponent(
-                label: 'Cliente:',
+                label: 'CPF/CNPJ:',
               ),
               InputComponent(
-                label: 'Data do pedido:',
+                label: 'Telefone:',
               ),
               InputComponent(
-                label: 'Valor do pedido:',
+                label: 'E-mail:',
               ),
             ],
           )),
+    );
+  }
+}
+
+class Buttons  extends StatelessWidget {
+  GlobalKey<FormState>? formKeyCadastrar;
+  Function? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Form(
+        key: formKeyCadastrar,
+        child: (
+             Column(
+              children: [
+                ButtonComponent(
+                  label: 'Cadastrar Novo Estoque',
+                //  controller: idPedidoController,
+                ),
+                ButtonComponent(
+                  label: 'Atualizar',
+                  onPressed: onPressed,
+                )
+              ],
+            )),
+      ),
+      
     );
   }
 }
@@ -173,13 +173,13 @@ class ItemPedido extends StatelessWidget {
   Widget build(BuildContext context) {
     List<ItemPedidoCard> listaItemPedidoCard = [];
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 5; i++) {
       listaItemPedidoCard.add(ItemPedidoCard());
     }
 
     return Container(
       child: MolduraComponent(
-        label: 'ITENS PEDIDO',
+        label: 'Estoque',
         content: Column(
           children: [...listaItemPedidoCard],
         ),
@@ -196,56 +196,32 @@ class ItemPedidoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        //height: MediaQuery.of(context).size.height * .1,
+        height: MediaQuery.of(context).size.height * .1,
         margin: EdgeInsets.only(bottom: 5.0),
         child: Row(
           children: [
             Expanded(
-                flex: 2,
+                flex: 3,
                 child: Container(
                   padding: paddingPadrao,
-                  color: colorCinza,
+                  color:  colorCinza,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
                           TextComponent(
-                            label: 'Nome: ',
+                            label: 'Filial 01 ',
                             fontWeight: FontWeight.bold,
-                          ),
-                          TextComponent(
-                            label: 'Produto x ',
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          TextComponent(
-                            label: 'Categoria: ',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextComponent(
-                            label: 'Categoria y',
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          TextComponent(
-                            label: 'Valor Compra: ',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextComponent(
-                            label: '1000,00',
-                          ),
-                        ],
-                      )
+                     
                     ],
                   ),
                 )),
             Expanded(
-                child: Container(
+              child: Container(
               padding: paddingPadrao,
               color: colorBranco,
               child: Column(
@@ -253,13 +229,15 @@ class ItemPedidoCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextComponent(
-                    fontWeight: FontWeight.bold,
-                    label: '3',
+                    label: '50',
                   ),
                 ],
               ),
             )),
           ],
         ));
+
+
+
   }
 }

@@ -171,7 +171,7 @@ class FormFornecedor extends StatelessWidget {
     nomeFornecedorController.text = fornecedor.nome!;
     //Seta fornecedor no pedido
 
-    this.context!.read<CarrinhoModel>().fornecedor = fornecedor;
+    //this.context!.read<CarrinhoModel>().fornecedor = fornecedor;
   }
 
   @override
