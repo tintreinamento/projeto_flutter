@@ -15,6 +15,7 @@ import 'package:projeto_flutter/views/produto/ProdutoCadastrarView.dart';
 import 'package:projeto_flutter/views/splash/splash_screen.dart';
 // import 'package:projeto_flutter/views/pedido/pedido.dart';
 // import './views/pedido/pedido.dart';
+import 'package:projeto_flutter/views/precificacao/precificacaoView.dart';
 
 import 'package:provider/provider.dart';
 
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
         '/consultar_fornecedor': (context) => FornecedorConsultarView(),
         '/consultar_produto': (context) => ProdutoConsultarView(),
         '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
+        '/cadastrar_margem': (contexto) => PrecificacaoView(),
         '/pedido_compra': (contexto) => PedidoCompraCadastroView(),
         '/estoque': (contexto) => EstoqueView()
       },
