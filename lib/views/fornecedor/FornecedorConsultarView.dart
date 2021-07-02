@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:flutter/material.dart';
@@ -236,7 +238,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                       label: 'CPF/CNPJ: ',
                     ),
                     TextComponent(
-                      label: fornecedorModel.cpfCnpj,
+                      label: (fornecedorModel.cpfCnpj).toString(),
                     ),
                   ],
                 ),
@@ -251,7 +253,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                       label: 'Telefone: ',
                     ),
                     TextComponent(
-                      label: fornecedorModel.telefone,
+                      label: (fornecedorModel.telefone).toString(),
                     ),
                   ],
                 ),
@@ -277,7 +279,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
               right: -10,
               child: FlatButton(
                   onPressed: () {
-                    // Navigator.pushNamed(context, '/login');
+                     //Navigator.pushNamed(context, '/cadastrar_fornecedor');
                   },
                   child: Container(
                       child:
