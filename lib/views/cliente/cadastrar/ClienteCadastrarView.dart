@@ -84,7 +84,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
             lastDate: DateTime.now())
         .then((value) {
       setState(() {
-        dataNascimentoController.text = value.toString();
+        dataNascimentoController.text = UtilData.obterDataDDMMAAAA(value!);
       });
     });
   }
@@ -163,7 +163,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     // TODO: implement initState
     super.initState();
 
-    estadoCivilController.text = "Selecione o estado cível";
+    estadoCivilController.text = "Selecione o estado cívil";
   }
 
   @override
@@ -182,9 +182,6 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               return null;
             },
           ),
-          SizedBox(
-            height: 10,
-          ),
           InputComponent(
             label: 'CPF/CNPJ: ',
             inputFormatter: [
@@ -194,28 +191,27 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
             controller: cpfCnpjController,
             // validator: validarCpfCnpj,
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child: InputDropDownComponent(
-                label: 'Estado cível: ',
-                labelDropDown: estadoCivilController.text,
-                items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
-                onChanged: selectEstadoCivel,
-              )),
-              Expanded(
-                  child: Row(
-                children: [
-                  Expanded(
-                    child: InputComponent(
-                      label: 'Data de nascimento: ',
-                      inputFormatter: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        DataInputFormatter()
-                      ],
+          Expanded(
+              child: InputDropDownComponent(
+            label: 'Estado cívil: ',
+            labelDropDown: estadoCivilController.text,
+            items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
+            onChanged: selectEstadoCivel,
+          )),
+          Container(
+            margin: EdgeInsets.only(bottom: 5),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: TextComponent(
+                    label: 'Data de nascimento: ',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: TextFormField(
                       controller: dataNascimentoController,
                       validator: (value) {
                         if (isVazio(value)) {
@@ -223,21 +219,62 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                         }
                         return null;
                       },
-                    ),
-                  ),
-                  FlatButton(
-                      onPressed: exibirData,
-                      child: Icon(
-                        Icons.calendar_today,
-                        color: colorAzul,
-                      ))
-                ],
-              ))
-            ],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        DataInputFormatter()
+                      ],
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: 10, top: 15, bottom: 15),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromRGBO(191, 188, 188, 1))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromRGBO(191, 188, 188, 1))),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(
+                              top: 15), // add padding to adjust icon
+                          child: FlatButton(
+                              onPressed: exibirData,
+                              child: Icon(
+                                Icons.calendar_today,
+                                color: colorAzul,
+                              )),
+                        ),
+                      )),
+                )
+              ],
+            ),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //         child: Row(
+          //       children: [
+          //         Expanded(
+          //           child: InputComponent(
+          //             label: 'Data de nascimento: ',
+          //             inputFormatter: [
+          //               FilteringTextInputFormatter.digitsOnly,
+          //               DataInputFormatter()
+          //             ],
+          //             controller: dataNascimentoController,
+          //             validator: (value) {
+          //               if (isVazio(value)) {
+          //                 return 'Campo data de nascimento vazio !';
+          //               }
+          //               return null;
+          //             },
+          //           ),
+          //         ),
+          //       ],
+          //     ))
+          //   ],
+          // ),
           InputComponent(
             label: 'E-mail: ',
             controller: emailController,
@@ -247,9 +284,6 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               }
               return null;
             },
-          ),
-          SizedBox(
-            height: 10,
           ),
           InputComponent(
             inputFormatter: [
@@ -374,29 +408,28 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                 segundaRota: '/consultar_cliente',
               ),
               Expanded(
+                  flex: 15,
                   child: SingleChildScrollView(
-                child: Container(
-                  width: double.infinity,
-                  // height: MediaQuery.of(context).size.height,
-                  margin: marginPadrao,
-                  child: Column(
-                    children: [
-                      MolduraComponent(
-                        label: 'Cliente',
-                        content: formCliente,
+                    child: Container(
+                      padding: paddingPadrao,
+                      child: Column(
+                        children: [
+                          MolduraComponent(
+                            label: 'Cliente',
+                            content: formCliente,
+                          ),
+                          MolduraComponent(
+                            label: 'Endereco',
+                            content: formEndereco,
+                          ),
+                          ButtonComponent(
+                            label: 'Cadastrar',
+                            onPressed: cadastrarCliente,
+                          ),
+                        ],
                       ),
-                      MolduraComponent(
-                        label: 'Endereco',
-                        content: formEndereco,
-                      ),
-                      ButtonComponent(
-                        label: 'Cadastrar',
-                        onPressed: cadastrarCliente,
-                      ),
-                    ],
-                  ),
-                ),
-              ))
+                    ),
+                  ))
             ],
           ),
         ));
