@@ -4,6 +4,7 @@ import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/ProdutoMargemModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
@@ -64,7 +65,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(produtoModel.id.toString()),
-                    Expanded(child: Text('produto'))
+                    Text(produtoModel.nome.toString())
                     //Expanded(child: Text(produtoModel.nome))
                   ],
                 ),
@@ -80,8 +81,9 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(produtoMargemModel.margem.toString()),
-                    Text(produtoModel.valorCompra.toString()),
-                    Text(produtoModel.valorVenda.toString())
+                    Text(produtoModel.precoCompra.toString()),
+                    Text('valorVenda')
+                    //Text(produtoModel.valorVenda.toString())
                   ],
                 ),
               ],
@@ -262,7 +264,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
               margin: EdgeInsets.only(left: 20, top: 20, right: 20),
               child: Column(
                 children: [
-                  FormComponent(
+                  MolduraComponent(
                     label: 'Produto',
                     content: lista,
                   ),
@@ -291,7 +293,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
               children: [
                 Expanded(
                     child: SingleChildScrollView(
-                  child: FormComponent(
+                  child: MolduraComponent(
                     label: 'Produto',
                     content: lista,
                   ),
@@ -339,7 +341,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Nome: '),
-                    Expanded(child: Text(produtoModel.nome))
+                    Expanded(child: Text(produtoModel.nome.toString()))
                   ],
                 ),
                 Row(
@@ -347,7 +349,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Descrição: '),
-                    Expanded(child: Text(produtoModel.descricao))
+                    Expanded(child: Text(produtoModel.descricao.toString()))
                   ],
                 ),
                 Row(
@@ -355,16 +357,17 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Categoria: '),
-                    Expanded(child: Text(produtoModel.idCategoria.toString()))
+                    Expanded(child: Text(produtoModel.id.toString()))
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextComponent(label: 'Valor Compra: '),
-                    Text(produtoModel.valorCompra.toString()),
+                    Text(produtoModel.precoCompra.toString()),
                     TextComponent(label: 'Valor Venda: '),
-                    Text(produtoModel.valorVenda.toString())
+                    Text('valorVenda')
+                    //Text(produtoModel.valorVenda.toString())
                   ],
                 ),
                 Row(
