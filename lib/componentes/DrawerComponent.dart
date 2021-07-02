@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projeto_flutter/componentes/TextComponent.dart';
+import 'package:projeto_flutter/componentes/styles.dart';
+import 'package:projeto_flutter/services/Auth.dart';
 //import 'package:projeto_flutter/views/pedido/pedido.dart';
 //import '../views/pedido/pedido.dart';
 
@@ -29,7 +32,8 @@ class DrawerComponent extends StatelessWidget {
                       left: -20,
                       child: FlatButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/login');
+                            Auth.logout();
+                            Navigator.of(context).pushNamed('/login');
                           },
                           child: Container(
                               child: Image(
@@ -52,20 +56,18 @@ class DrawerComponent extends StatelessWidget {
                               height: 1),
                         )),
                     Positioned(
-                        top: 15,
-                        left: 38,
-                        child: Text(
-                          'Sair',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: Color.fromRGBO(255, 255, 255, 1),
-                              fontFamily: 'Roboto',
-                              fontSize: 14,
-                              letterSpacing:
-                                  0 /*percentages not used in flutter. defaulting to zero*/,
-                              fontWeight: FontWeight.normal,
-                              height: 1),
-                        )),
+                      top: 15,
+                      left: 38,
+                      child: GestureDetector(
+                          onTap: () {
+                            Auth.logout();
+                            Navigator.of(context).pushNamed('/login');
+                          },
+                          child: TextComponent(
+                            label: 'Sair',
+                            cor: colorBranco,
+                          )),
+                    ),
                     Positioned(
                         top: 1,
                         left: 290,
@@ -127,9 +129,13 @@ class DrawerComponent extends StatelessWidget {
             // itemMenu('Estoque', context),
             // itemMenu('Pedido de compras', context),
             itemMenu('Fornecedor', context, '/cadastrar_fornecedor'),
-            itemMenu('Cliente', context, '/cadastrar_cliente'),
-            itemMenu('Pedido de venda', context, '/pedido'),
             itemMenu('Produto', context, '/cadastrar_produto'),
+            itemMenu('Precificação', context, '/cadastrar_precificacao'),
+            itemMenu('Estoque', context, '/estoque'),
+            itemMenu('Pedido de Compras', context, '/pedido_compra_cadastrar'),
+            itemMenu('Cliente', context, '/cadastrar_cliente'),
+            itemMenu('Pedido de venda', context, '/pedido_venda_cadastrar'),
+            itemMenu('Pedido de compra', context, '/pedido_compra'),
           ],
         ),
       ),

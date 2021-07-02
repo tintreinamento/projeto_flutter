@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-import 'package:projeto_flutter/componentes/FormComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/CidadeController.dart';
 import 'package:projeto_flutter/controllers/EnderecoController.dart';
 import 'package:projeto_flutter/controllers/EstadoController.dart';
@@ -60,9 +61,9 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
     }
   }
 
-  String validarCpfCnpj(cpfCnpj) {
+  String? validarCpfCnpj(cpfCnpj) {
     if (isVazio(cpfCnpj)) {
-      return 'Campo CPF/CNPJ vazio';
+      return 'Campo CPF/CNPJ vazio!';
     }
 
     var cpfLimpo = UtilBrasilFields.removeCaracteres(cpfCnpj);
@@ -79,7 +80,20 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
       return 'CPF/CNPJ inválido!';
     }
 
-    return "";
+    return null;
+  }
+
+  limpaCampos() {
+    nomeController.text = "";
+    cpfCnpjController.text = "";
+    emailController.text = "";
+    telefoneController.text = "";
+    cepController.text = "";
+    logradouroController.text = "";
+    numeroController.text = "";
+    bairroController.text = "";
+    cidadeController.text = "";
+    estadoController.text = "";
   }
 
   cadastrarFornecedor() async {
@@ -108,17 +122,18 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
         var cidade = await cidadeControllerApi.crie(cidadeModel);
 
         var enderecoModel = EnderecoModel(
-            idCidade: cidade.id,
-            idEstado: estado.id,
-            idFornecedor: fornecedor.id,
-            idPais: 1,
+            // idCidade: cidade.id,
+            // idEstado: estado.id,
+            // idFornecedor: fornecedor.id,
+            // idPais: 1,
             cep: UtilBrasilFields.removeCaracteres(cepController.text),
             logradouro: logradouroController.text,
-            numero: numeroController.text,
+            // numero: numeroController.text,
             bairro: bairroController.text);
 
-        var enderecoControllerApi = EnderecoController();
-        await enderecoControllerApi.crie(enderecoModel);
+        // var enderecoControllerApi = EnderecoController();
+        // await enderecoControllerApi.crie(enderecoModel);
+        limpaCampos();
       }
     }
   }
@@ -195,6 +210,10 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             InputComponent(
+              inputFormatter: [
+                FilteringTextInputFormatter.digitsOnly,
+                CepInputFormatter()
+              ],
               label: 'CEP: ',
               controller: cepController,
               validator: (value) {
@@ -289,25 +308,25 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             ),
             Expanded(
                 child: SingleChildScrollView(
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height,
-                margin: EdgeInsets.only(left: 20, top: 20, right: 20),
-                child: Column(
-                  children: [
-                    FormComponent(
-                      label: 'Fornecedor',
-                      content: formFornecedor,
-                    ),
-                    FormComponent(
-                      label: 'Endereço',
-                      content: formEndereco,
-                    ),
-                    ButtonComponent(
-                      label: 'Cadastrar',
-                      onPressed: cadastrarFornecedor,
-                    ),
-                  ],
+              child: Expanded(
+                child: Container(
+                  padding: paddingPadrao,
+                  child: Column(
+                    children: [
+                      MolduraComponent(
+                        label: 'Fornecedor',
+                        content: formFornecedor,
+                      ),
+                      MolduraComponent(
+                        label: 'Endereço',
+                        content: formEndereco,
+                      ),
+                      ButtonComponent(
+                        label: 'Cadastrar',
+                        onPressed: cadastrarFornecedor,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ))

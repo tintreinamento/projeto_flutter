@@ -11,6 +11,7 @@ class InputComponent extends StatefulWidget {
   Function? onChange;
   Function? onFieldSubmitted;
   FormFieldValidator<String>? validator;
+  bool? obscureText;
 
   InputComponent(
       {Key? key,
@@ -19,7 +20,8 @@ class InputComponent extends StatefulWidget {
       this.controller,
       this.onChange,
       this.onFieldSubmitted,
-      this.validator})
+      this.validator,
+      this.obscureText})
       : super(key: key);
 
   @override
@@ -29,16 +31,22 @@ class InputComponent extends StatefulWidget {
 class _InputComponentState extends State<InputComponent> {
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(minWidth: 260.0, minHeight: 30),
+    return Container(
+      margin: EdgeInsets.only(bottom: 5.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextComponent(
-            label: widget.label,
+          Expanded(
+            flex: 2,
+            child: TextComponent(
+              label: widget.label,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Expanded(
+            flex: 5,
             child: TextFormFieldComponent(
+              obscureText: widget.obscureText,
               inputFormatter: widget.inputFormatter,
               controller: widget.controller,
               onChange: widget.onChange,

@@ -19,20 +19,26 @@ class InputDropDownComponent extends StatefulWidget {
 class _InputDropDownComponentState extends State<InputDropDownComponent> {
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 260.0),
+    return Container(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TextComponent(
-              label: widget.label,
-            ),
-            DropDownComponent(
-              label: widget.labelDropDown,
-              items: widget.items,
-              onChanged: widget.onChanged,
-            ),
-          ],
-        ));
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          flex: 2,
+          child: TextComponent(
+            label: widget.label,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Expanded(
+          flex: 5,
+          child: DropDownComponent(
+            label: widget.labelDropDown,
+            items: widget.items,
+            onChanged: widget.onChanged,
+          ),
+        )
+      ],
+    ));
   }
 }

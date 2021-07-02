@@ -9,22 +9,22 @@ class PedidoController {
 
     List<PedidoModel> colecaoDePedidos = new List.empty(growable: true);
 
-    List<dynamic> stringJson = json.decode(resposta.body);
+    var stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
-      var pedido = new PedidoModel.fromJson(element);
+      var pedido = new PedidoModel.fromMap(element);
       colecaoDePedidos.add(pedido);
     });
 
     return colecaoDePedidos;
   }
 
-  Future<PedidoModel> obtenhaPorId(int id) async {
-    final resposta = await new Api().obtenha('pedidos/' + id.toString());
+  Future<PedidoModel> obtenhaPorId(String id) async {
+    final resposta = await new Api().obtenha('pedidos/' + id);
 
     var stringJson = json.decode(resposta.body);
 
-    return new PedidoModel.fromJson(stringJson.single);
+    return new PedidoModel.fromMap(stringJson);
   }
 
   Future<PedidoModel> crie(PedidoModel pedido) async {

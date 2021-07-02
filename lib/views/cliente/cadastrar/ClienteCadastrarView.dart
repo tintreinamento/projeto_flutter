@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DropDownComponent.dart';
-import 'package:projeto_flutter/componentes/FormComponent.dart';
+
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/TextFormFieldComponent.dart';
 import 'package:projeto_flutter/componentes/inputDropDownComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
@@ -47,14 +48,6 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
   final cidadeController = TextEditingController();
   final estadoController = TextEditingController();
 
-  pegarNome() {
-    print(nomeController.text);
-  }
-
-  pegaraNome(text) {
-    print(nomeController.text);
-  }
-
   bool isVazio(value) {
     if (value == null || value.isEmpty) {
       return true;
@@ -63,26 +56,10 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     }
   }
 
-  String validarCpfCnpj(cpfCnpj) {
-    if (isVazio(cpfCnpj)) {
-      return 'Campo CPF/CNPJ vazio';
-    }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 11) {
-      if (UtilBrasilFields.isCPFValido(
-          UtilBrasilFields.removeCaracteres(cpfCnpj))) {
-        return 'CPF inválido !';
-      }
-    }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 14) {
-      if (UtilBrasilFields.isCNPJValido(cpfCnpj)) {
-        return 'CNPJ inválido !';
-      }
-    }
-    return "";
-  }
-
   selectEstadoCivel(value) {
-    estadoCivilController.text = value;
+    setState(() {
+      estadoCivilController.text = value;
+    });
   }
 
   carregarEndereco() async {
@@ -107,46 +84,93 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
             lastDate: DateTime.now())
         .then((value) {
       setState(() {
-        dataNascimentoController.text = value.toString();
+        dataNascimentoController.text = UtilData.obterDataDDMMAAAA(value!);
       });
     });
   }
 
-  cadastrarCliente() {
-    if (_formKeyCliente.currentState!.validate()) {
-      if (_formKeyEndereco.currentState!.validate()) {
-        //Cadastrar os dados na API
+  cadastrarCliente() async {
+    // if (_formKeyCliente.currentState!.validate()) {
+    //  if (_formKeyEndereco.currentState!.validate()) {
+    //Cadastrar os dados na API
 
-        ClienteModel clienteModel = ClienteModel(
-            nome: nomeController.text,
-            cpf: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
-            email: emailController.text,
-            dataNascimento: UtilBrasilFields.removeCaracteres(
-                dataNascimentoController.text),
-            estadoCivil: estadoCivilController.text,
-            sexo: sexoController.text,
-            ddd: dddController.text,
-            numeroTelefone:
-                UtilBrasilFields.removeCaracteres(telefoneController.text),
-            cep: UtilBrasilFields.removeCaracteres(cepController.text),
-            logradouro: logradouroController.text,
-            numero: numeroController.text,
-            bairro: bairroController.text,
-            cidade: cidadeController.text,
-            uf: estadoController.text);
+    // ClienteModel clienteModel = ClienteModel(
+    //     nome: nomeController.text,
+    //     cpf: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
+    //     email: emailController.text,
+    //     //dataNascimento:
+    //     // UtilBrasilFields.removeCaracteres(dataNascimentoController.text),
+    //     estadoCivil: estadoCivilController.text,
+    //     sexo: sexoController.text,
+    //     ddd: dddController.text,
+    //     numeroTelefone:
+    //         UtilBrasilFields.removeCaracteres(telefoneController.text),
+    //     cep: UtilBrasilFields.removeCaracteres(cepController.text),
+    //     logradouro: logradouroController.text,
+    //     numero: numeroController.text,
+    //     bairro: bairroController.text,
+    //     cidade: cidadeController.text,
+    //     uf: estadoController.text);
 
-        ClienteController clienteController = ClienteController();
+    // ClienteController clienteController = ClienteController();
 
-        clienteController.crie(clienteModel);
-      }
-    }
+    // var teste = await clienteController.crie(clienteModel);
+    // print(teste);
+    // limparCampos();
+    // showDialog();
+    // }
+    //}
+  }
+
+  showDialog() {
+    return AlertDialog(
+      actions: [
+        Column(children: [
+          Text('Cliente cadastrado com sucesso !'),
+          Container(
+            width: 241,
+            height: 31,
+            margin: EdgeInsets.only(top: 18, bottom: 13),
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Color.fromRGBO(0, 94, 181, 1)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(100),
+                    ))),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Confirmar pedido',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                    color: Color.fromRGBO(255, 255, 255, 1),
+                  ),
+                )),
+          )
+        ])
+      ],
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    estadoCivilController.text = "Selecione o estado cívil";
   }
 
   @override
   Widget build(BuildContext context) {
     final formCliente = Form(
       key: _formKeyCliente,
-      child: Column(
+      child: Wrap(
         children: [
           InputComponent(
             label: 'Nome: ',
@@ -158,9 +182,6 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               return null;
             },
           ),
-          SizedBox(
-            height: 10,
-          ),
           InputComponent(
             label: 'CPF/CNPJ: ',
             inputFormatter: [
@@ -168,31 +189,29 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               CpfOuCnpjFormatter()
             ],
             controller: cpfCnpjController,
-            validator: validarCpfCnpj,
+            // validator: validarCpfCnpj,
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            children: [
-              ConstrainedBox(
-                  constraints: BoxConstraints(minWidth: 260.0),
-                  child: InputDropDownComponent(
-                    label: 'Estado cível: ',
-                    labelDropDown: 'Selecione o estado cível',
-                    items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
-                    onChanged: selectEstadoCivel,
-                  )),
-              Expanded(
-                  child: Row(
-                children: [
-                  Expanded(
-                    child: InputComponent(
-                      label: 'Data de nascimento: ',
-                      inputFormatter: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        DataInputFormatter()
-                      ],
+          Expanded(
+              child: InputDropDownComponent(
+            label: 'Estado cívil: ',
+            labelDropDown: estadoCivilController.text,
+            items: ['Solteiro', 'Casado', 'Divorciado', 'Viuvo'],
+            onChanged: selectEstadoCivel,
+          )),
+          Container(
+            margin: EdgeInsets.only(bottom: 5),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: TextComponent(
+                    label: 'Data de nascimento: ',
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Expanded(
+                  flex: 5,
+                  child: TextFormField(
                       controller: dataNascimentoController,
                       validator: (value) {
                         if (isVazio(value)) {
@@ -200,21 +219,62 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                         }
                         return null;
                       },
-                    ),
-                  ),
-                  FlatButton(
-                      onPressed: exibirData,
-                      child: Icon(
-                        Icons.calendar_today,
-                        color: colorAzul,
-                      ))
-                ],
-              ))
-            ],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        DataInputFormatter()
+                      ],
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: 10, top: 15, bottom: 15),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromRGBO(191, 188, 188, 1))),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color.fromRGBO(191, 188, 188, 1))),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.only(
+                              top: 15), // add padding to adjust icon
+                          child: FlatButton(
+                              onPressed: exibirData,
+                              child: Icon(
+                                Icons.calendar_today,
+                                color: colorAzul,
+                              )),
+                        ),
+                      )),
+                )
+              ],
+            ),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //         child: Row(
+          //       children: [
+          //         Expanded(
+          //           child: InputComponent(
+          //             label: 'Data de nascimento: ',
+          //             inputFormatter: [
+          //               FilteringTextInputFormatter.digitsOnly,
+          //               DataInputFormatter()
+          //             ],
+          //             controller: dataNascimentoController,
+          //             validator: (value) {
+          //               if (isVazio(value)) {
+          //                 return 'Campo data de nascimento vazio !';
+          //               }
+          //               return null;
+          //             },
+          //           ),
+          //         ),
+          //       ],
+          //     ))
+          //   ],
+          // ),
           InputComponent(
             label: 'E-mail: ',
             controller: emailController,
@@ -224,9 +284,6 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
               }
               return null;
             },
-          ),
-          SizedBox(
-            height: 10,
           ),
           InputComponent(
             inputFormatter: [
@@ -351,29 +408,28 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                 segundaRota: '/consultar_cliente',
               ),
               Expanded(
+                  flex: 15,
                   child: SingleChildScrollView(
-                child: Container(
-                  width: double.infinity,
-                  // height: MediaQuery.of(context).size.height,
-                  margin: EdgeInsets.only(left: 20, top: 20, right: 20),
-                  child: Column(
-                    children: [
-                      FormComponent(
-                        label: 'Cliente',
-                        content: formCliente,
+                    child: Container(
+                      padding: paddingPadrao,
+                      child: Column(
+                        children: [
+                          MolduraComponent(
+                            label: 'Cliente',
+                            content: formCliente,
+                          ),
+                          MolduraComponent(
+                            label: 'Endereco',
+                            content: formEndereco,
+                          ),
+                          ButtonComponent(
+                            label: 'Cadastrar',
+                            onPressed: cadastrarCliente,
+                          ),
+                        ],
                       ),
-                      FormComponent(
-                        label: 'Endereco',
-                        content: formEndereco,
-                      ),
-                      ButtonComponent(
-                        label: 'Cadastrar',
-                        onPressed: cadastrarCliente,
-                      ),
-                    ],
-                  ),
-                ),
-              ))
+                    ),
+                  ))
             ],
           ),
         ));

@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DropDownComponent.dart';
-import 'package:projeto_flutter/componentes/FormComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/TextFormFieldComponent.dart';
 import 'package:projeto_flutter/componentes/inputDropDownComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
@@ -97,23 +97,27 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
   }
 
   //validador de cpf/cnpj
-  /*String validarCpfCnpj(cpfCnpj) {
+  String? validarCpfCnpj(cpfCnpj) {
     if (isVazio(cpfCnpj)) {
       return 'Campo CPF/CNPJ vazio';
     }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 11) {
-      if (UtilBrasilFields.isCPFValido(
-          UtilBrasilFields.removeCaracteres(cpfCnpj))) {
-        return 'CPF inválido !';
+
+    var cpfLimpo = UtilBrasilFields.removeCaracteres(cpfCnpj);
+
+    if (cpfLimpo.length == 11) {
+      if (!UtilBrasilFields.isCPFValido(cpfLimpo)) {
+        return 'CPF inválido';
       }
-    }
-    if (UtilBrasilFields.removeCaracteres(cpfCnpj).length == 14) {
-      if (UtilBrasilFields.isCNPJValido(cpfCnpj)) {
-        return 'CNPJ inválido !';
+    } else if (cpfLimpo.length == 14) {
+      if (!UtilBrasilFields.isCNPJValido(cpfLimpo)) {
+        return 'CNPJ inválido!';
       }
+    } else {
+      return 'CPF/CNPJ inválido!';
     }
-    return "";
-  }*/
+
+    return null;
+  }
 
   consultarFornecedor() async {
     //Consultando dados do cliente através da API
@@ -123,33 +127,33 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
 
     //Caso exista o cliente cadastrado, preencha os campos com as respectivas informações
     //nomeConsultaController = nomeController.text;
-    cpfCnpjController.text = fornecedor.cpfCnpj;
-    emailController.text = fornecedor.email;
-    telefoneController.text = fornecedor.telefone;
-    idFornecedorController = fornecedor.id;
+    // cpfCnpjController.text = UtilBrasilFields.obterCnpj(fornecedor.cpfCnpj);
+    // emailController.text = fornecedor.email;
+    // telefoneController.text = fornecedor.telefone;
+    // idFornecedorController = fornecedor.id;
   }
 
   //Botão para inserção do produto usando a API
-  cadastrarProduto() {
-    if (_formKeyFornecedor.currentState!.validate()) {
-      if (_formKeyProduto.currentState!.validate()) {
-        //Cadastrar os dados na API
+  // cadastrarProduto() {
+  //   if (_formKeyFornecedor.currentState!.validate()) {
+  //     if (_formKeyProduto.currentState!.validate()) {
+  //       //Cadastrar os dados na API
 
-        ProdutoModel produtoModel = ProdutoModel(
-            nome: nomeProdutoController.text,
-            descricao: descricaoController.text,
-            idCategoria: categoriaController.text,
-            valorCompra: valorCompraController.text,
-            idFornecedor: idFornecedorController);
+  //       //   ProdutoModel produtoModel = ProdutoModel(
+  //       //       // nome: nomeProdutoController.text,
+  //       //       // descricao: descricaoController.text,
+  //       //       // idCategoria: categoriaController.text,
+  //       //       // valorCompra: valorCompraController.text,
+  //       //       // idFornecedor: idFornecedorController);
 
-        ProdutoController produtoController = ProdutoController();
+  //       //   // ProdutoController produtoController = ProdutoController();
 
-        produtoController.crie(produtoModel);
-        limparCampos();
-        showAlertDialog1(context);
-      }
-    }
-  }
+  //       //   // produtoController.crie(produtoModel);
+  //       //   // limparCampos();
+  //       //   // showAlertDialog1(context);
+  //       // }
+  //     }
+  //   }
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +205,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
               TelefoneInputFormatter()
             ],
             label: 'Telefone: ',
-            controller: emailController,
+            controller: telefoneController,
             validator: (value) {
               if (isVazio(value)) {
                 return 'Campo telefone vazio !';
@@ -294,7 +298,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
                   margin: EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: Column(
                     children: [
-                      FormComponent(
+                      MolduraComponent(
                         label: 'Fornecedor',
                         content: formFornecedor,
                       ),
@@ -302,13 +306,13 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
                         label: 'Consultar',
                         onPressed: consultarFornecedor,
                       ),
-                      FormComponent(
+                      MolduraComponent(
                         label: 'Produto',
                         content: formProduto,
                       ),
                       ButtonComponent(
                         label: 'Cadastrar',
-                        onPressed: cadastrarProduto,
+                        // onPressed: cadastrarProduto,
                       ),
                     ],
                   ),

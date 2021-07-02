@@ -5,22 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 
-import 'package:projeto_flutter/componentes/FormComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/controllers/FornecedorController.dart';
-import 'package:projeto_flutter/models/ClienteModel.dart';
-import 'package:projeto_flutter/controllers/ClienteController.dart';
 import 'package:projeto_flutter/models/FornecedorModel.dart';
 
 class FornecedorConsultarView extends StatefulWidget {
   const FornecedorConsultarView({Key? key}) : super(key: key);
 
   @override
-  _FornecedorConsultarViewState createState() => _FornecedorConsultarViewState();
+  _FornecedorConsultarViewState createState() =>
+      _FornecedorConsultarViewState();
 }
 
 class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
@@ -38,19 +37,11 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
     }
   }
 
-  consultarFornecedor() async {
+  consultarFornecedor() {
     if (_formKeyConsultaFornecedor.currentState!.validate()) {
       //consulta
-      /*var nomeFornecedor = nomeController;
-      FornecedorController fornecedor = new FornecedorController();
-      void initState() {
-        super.initState();
-        listaFornecedores = fornecedorController.obtenhaPorNome(nomeFornecedor.text) as Future<List<FornecedorModel>>;
-      }*/
+      setState(() {});
     }
-
-
-
   }
 
   @override
@@ -62,6 +53,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
   @override
   Widget build(BuildContext context) {
     final formConsulta = Form(
+      key: _formKeyConsultaFornecedor,
       child: Column(
         children: [
           InputComponent(
@@ -73,7 +65,11 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
               }
               return null;
             },
-          )
+          ),
+          ButtonComponent(
+            label: 'Consultar',
+            onPressed: consultarFornecedor,
+          ),
         ],
       ),
     );
@@ -81,17 +77,26 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
     //Map
     var lista = FutureBuilder(
         future: listaFornecedores,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<FornecedorModel>> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<List<FornecedorModel>> snapshot) {
           if (snapshot.hasData) {
-            final listaFornecedores = snapshot.data!.map((fornecedor) {
-              return Column(
-                children: [
-                  cardFornecedor(fornecedor),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+            //Ordena consulta
+            final listaOrdenada = snapshot.data!.where((fornecedor) {
+              return fornecedor.nome!
+                  .toLowerCase()
+                  .startsWith(nomeController.text.toLowerCase());
+            });
+
+            final listaFornecedores = listaOrdenada.map((fornecedor) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    cardFornecedor(fornecedor),
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               );
             }).toList();
 
@@ -102,7 +107,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
             );
           } else if (snapshot.hasError) {
             // If something went wrong
-            return Text('Falha ao obter os dados da API ');
+            return Text('Falha ao obter os dados da API');
           }
           return CircularProgressIndicator();
         });
@@ -111,29 +116,25 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
       child: Column(
         children: [
           SubMenuComponent(
-            titulo: 'Cliente',
+            titulo: 'Fornecedor',
             tituloPrimeiraRota: 'Cadastro',
-            primeiraRota: '/cadastrar_cliente',
+            primeiraRota: '/cadastrar_fornecedor',
             tituloSegundaRota: 'Consultar',
-            segundaRota: '/consultar_cliente',
+            segundaRota: '/consultar_fornecedor',
           ),
           Expanded(
               child: SingleChildScrollView(
             child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height,
+              //width: double.infinity,
+              //height: MediaQuery.of(context).size.height,
               margin: EdgeInsets.only(left: 20, top: 20, right: 20),
               child: Column(
                 children: [
-                  FormComponent(
+                  MolduraComponent(
                     label: 'Fornecedor',
                     content: formConsulta,
                   ),
-                  ButtonComponent(
-                    label: 'Consultar',
-                    onPressed: consultarFornecedor,
-                  ),
-                  FormComponent(
+                  MolduraComponent(
                     label: 'Fornecedores',
                     content: lista,
                   ),
@@ -149,35 +150,38 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
       child: Column(
         children: [
           SubMenuComponent(
-            titulo: 'Cliente',
+            titulo: 'Fornecedor',
             tituloPrimeiraRota: 'Cadastro',
-            primeiraRota: '/cadastrar_cliente',
+            primeiraRota: '/cadastrar_fornecedor',
             tituloSegundaRota: 'Consultar',
-            segundaRota: '/consultar_cliente',
+            segundaRota: '/consultar_fornecedor',
           ),
           Expanded(
-              child: SingleChildScrollView(
             child: Container(
-              height: MediaQuery.of(context).size.height,
-              margin: EdgeInsets.only(left: 20, top: 20, right: 20),
+              margin: EdgeInsets.all(10),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FormComponent(
-                    label: 'Fornecedor',
-                    content: formConsulta,
+                  Expanded(
+                    child: MolduraComponent(
+                      label: 'Fornecedor',
+                      content: formConsulta,
+                    ),
                   ),
-                  ButtonComponent(
-                    label: 'Consultar',
-                    onPressed: consultarFornecedor,
+                  SizedBox(
+                    width: 10,
                   ),
-                  FormComponent(
-                    label: 'Fornecedores',
-                    content: lista,
-                  ),
+                  Expanded(
+                      child: SingleChildScrollView(
+                    child: MolduraComponent(
+                      label: 'Fornecedores',
+                      content: lista,
+                    ),
+                  ))
                 ],
               ),
             ),
-          ))
+          ),
         ],
       ),
     );
@@ -187,7 +191,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
         drawer: DrawerComponent(),
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxHeight < 600) {
+            if (constraints.maxHeight > 600) {
               return layoutVertical;
             } else {
               return layoutHorizontal;
@@ -198,74 +202,88 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
 }
 
 Widget cardFornecedor(FornecedorModel fornecedorModel) {
-  return Container(
-      padding: EdgeInsets.all(16),
-      color: Color.fromRGBO(235, 231, 231, 1),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              Row(
-                children: [
-                  TextComponent(
-                    label: 'Nome: ',
-                  ),
-                  TextComponent(
-                    label: fornecedorModel.nome,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 3,
-              ),
-              Row(
-                children: [
-                  TextComponent(
-                    label: 'CPF/CNPJ: ',
-                  ),
-                  TextComponent(
-                    label: fornecedorModel.cpfCnpj,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 3,
-              ),
-              Row(
-                children: [
-                  TextComponent(
-                    label: 'Telefone: ',
-                  ),
-                  TextComponent(
-                    label: fornecedorModel.telefone,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 3,
-              ),
-              Row(
-                children: [
-                  TextComponent(
-                    label: 'E-mail: ',
-                  ),
-                  TextComponent(
-                    label: fornecedorModel.email,
-                  ),
-                ],
-              )
-            ],
-          ),
-          Positioned(
-            top: 50,
-            right: 0,
-            child: FlatButton(
-                onPressed: () {
-                  // Navigator.pushNamed(context, '/login');
-                },
-                child: Container(
-                    child: Image(image: AssetImage('assets/images/edit.png')))),
-          ),
-        ],
-      ));
+  return ConstrainedBox(
+    constraints: BoxConstraints(minWidth: 340.0),
+    child: Container(
+        padding: EdgeInsets.all(10),
+        color: Color.fromRGBO(235, 231, 231, 1),
+        child: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextComponent(
+                      label: 'Nome: ',
+                    ),
+                    /*Expanded(child: Text( fornecedorModel.nome)),*/
+                    TextComponent(
+                      label: fornecedorModel.nome,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextComponent(
+                      label: 'CPF/CNPJ: ',
+                    ),
+                    TextComponent(
+                      label: fornecedorModel.cpfCnpj,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextComponent(
+                      label: 'Telefone: ',
+                    ),
+                    TextComponent(
+                      label: fornecedorModel.telefone,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 3,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextComponent(
+                      label: 'E-mail: ',
+                    ),
+                    TextComponent(
+                      label: fornecedorModel.email,
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Positioned(
+              top: 50,
+              right: -10,
+              child: FlatButton(
+                  onPressed: () {
+                    // Navigator.pushNamed(context, '/login');
+                  },
+                  child: Container(
+                      child:
+                          Image(image: AssetImage('assets/images/edit.png')))),
+            ),
+          ],
+        )),
+  );
 }

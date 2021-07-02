@@ -1,46 +1,50 @@
+import 'dart:convert';
+
 class EnderecoModel {
-  var id;
-  var idFornecedor;
-  var idPais;
-  var idCidade;
-  var idEstado;
-  var logradouro;
-  var numero;
-  var bairro;
-  var cep;
+  String? cep = "";
+  String? logradouro = "";
+  String? complemento = "";
+  String? bairro = "";
+  String? cidade = "";
+  String? estado = "";
+  String? pais = "";
 
-  EnderecoModel(
-      {this.id,
-      this.idFornecedor,
-      this.idPais,
-      this.idCidade,
-      this.idEstado,
-      this.logradouro,
-      this.numero,
-      this.bairro,
-      this.cep});
+  EnderecoModel({
+    this.cep,
+    this.logradouro,
+    this.complemento,
+    this.bairro,
+    this.cidade,
+    this.estado,
+    this.pais,
+  });
 
-  factory EnderecoModel.fromJson(Map<String, dynamic> parsedJson) {
-    return EnderecoModel(
-        id: parsedJson['id'],
-        idFornecedor: parsedJson['id_fornecedor'],
-        idPais: parsedJson['id_pais'],
-        idCidade: parsedJson['id_cidade'],
-        idEstado: parsedJson['id_estado'],
-        logradouro: parsedJson['logradouro'],
-        numero: parsedJson['numero'],
-        bairro: parsedJson['bairro'],
-        cep: parsedJson['cep']);
+  Map<String, dynamic> toMap() {
+    return {
+      'cep': cep,
+      'logradouro': logradouro,
+      'complemento': complemento,
+      'bairro': bairro,
+      'cidade': cidade,
+      'estado': estado,
+      'pais': pais,
+    };
   }
 
-  Map<String, dynamic> toJson() => {
-        'id_fornecedor': idFornecedor,
-        'id_pais': idPais,
-        'id_cidade': idCidade,
-        'id_estado': idEstado,
-        'logradouro': logradouro,
-        'numero': numero,
-        'bairro': bairro,
-        'cep': cep,
-      };
+  factory EnderecoModel.fromMap(Map<String, dynamic> map) {
+    return EnderecoModel(
+      cep: map['cep'],
+      logradouro: map['logradouro'],
+      complemento: map['complemento'],
+      bairro: map['bairro'],
+      cidade: map['cidade'],
+      estado: map['estado'],
+      pais: map['pais'],
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory EnderecoModel.fromJson(String source) =>
+      EnderecoModel.fromMap(json.decode(source));
 }

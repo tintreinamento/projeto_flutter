@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-import 'package:projeto_flutter/componentes/FormComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
+import 'package:projeto_flutter/controllers/AutenticacaoController.dart';
+import 'package:projeto_flutter/models/AutenticacaoModel.dart';
+import 'package:projeto_flutter/services/Auth.dart';
 import '../homepage/homepage.dart';
 
 class LoginView extends StatefulWidget {
@@ -15,8 +18,21 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final GlobalKey<FormState> _formKeyAutenticacao = GlobalKey<FormState>();
 
-  autenticar() {
-    Navigator.of(context).pushNamed('/pedido');
+  TextEditingController usuarioController = new TextEditingController();
+  TextEditingController senhaController = new TextEditingController();
+
+  autenticar() async {
+    AutenticacaoController autenticacaoController = AutenticacaoController();
+
+    AutenticacaoModel autenticacaoModel = await autenticacaoController.crie(
+        usuarioController.text, senhaController.text);
+
+    //Realiza o login
+    Auth.login(autenticacaoModel.jwt!);
+
+    if (Auth.isAuthenticated()) {
+      Navigator.of(context).pushNamed('/pedido_venda_cadastrar');
+    }
   }
 
   @override
@@ -24,15 +40,20 @@ class _LoginViewState extends State<LoginView> {
     final formAutenticacao = Form(
       key: _formKeyAutenticacao,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           InputComponent(
             label: 'Usuário: ',
+            controller: usuarioController,
           ),
           SizedBox(
             height: 10,
           ),
           InputComponent(
             label: 'Senha: ',
+            obscureText: true,
+            controller: senhaController,
           ),
           SizedBox(height: 10),
           ButtonComponent(
@@ -43,7 +64,7 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
 
-    final cardAutenticacao = FormComponent(
+    final cardAutenticacao = MolduraComponent(
       label: 'Login',
       content: formAutenticacao,
     );
@@ -51,22 +72,27 @@ class _LoginViewState extends State<LoginView> {
     return MaterialApp(
       home: Scaffold(
           body: Container(
-        height: MediaQuery.of(context).size.height,
         child: Column(children: [
-          Container(
-            height: 73,
-            decoration: BoxDecoration(color: colorAzul),
+          Expanded(
+            flex: 1,
+            child: Container(
+              decoration: BoxDecoration(color: colorAzul),
+            ),
           ),
-          Container(
-            height: 20,
-            decoration: BoxDecoration(color: colorVermelho),
+          Expanded(
+            flex: 1,
+            child: Container(
+              decoration: BoxDecoration(color: colorVermelho),
+            ),
           ),
-          SizedBox(
-            height: 40.0,
-          ),
-          SingleChildScrollView(
-            child: cardAutenticacao,
-          ),
+          Expanded(
+              flex: 14,
+              child: Container(
+                  margin: marginPadrao,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [cardAutenticacao],
+                  )))
         ]),
       )),
     );

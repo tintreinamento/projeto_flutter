@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 
-import 'package:projeto_flutter/componentes/FormComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
@@ -81,7 +81,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
           if (snapshot.hasData) {
             //Ordena consulta
             final listaOrdenada = snapshot.data!.where((cliente) {
-              return cliente.nome
+              return cliente.nome!
                   .toLowerCase()
                   .startsWith(nomeController.text.toLowerCase());
             });
@@ -129,11 +129,11 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
               margin: EdgeInsets.only(left: 20, top: 20, right: 20),
               child: Column(
                 children: [
-                  FormComponent(
+                  MolduraComponent(
                     label: 'Cliente',
                     content: formConsulta,
                   ),
-                  FormComponent(
+                  MolduraComponent(
                     label: 'Clientes',
                     content: lista,
                   ),
@@ -162,7 +162,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: FormComponent(
+                    child: MolduraComponent(
                       label: 'Cliente',
                       content: formConsulta,
                     ),
@@ -172,7 +172,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
                   ),
                   Expanded(
                       child: SingleChildScrollView(
-                    child: FormComponent(
+                    child: MolduraComponent(
                       label: 'Clientes',
                       content: lista,
                     ),
@@ -230,7 +230,7 @@ Widget cardCliente(ClienteModel clienteModel) {
                       label: 'CPF/CNPJ: ',
                     ),
                     TextComponent(
-                      label: clienteModel.cpf,
+                      label: clienteModel.cpfCnpj,
                     ),
                   ],
                 ),
@@ -243,7 +243,7 @@ Widget cardCliente(ClienteModel clienteModel) {
                       label: 'Telefone: ',
                     ),
                     TextComponent(
-                      label: clienteModel.numeroTelefone,
+                      label: clienteModel.telefone,
                     ),
                   ],
                 ),
