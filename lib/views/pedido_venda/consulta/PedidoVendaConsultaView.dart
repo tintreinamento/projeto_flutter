@@ -196,7 +196,7 @@ class ItemPedidoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height * .1,
+        //height: MediaQuery.of(context).size.height * .1,
         margin: EdgeInsets.only(bottom: 5.0),
         child: Row(
           children: [
