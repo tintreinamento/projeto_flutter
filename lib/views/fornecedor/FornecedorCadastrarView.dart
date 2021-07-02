@@ -9,6 +9,7 @@ import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/CidadeController.dart';
 import 'package:projeto_flutter/controllers/EnderecoController.dart';
 import 'package:projeto_flutter/controllers/EstadoController.dart';
@@ -309,9 +310,7 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
                 child: SingleChildScrollView(
               child: Expanded(
                 child: Container(
-                  padding: EdgeInsets.all(5),
-                  height: 900,
-                  width: double.infinity,
+                  padding: paddingPadrao,
                   child: Column(
                     children: [
                       MolduraComponent(

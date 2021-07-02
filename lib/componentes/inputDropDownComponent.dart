@@ -27,10 +27,11 @@ class _InputDropDownComponentState extends State<InputDropDownComponent> {
           flex: 2,
           child: TextComponent(
             label: widget.label,
+            fontWeight: FontWeight.bold,
           ),
         ),
         Expanded(
-          flex: 4,
+          flex: 5,
           child: DropDownComponent(
             label: widget.labelDropDown,
             items: widget.items,

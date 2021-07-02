@@ -7,14 +7,13 @@ import 'package:projeto_flutter/views/fornecedor/FornecedorCadastrarView.dart';
 import 'package:projeto_flutter/views/fornecedor/FornecedorConsultarView.dart';
 import 'package:projeto_flutter/views/pedido_venda/cadastrar/PedidoVendaCadastrarView.dart';
 import 'package:projeto_flutter/views/pedido_venda/consulta/PedidoVendaConsultaView.dart';
+import 'package:projeto_flutter/views/pedido_Compra/PedidoCompraCadastroView.dart';
 import 'package:projeto_flutter/views/produto/consulta_produto.dart';
 import 'package:projeto_flutter/views/login/LoginView.dart';
 import 'package:projeto_flutter/views/produto/ProdutoCadastrarView.dart';
 import 'package:projeto_flutter/views/splash/splash_screen.dart';
 // import 'package:projeto_flutter/views/pedido/pedido.dart';
 // import './views/pedido/pedido.dart';
-import 'package:projeto_flutter/views/cliente/ClienteCadastrarView.dart';
-import 'package:projeto_flutter/views/cliente/ClienteConsultarView.dart';
 
 import 'package:provider/provider.dart';
 
@@ -48,7 +47,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         //'/': (context) => PedidoVendaConsultaView(),
-        '/': (context) => SplashPage(), //ok
+        //'/': (context) => SplashPage(), //ok
         '/login': (context) => LoginView(), // ok
         '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
         '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
@@ -56,8 +55,9 @@ class MyApp extends StatelessWidget {
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
         '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
         '/consultar_fornecedor': (context) => FornecedorConsultarView(),
-        // '/consultar_produto': (context) => ProdutoConsultarView(),
+        '/consultar_produto': (context) => ProdutoConsultarView(),
         '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
+        '/pedido_compra': (contexto) => PedidoCompraCadastroView()
       },
     );
   }
