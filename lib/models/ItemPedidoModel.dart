@@ -1,33 +1,34 @@
-import 'dart:convert';
-
-import 'package:projeto_flutter/models/ProdutoModel.dart';
-import 'package:projeto_flutter/models/ProdutoModel.dart';
-
 class ItemPedidoModel {
-  int? quantidade;
-  ProdutoModel? produto;
+  var id;
+  var idPedido;
+  var idProduto;
+  var quantidade;
+  var valorUnitario;
+  var valorTotal;
 
-  ItemPedidoModel({
-    this.quantidade,
-    this.produto,
-  });
+  ItemPedidoModel(
+      {this.id,
+      this.idPedido,
+      this.idProduto,
+      this.quantidade,
+      this.valorUnitario,
+      this.valorTotal});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'quantidade': quantidade,
-      'produto': produto?.toMap(),
-    };
-  }
-
-  factory ItemPedidoModel.fromMap(Map<String, dynamic> map) {
+  factory ItemPedidoModel.fromJson(Map<String, dynamic> parsedJson) {
     return ItemPedidoModel(
-      quantidade: map['quantidade'],
-      produto: ProdutoModel.fromMap(map['produto']),
-    );
+        id: parsedJson['ID_ITEM_PEDIDO'],
+        idPedido: parsedJson['ID_PEDIDO'],
+        idProduto: parsedJson['ID_PRODUTO'],
+        quantidade: parsedJson['QUANTIDADE'],
+        valorUnitario: parsedJson['VALOR_UNITARIO'],
+        valorTotal: parsedJson['VALOR_TOTAL']);
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory ItemPedidoModel.fromJson(String source) =>
-      ItemPedidoModel.fromMap(json.decode(source));
+  Map<String, dynamic> toJson() => {
+        'ID_PEDIDO': idPedido,
+        'ID_PRODUTO': idProduto,
+        'QUANTIDADE': quantidade,
+        'VALOR_UNITARIO': valorUnitario,
+        'VALOR_TOTAL': valorTotal,
+      };
 }

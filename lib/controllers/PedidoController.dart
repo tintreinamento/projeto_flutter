@@ -1,54 +1,58 @@
 import 'dart:convert';
 
-import 'package:projeto_flutter/models/PedidoModel.dart';
+import 'package:projeto_flutter/models/PedidoFornecedorModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
-class PedidoController {
-  Future<List<PedidoModel>> obtenhaTodos() async {
-    final resposta = await new Api().obtenha('pedidos');
+class PedidoFornecedorController {
+  Future<List<PedidoFornecedorModel>> obtenhaTodos() async {
+    final resposta = await new Api().obtenha('pedido-fornecedor');
 
-    List<PedidoModel> colecaoDePedidos = new List.empty(growable: true);
+    List<PedidoFornecedorModel> colecaoDePedidos =
+        new List.empty(growable: true);
 
-    var stringJson = json.decode(resposta.body);
+    List<dynamic> stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
-      var pedido = new PedidoModel.fromMap(element);
+      var pedido = new PedidoFornecedorModel.fromJson(element);
       colecaoDePedidos.add(pedido);
     });
 
     return colecaoDePedidos;
   }
 
-  Future<PedidoModel> obtenhaPorId(String id) async {
-    final resposta = await new Api().obtenha('pedidos/' + id);
+  Future<PedidoFornecedorModel> obtenhaPorId(int id) async {
+    final resposta =
+        await new Api().obtenha('pedido-fornecedor/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
 
-    return new PedidoModel.fromMap(stringJson);
+    return new PedidoFornecedorModel.fromJson(stringJson.single);
   }
 
-  Future<PedidoModel> crie(PedidoModel pedido) async {
-    final resposta = await new Api().crie('pedidos', json.encode(pedido));
+  Future<PedidoFornecedorModel> crie(PedidoFornecedorModel pedido) async {
+    final resposta =
+        await new Api().crie('pedido-fornecedor', json.encode(pedido));
 
     var stringJson = json.decode(resposta.body);
 
-    return new PedidoModel.fromJson(stringJson);
+    return new PedidoFornecedorModel.fromJson(stringJson);
   }
 
-  Future<PedidoModel> delete(PedidoModel pedido) async {
-    final resposta = await new Api().delete('pedidos/' + pedido.id.toString());
+  Future<PedidoFornecedorModel> delete(PedidoFornecedorModel pedido) async {
+    final resposta =
+        await new Api().delete('pedido-fornecedor/' + pedido.id.toString());
 
     var stringJson = json.decode(resposta.body);
 
-    return new PedidoModel.fromJson(stringJson);
+    return new PedidoFornecedorModel.fromJson(stringJson);
   }
 
-  Future<PedidoModel> atualize(PedidoModel pedido) async {
-    final resposta = await new Api()
-        .atualize('pedidos/' + pedido.id.toString(), json.encode(pedido));
+  Future<PedidoFornecedorModel> atualize(PedidoFornecedorModel pedido) async {
+    final resposta = await new Api().atualize(
+        'pedido-fornecedor/' + pedido.id.toString(), json.encode(pedido));
 
     var stringJson = json.decode(resposta.body);
 
-    return new PedidoModel.fromJson(stringJson);
+    return new PedidoFornecedorModel.fromJson(stringJson);
   }
 }

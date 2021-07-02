@@ -5,7 +5,7 @@ import 'package:projeto_flutter/services/Api.dart';
 
 class ItemPedidoFornecedorController {
   Future<List<ItemPedidoFornecedorModel>> obtenhaTodos() async {
-    final resposta = await new Api().obtenha('item-pedido-fornecedors');
+    final resposta = await new Api().obtenha('item-pedido-fornecedor');
 
     List<ItemPedidoFornecedorModel> colecaoDeItemPedido =
         new List.empty(growable: true);
@@ -22,7 +22,7 @@ class ItemPedidoFornecedorController {
 
   Future<ItemPedidoFornecedorModel> obtenhaPorId(int id) async {
     final resposta =
-        await new Api().obtenha('item-pedido-fornecedors/' + id.toString());
+        await new Api().obtenha('item-pedido-fornecedor/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -32,7 +32,7 @@ class ItemPedidoFornecedorController {
   Future<ItemPedidoFornecedorModel> crie(
       ItemPedidoFornecedorModel pedido) async {
     final resposta =
-        await new Api().crie('item-pedido-fornecedors', json.encode(pedido));
+        await new Api().crie('item-pedido-fornecedor', json.encode(pedido));
 
     var stringJson = json.decode(resposta.body);
 
@@ -42,7 +42,7 @@ class ItemPedidoFornecedorController {
   Future<ItemPedidoFornecedorModel> delete(
       ItemPedidoFornecedorModel pedido) async {
     final resposta = await new Api()
-        .delete('item-pedido-fornecedors/' + pedido.id.toString());
+        .delete('item-pedido-fornecedor/' + pedido.id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -52,7 +52,7 @@ class ItemPedidoFornecedorController {
   Future<ItemPedidoFornecedorModel> atualize(
       ItemPedidoFornecedorModel pedido) async {
     final resposta = await new Api().atualize(
-        'item-pedido-fornecedors/' + pedido.id.toString(), json.encode(pedido));
+        'item-pedido-fornecedor/' + pedido.id.toString(), json.encode(pedido));
 
     var stringJson = json.decode(resposta.body);
 

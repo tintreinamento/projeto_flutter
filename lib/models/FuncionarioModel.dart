@@ -1,30 +1,25 @@
-import 'dart:convert';
-
 class FuncionarioModel {
-  String? nome;
-  String? cpfCnpj;
+  var id;
+  var usuario;
+  var senha;
+  var nome;
+  var cargo;
 
-  FuncionarioModel({
-    this.nome,
-    this.cpfCnpj,
-  });
+  FuncionarioModel({this.id, this.usuario, this.senha, this.nome, this.cargo});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'nome': nome,
-      'cpfCnpj': cpfCnpj,
-    };
-  }
-
-  factory FuncionarioModel.fromMap(Map<String, dynamic> map) {
+  factory FuncionarioModel.fromJson(Map<String, dynamic> parsedJson) {
     return FuncionarioModel(
-      nome: map['nome'],
-      cpfCnpj: map['cpfCnpj'],
-    );
+        id: parsedJson['ID_FUNCIONARIO'],
+        usuario: parsedJson['USUARIO'],
+        senha: parsedJson['SENHA'],
+        nome: parsedJson['NOME'],
+        cargo: parsedJson['CARGO']);
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory FuncionarioModel.fromJson(String source) =>
-      FuncionarioModel.fromMap(json.decode(source));
+  Map<String, dynamic> toJson() => {
+        'USUARIO': usuario,
+        'SENHA': senha,
+        'NOME': nome,
+        'CARGO': cargo,
+      };
 }

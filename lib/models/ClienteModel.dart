@@ -1,56 +1,70 @@
-import 'dart:convert';
-
-import 'package:projeto_flutter/models/EnderecoModel.dart';
-
 class ClienteModel {
-  String? nome;
-  String? cpfCnpj;
-  String? dataNascimento;
-  String? estadoCivil;
-  String? email;
-  String? sexo;
-  String? telefone;
-  EnderecoModel? endereco = new EnderecoModel();
+  var id;
+  var nome;
+  var cpf;
+  var email;
+  var estadoCivil;
+  var dataNascimento;
+  var sexo;
+  var ddd;
+  var numeroTelefone;
+  var logradouro;
+  var numero;
+  var bairro;
+  var cidade;
+  var cep;
+  var uf;
 
-  ClienteModel({
-    this.nome,
-    this.cpfCnpj,
-    this.dataNascimento,
-    this.estadoCivil,
-    this.email,
-    this.sexo,
-    this.telefone,
-    this.endereco,
-  });
+  ClienteModel(
+      {this.id,
+      this.nome,
+      this.cpf,
+      this.email,
+      this.dataNascimento,
+      this.estadoCivil,
+      this.sexo,
+      this.ddd,
+      this.numeroTelefone,
+      this.logradouro,
+      this.numero,
+      this.bairro,
+      this.cidade,
+      this.cep,
+      this.uf});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'nome': nome,
-      'cpfCnpj': cpfCnpj,
-      'dataNascimento': dataNascimento,
-      'estadoCivil': estadoCivil,
-      'email': email,
-      'sexo': sexo,
-      'telefone': telefone,
-      'endereco': endereco?.toMap(),
-    };
-  }
-
-  factory ClienteModel.fromMap(Map<String, dynamic> map) {
+  factory ClienteModel.fromJson(Map<String, dynamic> parsedJson) {
     return ClienteModel(
-      nome: map['nome'],
-      cpfCnpj: map['cpfCnpj'],
-      dataNascimento: map['dataNascimento'],
-      estadoCivil: map['estadoCivil'],
-      email: map['email'],
-      sexo: map['sexo'],
-      telefone: map['telefone'],
-      endereco: EnderecoModel.fromMap(map['endereco']),
-    );
+        id: parsedJson['ID_CLIENTE'],
+        nome: parsedJson['NOME'],
+        cpf: parsedJson['CPF'].toString(),
+        email: parsedJson['EMAIL'],
+        dataNascimento: parsedJson['DATA_NASCIMENTO'],
+        estadoCivil: parsedJson['ESTADO_CIVIL'],
+        sexo: parsedJson['SEXO'],
+        ddd: parsedJson['DDD'],
+        numeroTelefone: parsedJson['NUMERO_TELEFONE'],
+        logradouro: parsedJson['LOGRADOURO'],
+        numero: parsedJson['NUMERO'],
+        bairro: parsedJson['BAIRRO'],
+        cidade: parsedJson['CIDADE'],
+        cep: parsedJson['CEP'],
+        uf: parsedJson['UF']);
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory ClienteModel.fromJson(String source) =>
-      ClienteModel.fromMap(json.decode(source));
+  Map<String, dynamic> toJson() => {
+        'NOME': nome,
+        'CPF_CNPJ': cpf,
+        'DATA_NASCIMENTO': dataNascimento,
+        'ESTADO_CIVIL': estadoCivil,
+        'EMAIL': email,
+        'SEXO': sexo,
+        'DDD': ddd,
+        'NUMERO_TELEFONE': numeroTelefone,
+        'LOGRADOURO': logradouro,
+        'NUMERO': numero,
+        'BAIRRO': bairro,
+        'CIDADE': cidade,
+        'CEP': cep,
+        'UF': uf,
+      };
 }
