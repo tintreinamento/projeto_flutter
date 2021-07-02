@@ -84,7 +84,7 @@ class _PedidoCompraCadastroViewState extends State<PedidoCompraCadastroView> {
                   tituloPrimeiraRota: 'Cadastrar',
                   primeiraRota: '/pedido_compra_cadastrar',
                   tituloSegundaRota: 'Consultar',
-                  segundaRota: '/pedido_compra_consultar'),
+                  segundaRota: '/pedido_compra_cadastrar'),
               Expanded(
                 flex: 15,
                 child: Stack(

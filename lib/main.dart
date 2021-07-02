@@ -45,11 +45,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/cadastrar_fornecedor',
       routes: {
-        //'/': (context) => PedidoVendaConsultaView(),
-        '/': (context) => SplashPage(), //ok
-        '/login': (context) => LoginView(), // ok
+        '/': (context) => PedidoVendaConsultaView(),
+        //'/': (context) => SplashPage(), //ok
+        //'/login': (context) => LoginView(), // ok
         '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
         '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
