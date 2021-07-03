@@ -208,9 +208,9 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
 String getCpfCnpj(String value) {
   String cpfCnpj = "";
 
-  if (value.length == 10) {
+  if (value.length == 10 || value.length == 13) {
     value = '0' + value;
-  } else if (value.length == 9) {
+  } else if (value.length == 9 || value.length == 12) {
     value = '00' + value;
   }
 

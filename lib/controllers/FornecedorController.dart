@@ -22,7 +22,15 @@ class FornecedorController {
 
     var stringJson = json.decode(resposta.body);
 
-    return new FornecedorModel.fromJson(stringJson.single);
+    return new FornecedorModel.fromJson(stringJson);
+  }
+
+  Future<FornecedorModel> obtenhaPorCpfCnpj(String cpfCnpj) async {
+    final resposta = await new Api().obtenha('fornecedor/cpfCnpj/' + cpfCnpj);
+
+    var stringJson = json.decode(resposta.body);
+
+    return new FornecedorModel.fromJson(stringJson);
   }
 
   Future<FornecedorModel> crie(FornecedorModel fornecedor) async {
