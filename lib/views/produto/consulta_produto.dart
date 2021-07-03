@@ -33,10 +33,10 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
 
   consultarProduto() {
     if (_formKeyConsultaProduto.currentState!.validate()) {
-      //produtoController
-      //.obtenhaPorNome(nomeController.text.toString())
-      //.then((value) => listaProdutos);
-      //setState(() {});
+      produtoController
+          .obtenhaPorNome(nomeController.text.toString())
+          .then((value) => listaProdutos);
+      setState(() {});
     }
   }
 
@@ -57,7 +57,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
             controller: nomeController,
             validator: (value) {
               if (isVazio(value)) {
-                return 'Campo Nome vazio!';
+                return 'Campo nome vazio!';
               }
               return null;
             },
