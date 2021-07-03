@@ -4,7 +4,7 @@ import 'package:projeto_flutter/services/Api.dart';
 
 class ProdutoMargemController {
   Future<List<ProdutoMargemModel>> obtenhaTodos() async {
-    final resposta = await new Api().obtenha('margems');
+    final resposta = await new Api().obtenha('produto-margem');
 
     List<ProdutoMargemModel> colecaoDeProdutos = new List.empty(growable: true);
 
@@ -19,7 +19,7 @@ class ProdutoMargemController {
   }
 
   Future<ProdutoMargemModel> obtenhaPorNome(String nome) async {
-    final resposta = await new Api().obtenha('margems?nome=' + nome);
+    final resposta = await new Api().obtenha('produto-margem/nome/' + nome);
 
     var stringJson = json.decode(resposta.body);
 
@@ -27,7 +27,7 @@ class ProdutoMargemController {
   }
 
   Future<ProdutoMargemModel> obtenhaPorId(int id) async {
-    final resposta = await new Api().obtenha('margems/' + id.toString());
+    final resposta = await new Api().obtenha('produto-margem/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -35,7 +35,8 @@ class ProdutoMargemController {
   }
 
   Future<ProdutoMargemModel> crie(ProdutoMargemModel produto) async {
-    final resposta = await new Api().crie('margems', json.encode(produto));
+    final resposta =
+        await new Api().crie('produto-margem', json.encode(produto));
 
     var stringJson = json.decode(resposta.body);
 
@@ -43,7 +44,8 @@ class ProdutoMargemController {
   }
 
   Future<ProdutoMargemModel> delete(ProdutoMargemModel produto) async {
-    final resposta = await new Api().delete('margems/' + produto.id.toString());
+    final resposta =
+        await new Api().delete('produto-margem/' + produto.id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -51,8 +53,8 @@ class ProdutoMargemController {
   }
 
   Future<ProdutoMargemModel> atualize(ProdutoMargemModel produto) async {
-    final resposta = await new Api()
-        .atualize('margems/' + produto.id.toString(), json.encode(produto));
+    final resposta = await new Api().atualize(
+        'produto-margem/' + produto.id.toString(), json.encode(produto));
 
     var stringJson = json.decode(resposta.body);
 

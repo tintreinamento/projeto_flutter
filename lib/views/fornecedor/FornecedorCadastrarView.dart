@@ -84,34 +84,34 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
   }
 
   limpaCampos() {
-    nomeController.text = "";
-    cpfCnpjController.text = "";
-    emailController.text = "";
-    telefoneController.text = "";
-    cepController.text = "";
-    logradouroController.text = "";
-    numeroController.text = "";
-    bairroController.text = "";
-    cidadeController.text = "";
-    estadoController.text = "";
+    nomeController.clear();
+    cpfCnpjController.clear();
+    emailController.clear();
+    telefoneController.clear();
+    cepController.clear();
+    logradouroController.clear();
+    numeroController.clear();
+    bairroController.clear();
+    cidadeController.clear();
+    estadoController.clear();
   }
 
   cadastrarFornecedor() async {
     if (_formKeyFornecedor.currentState!.validate()) {
       if (_formKeyEndereco.currentState!.validate()) {
         //Cadastrar os dados na API
-
         var fornecedorModel = FornecedorModel(
-            nome: nomeController.text,
-            cpfCnpj: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
-            email: emailController.text,
-            telefone:
-                UtilBrasilFields.removeCaracteres(telefoneController.text));
+            nome: nomeController.text.toString(),
+            cpfCnpj: int.parse(UtilBrasilFields.removeCaracteres(
+                cpfCnpjController.text.toString())),
+            email: emailController.text.toString(),
+            telefone: int.parse(UtilBrasilFields.removeCaracteres(
+                telefoneController.text.toString())));
 
         var fornecedorControllerApi = FornecedorController();
         var fornecedor = await fornecedorControllerApi.crie(fornecedorModel);
 
-        var estadoModel = EstadoModel(idPais: 1, nome: estadoController.text);
+        var estadoModel = EstadoModel(idPais: 315, nome: estadoController.text);
         var estadoControllerApi = EstadoController();
         var estado = await estadoControllerApi.crie(estadoModel);
 
@@ -122,17 +122,17 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
         var cidade = await cidadeControllerApi.crie(cidadeModel);
 
         var enderecoModel = EnderecoModel(
-            // idCidade: cidade.id,
-            // idEstado: estado.id,
-            // idFornecedor: fornecedor.id,
-            // idPais: 1,
+            idCidade: cidade.id,
+            idEstado: estado.id,
+            idFornecedor: fornecedor.id,
+            idPais: 315,
             cep: UtilBrasilFields.removeCaracteres(cepController.text),
             logradouro: logradouroController.text,
-            // numero: numeroController.text,
+            numero: numeroController.text,
             bairro: bairroController.text);
 
-        // var enderecoControllerApi = EnderecoController();
-        // await enderecoControllerApi.crie(enderecoModel);
+        var enderecoControllerApi = EnderecoController();
+        await enderecoControllerApi.crie(enderecoModel);
         limpaCampos();
       }
     }
@@ -308,27 +308,27 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             ),
             Expanded(
                 child: SingleChildScrollView(
-              child: Expanded(
-                child: Container(
-                  padding: paddingPadrao,
-                  child: Column(
-                    children: [
-                      MolduraComponent(
-                        label: 'Fornecedor',
-                        content: formFornecedor,
-                      ),
-                      MolduraComponent(
-                        label: 'Endereço',
-                        content: formEndereco,
-                      ),
-                      ButtonComponent(
-                        label: 'Cadastrar',
-                        onPressed: cadastrarFornecedor,
-                      ),
-                    ],
-                  ),
+              // child: Expanded(
+              child: Container(
+                padding: paddingPadrao,
+                child: Column(
+                  children: [
+                    MolduraComponent(
+                      label: 'Fornecedor',
+                      content: formFornecedor,
+                    ),
+                    MolduraComponent(
+                      label: 'Endereço',
+                      content: formEndereco,
+                    ),
+                    ButtonComponent(
+                      label: 'Cadastrar',
+                      onPressed: cadastrarFornecedor,
+                    ),
+                  ],
                 ),
               ),
+              // ),
             ))
           ],
         ),

@@ -3,7 +3,7 @@ class ItemPedidoFornecedorModel {
   var idPedido;
   var idProduto;
   var quantidade;
-  var valorUnitario;
+  var valorUnidade;
   var valorTotal;
 
   ItemPedidoFornecedorModel(
@@ -11,24 +11,24 @@ class ItemPedidoFornecedorModel {
       this.idPedido,
       this.idProduto,
       this.quantidade,
-      this.valorUnitario,
+      this.valorUnidade,
       this.valorTotal});
 
   factory ItemPedidoFornecedorModel.fromJson(Map<String, dynamic> parsedJson) {
     return ItemPedidoFornecedorModel(
-        id: parsedJson['id'],
-        idPedido: parsedJson['id_pedido'],
-        idProduto: parsedJson['id_produto'],
-        quantidade: parsedJson['quantidade'],
-        valorUnitario: parsedJson['valor_unidade'],
-        valorTotal: parsedJson['valor_total']);
+        id: parsedJson['ID_ITEM_PEDIDO_FORNECEDOR'],
+        idPedido: parsedJson['ID_PEDIDO'],
+        idProduto: parsedJson['ID_PRODUTO'],
+        quantidade: parsedJson['QUANTIDADE'],
+        valorUnidade: parsedJson['VALOR_UNIDADE'],
+        valorTotal: parsedJson['VALOR_TOTAL']);
   }
 
   Map<String, dynamic> toJson() => {
-        'id_pedido': idPedido,
-        'id_produto': idProduto,
-        'quantidade': quantidade,
-        'valor_unidade': valorUnitario,
-        'valor_total': valorTotal,
+        'ID_PEDIDO': idPedido,
+        'ID_PRODUTO': idProduto,
+        'QUANTIDADE': quantidade,
+        'VALOR_UNIDADE': valorUnidade,
+        'VALOR_TOTAL': valorTotal,
       };
 }

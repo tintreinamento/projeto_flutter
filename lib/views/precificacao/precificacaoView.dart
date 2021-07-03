@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
@@ -52,6 +54,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(''),
+<<<<<<< HEAD
             content: Column(
               children: [
                 Row(
@@ -87,13 +90,55 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   ],
                 ),
               ],
+=======
+            content: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextComponent(label: 'ID Produto:\n'),
+                      TextComponent(label: 'Produto:\n')
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(produtoModel.id.toString() + '\n'),
+                      Text(produtoModel.nome.toString() + '\n')
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextComponent(label: 'Margem:\n'),
+                      TextComponent(label: 'Valor\nCompra:\n'),
+                      TextComponent(label: 'Valor\nVenda:\n'),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(produtoMargemModel.margem.toString() + '\n'),
+                      Text(produtoModel.valorCompra.toString() + '\n'),
+                      Text(produtoModel.valorVenda.toString() + '\n')
+                    ],
+                  ),
+                ],
+              ),
+>>>>>>> cd97c93f945cf358e0ac5b3ea432997c7d943e79
             ),
             actions: <Widget>[
               ButtonComponent(
                   label: 'Cadastrar',
                   onPressed: () {
+<<<<<<< HEAD
                     Navigator.of(context)
                         .pop(); //Navigator.pop(context, 'Cadastrar'),
+=======
+                    Navigator.of(context).pop();
+>>>>>>> cd97c93f945cf358e0ac5b3ea432997c7d943e79
                   }),
             ],
           );
@@ -201,6 +246,11 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
 
   Widget cardProduto(ProdutoModel produtoModel) {
     ProdutoMargemModel produtoMargemModel = new ProdutoMargemModel();
+
+    TextEditingController valorCompraController = new TextEditingController();
+    TextEditingController valorVendaController = new TextEditingController();
+    NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
+
     return ConstrainedBox(
       constraints: BoxConstraints(minWidth: 340.0),
       child: Container(
@@ -231,7 +281,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Descrição: '),
-                    Expanded(child: Text(produtoModel.descricao.toString()))
+                    Expanded(child: Text(produtoModel.descricao ?? ""))
                   ],
                 ),
                 Row(
@@ -245,23 +295,26 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextComponent(label: 'Valor Compra: '),
-                    Text(produtoModel.precoCompra.toString()),
-                    TextComponent(label: 'Valor Venda: '),
-                    Text('valorVenda')
-                    //Text(produtoModel.valorVenda.toString())
+                    TextComponent(
+                      label: 'Valor\nCompra: ',
+                    ),
+                    Text(valorCompraController.text =
+                        formatter.format(produtoModel.valorCompra)),
+                    TextComponent(label: 'Valor\nVenda: '),
+                    Text(valorVendaController.text =
+                        formatter.format(produtoModel.valorVenda))
                   ],
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextComponent(label: 'Margem: '),
-                    Text(produtoMargemModel.margem.toString()),
+                    Expanded(child: Text(produtoMargemModel.margem ?? "")),
                     ButtonComponent(
                       label: 'Alterar Margem',
                       onPressed: () {
                         _abrirDialog(context);
-                      } /*boxMargem() _showMyDialog()*/,
+                      },
                     )
                   ],
                 ),

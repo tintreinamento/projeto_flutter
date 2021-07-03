@@ -4,59 +4,58 @@ import 'package:projeto_flutter/services/Api.dart';
 
 class ProdutoController {
   Future<List<ProdutoModel>> obtenhaTodos() async {
-    final resposta = await new Api().obtenha('produtos');
+    final resposta = await new Api().obtenha('produto');
 
     List<ProdutoModel> colecaoDeProdutos = new List.empty(growable: true);
 
     List<dynamic> stringJson = json.decode(resposta.body);
 
     stringJson.forEach((element) {
-      var produto = new ProdutoModel.fromMap(element);
+      var produto = new ProdutoModel.fromJson(element);
       colecaoDeProdutos.add(produto);
     });
 
     return colecaoDeProdutos;
   }
 
-  // Future<ProdutoModel> obtenhaPorNome(String nome) async {
-  //   final resposta = await new Api().obtenha('produtos?nome=' + nome);
+  Future<ProdutoModel> obtenhaPorNome(String nome) async {
+    final resposta = await new Api().obtenha('produto/nome/' + nome);
 
-  //   var stringJson = json.decode(resposta.body);
+    var stringJson = json.decode(resposta.body);
 
-  //   return new ProdutoModel.fromJson(stringJson.single);
-  // }
+    return new ProdutoModel.fromJson(stringJson.single);
+  }
 
-  // Future<ProdutoModel> obtenhaPorId(int id) async {
-  //   final resposta = await new Api().obtenha('produtos/' + id.toString());
+  Future<ProdutoModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('produto/' + id.toString());
 
-  //   var stringJson = json.decode(resposta.body);
+    var stringJson = json.decode(resposta.body);
 
-  //   return new ProdutoModel.fromJson(stringJson.single);
-  // }
+    return new ProdutoModel.fromJson(stringJson.single);
+  }
 
-  // Future<ProdutoModel> crie(ProdutoModel produto) async {
-  //   final resposta = await new Api().crie('produtos', json.encode(produto));
+  Future<ProdutoModel> crie(ProdutoModel produto) async {
+    final resposta = await new Api().crie('produto', json.encode(produto));
 
-  //   var stringJson = json.decode(resposta.body);
+    var stringJson = json.decode(resposta.body);
 
-  //   return new ProdutoModel.fromJson(stringJson);
-  // }
+    return new ProdutoModel.fromJson(stringJson);
+  }
 
-  // Future<ProdutoModel> delete(ProdutoModel produto) async {
-  //   final resposta =
-  //       await new Api().delete('produtos/' + produto.id.toString());
+  Future<ProdutoModel> delete(ProdutoModel produto) async {
+    final resposta = await new Api().delete('produto/' + produto.id.toString());
 
-  //   var stringJson = json.decode(resposta.body);
+    var stringJson = json.decode(resposta.body);
 
-  //   return new ProdutoModel.fromJson(stringJson);
-  // }
+    return new ProdutoModel.fromJson(stringJson);
+  }
 
-  // Future<ProdutoModel> atualize(ProdutoModel produto) async {
-  //   final resposta = await new Api()
-  //       .atualize('produtos/' + produto.id.toString(), json.encode(produto));
+  Future<ProdutoModel> atualize(ProdutoModel produto) async {
+    final resposta = await new Api()
+        .atualize('produto/' + produto.id.toString(), json.encode(produto));
 
-  //   var stringJson = json.decode(resposta.body);
+    var stringJson = json.decode(resposta.body);
 
-  //   return new ProdutoModel.fromJson(stringJson);
-  // }
+    return new ProdutoModel.fromJson(stringJson);
+  }
 }

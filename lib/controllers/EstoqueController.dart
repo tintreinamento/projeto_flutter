@@ -18,7 +18,7 @@ class EstoqueController {
   }
 
   Future<EstoqueModel> obtenhaPorId(int id) async {
-    final resposta = await new Api().obtenha('estoques/' + id.toString());
+    final resposta = await new Api().obtenha('estoque/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -26,7 +26,7 @@ class EstoqueController {
   }
 
   Future<EstoqueModel> obtenhaPorNome(String nome) async {
-    final resposta = await new Api().obtenha('estoques?nome=' + nome);
+    final resposta = await new Api().obtenha('estoque/nome/' + nome);
 
     var stringJson = json.decode(resposta.body);
 
@@ -34,7 +34,7 @@ class EstoqueController {
   }
 
   Future<EstoqueModel> crie(EstoqueModel estoque) async {
-    final resposta = await new Api().crie('estoques', json.encode(estoque));
+    final resposta = await new Api().crie('estoque', json.encode(estoque));
 
     var stringJson = json.decode(resposta.body);
 
@@ -43,7 +43,7 @@ class EstoqueController {
 
   Future<EstoqueModel> delete(EstoqueModel estoque) async {
     final resposta =
-        await new Api().delete('estoques/' + estoque.nome.toString());
+        await new Api().delete('estoque/' + estoque.nome.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -52,7 +52,7 @@ class EstoqueController {
 
   Future<EstoqueModel> atualize(EstoqueModel estoque) async {
     final resposta = await new Api()
-        .atualize('estoques/' + estoque.nome.toString(), json.encode(estoque));
+        .atualize('estoque/' + estoque.nome.toString(), json.encode(estoque));
 
     var stringJson = json.decode(resposta.body);
 
