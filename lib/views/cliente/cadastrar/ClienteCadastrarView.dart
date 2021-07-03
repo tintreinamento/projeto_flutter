@@ -39,6 +39,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
   final emailController = TextEditingController();
   final sexoController = TextEditingController();
   final dddController = TextEditingController();
+
   final telefoneController = TextEditingController();
 
   //Dados de endereço
@@ -57,7 +58,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     }
   }
 
-  getSexo(value) {
+  int getSexo(value) {
     int sexo = 0;
     switch (value) {
       case "Masculino":
@@ -68,6 +69,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
         break;
       default:
     }
+    return sexo;
   }
 
   selectSexo(value) {
@@ -109,37 +111,61 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
     });
   }
 
+  int getEstadoCivil(value) {
+    int estadoCivil = 0;
+    switch (value) {
+      case "Solteiro":
+        estadoCivil = 1;
+        break;
+      case "Casado":
+        estadoCivil = 2;
+        break;
+      case "Divorciado":
+        estadoCivil = 2;
+        break;
+      case "Viuvo":
+        estadoCivil = 2;
+        break;
+      default:
+    }
+
+    return estadoCivil;
+  }
+
   cadastrarCliente() async {
-    // if (_formKeyCliente.currentState!.validate()) {
-    //  if (_formKeyEndereco.currentState!.validate()) {
+    //  if (_formKeyCliente.currentState!.validate()) {
+    //    if (_formKeyEndereco.currentState!.validate()) {
     //Cadastrar os dados na API
+    ClienteController clienteController = new ClienteController();
 
-    // ClienteModel clienteModel = ClienteModel(
-    //     nome: nomeController.text,
-    //     cpf: UtilBrasilFields.removeCaracteres(cpfCnpjController.text),
-    //     email: emailController.text,
-    //     //dataNascimento:
-    //     // UtilBrasilFields.removeCaracteres(dataNascimentoController.text),
-    //     estadoCivil: estadoCivilController.text,
-    //     sexo: sexoController.text,
-    //     ddd: dddController.text,
-    //     numeroTelefone:
-    //         UtilBrasilFields.removeCaracteres(telefoneController.text),
-    //     cep: UtilBrasilFields.removeCaracteres(cepController.text),
-    //     logradouro: logradouroController.text,
-    //     numero: numeroController.text,
-    //     bairro: bairroController.text,
-    //     cidade: cidadeController.text,
-    //     uf: estadoController.text);
+    var telefone = UtilBrasilFields.removeCaracteres(telefoneController.text);
+    var ddd = telefone.substring(0, 2);
+    var numeroTelefone = telefone.substring(2, telefone.length - 1);
 
-    // ClienteController clienteController = ClienteController();
+    ClienteModel clienteModel = new ClienteModel(
+        nome: nomeController.text,
+        cpf: int.parse(
+            UtilBrasilFields.removeCaracteres(cpfCnpjController.text)),
+        dataNascimento: dataNascimentoController.text,
+        estadoCivil: getEstadoCivil(estadoCivilController.text),
+        email: emailController.text,
+        sexo: getSexo(sexoController.text),
+        ddd: ddd,
+        numeroTelefone: numeroTelefone,
+        logradouro: logradouroController.text,
+        numero: int.parse(numeroController.text),
+        bairro: bairroController.text,
+        cidade: cidadeController.text,
+        cep: int.parse(UtilBrasilFields.removeCaracteres(cepController.text)),
+        uf: estadoController.text);
 
-    // var teste = await clienteController.crie(clienteModel);
-    // print(teste);
-    // limparCampos();
-    // showDialog();
-    // }
+    //Cria o cliente
+    var clienteRetorno = await clienteController.crie(clienteModel);
+    print(clienteRetorno.nome);
+    print('teste');
+    showDialog();
     //}
+    // }
   }
 
   showDialog() {
@@ -309,12 +335,12 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
           Expanded(
               child: InputDropDownComponent(
             label: 'Sexo: ',
-            labelDropDown: estadoCivilController.text,
+            labelDropDown: sexoController.text,
             items: [
               'Masculino',
               'Feminino',
             ],
-            onChanged: selectEstadoCivel,
+            onChanged: selectSexo,
           )),
           InputComponent(
             inputFormatter: [

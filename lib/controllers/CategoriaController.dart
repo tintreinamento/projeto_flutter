@@ -3,15 +3,30 @@ import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
 class CategoriaController {
+  Future<List<CategoriaModel>> obtenhaTodos() async {
+    final resposta = await new Api().obtenha('categoria');
+
+    List<CategoriaModel> colecaoDeCategoria = new List.empty(growable: true);
+
+    List<dynamic> stringJson = json.decode(resposta.body);
+
+    stringJson.forEach((element) {
+      var cliente = new CategoriaModel.fromJson(element);
+      colecaoDeCategoria.add(cliente);
+    });
+
+    return colecaoDeCategoria;
+  }
+
   Future<CategoriaModel> obtenhaPorId(int id) async {
-    final resposta = await new Api().obtenha('categorias/' + id.toString());
+    final resposta = await new Api().obtenha('categoria/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
-    return new CategoriaModel.fromJson(stringJson.single);
+    return new CategoriaModel.fromJson(stringJson);
   }
 
   Future<CategoriaModel> crie(CategoriaModel cidade) async {
-    final resposta = await new Api().crie('categorias', json.encode(cidade));
+    final resposta = await new Api().crie('categoria', json.encode(cidade));
 
     var stringJson = json.decode(resposta.body);
 
@@ -20,7 +35,7 @@ class CategoriaController {
 
   Future<CategoriaModel> delete(CategoriaModel cidade) async {
     final resposta =
-        await new Api().delete('categorias/' + cidade.nome.toString());
+        await new Api().delete('categoria/' + cidade.nome.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -29,7 +44,7 @@ class CategoriaController {
 
   Future<CategoriaModel> atualize(CategoriaModel cidade) async {
     final resposta = await new Api()
-        .atualize('categorias/' + cidade.nome.toString(), json.encode(cidade));
+        .atualize('categoria/' + cidade.nome.toString(), json.encode(cidade));
 
     var stringJson = json.decode(resposta.body);
 

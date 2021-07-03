@@ -1,50 +1,46 @@
-import 'dart:convert';
-
 class EnderecoModel {
-  String? cep = "";
-  String? logradouro = "";
-  String? complemento = "";
-  String? bairro = "";
-  String? cidade = "";
-  String? estado = "";
-  String? pais = "";
+  var id;
+  var idFornecedor;
+  var idPais;
+  var idCidade;
+  var idEstado;
+  var logradouro;
+  var numero;
+  var bairro;
+  var cep;
 
-  EnderecoModel({
-    this.cep,
-    this.logradouro,
-    this.complemento,
-    this.bairro,
-    this.cidade,
-    this.estado,
-    this.pais,
-  });
+  EnderecoModel(
+      {this.id,
+      this.idFornecedor,
+      this.idPais,
+      this.idCidade,
+      this.idEstado,
+      this.logradouro,
+      this.numero,
+      this.bairro,
+      this.cep});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'cep': cep,
-      'logradouro': logradouro,
-      'complemento': complemento,
-      'bairro': bairro,
-      'cidade': cidade,
-      'estado': estado,
-      'pais': pais,
-    };
-  }
-
-  factory EnderecoModel.fromMap(Map<String, dynamic> map) {
+  factory EnderecoModel.fromJson(Map<String, dynamic> parsedJson) {
     return EnderecoModel(
-      cep: map['cep'],
-      logradouro: map['logradouro'],
-      complemento: map['complemento'],
-      bairro: map['bairro'],
-      cidade: map['cidade'],
-      estado: map['estado'],
-      pais: map['pais'],
-    );
+        id: parsedJson['ID_ENDERECO'],
+        idFornecedor: parsedJson['ID_FORNECEDOR'],
+        idPais: parsedJson['ID_PAIS'],
+        idCidade: parsedJson['ID_CIDADE'],
+        idEstado: parsedJson['ID_ESTADO'],
+        logradouro: parsedJson['LOGRADOURO'],
+        numero: parsedJson['NUMERO'],
+        bairro: parsedJson['BAIRRO'],
+        cep: parsedJson['CEP']);
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory EnderecoModel.fromJson(String source) =>
-      EnderecoModel.fromMap(json.decode(source));
+  Map<String, dynamic> toJson() => {
+        'ID_FORNECEDOR': idFornecedor,
+        'ID_PAIS': idPais,
+        'ID_CIDADE': idCidade,
+        'ID_ESTADO': idEstado,
+        'LOGRADOURO': logradouro,
+        'NUMERO': numero,
+        'BAIRRO': bairro,
+        'CEP': cep,
+      };
 }

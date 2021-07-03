@@ -7,10 +7,10 @@ class ProdutoMargemModel {
 
   factory ProdutoMargemModel.fromJson(Map<String, dynamic> parsedJson) {
     return ProdutoMargemModel(
-        id: parsedJson['id'],
-        idProduto: parsedJson['id_produto'],
-        margem: parsedJson['margem']);
+        id: parsedJson['ID_PRODUTO_MARGEM'],
+        idProduto: parsedJson['ID_PRODUTO'],
+        margem: parsedJson['MARGEM']);
   }
 
-  Map<String, dynamic> toJson() => {'id_produto': idProduto, 'margem': margem};
+  Map<String, dynamic> toJson() => {'ID_PRODUTO': idProduto, 'MARGEM': margem};
 }

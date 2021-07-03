@@ -3,6 +3,7 @@ import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/views/cliente/cadastrar/ClienteCadastrarView.dart';
 import 'package:projeto_flutter/views/cliente/consultar/ClienteConsultarView.dart';
+import 'package:projeto_flutter/views/estoque/EstoqueView.dart';
 import 'package:projeto_flutter/views/fornecedor/FornecedorCadastrarView.dart';
 import 'package:projeto_flutter/views/fornecedor/FornecedorConsultarView.dart';
 import 'package:projeto_flutter/views/pedido_venda/cadastrar/PedidoVendaCadastrarView.dart';
@@ -14,14 +15,20 @@ import 'package:projeto_flutter/views/produto/ProdutoCadastrarView.dart';
 import 'package:projeto_flutter/views/splash/splash_screen.dart';
 // import 'package:projeto_flutter/views/pedido/pedido.dart';
 // import './views/pedido/pedido.dart';
+import 'package:projeto_flutter/views/precificacao/precificacaoView.dart';
 
 import 'package:provider/provider.dart';
 
+// void main() {
+//   runApp(MultiProvider(
+//     providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
+//     child: MyApp(),
+//   ));
+//   //runApp(MyApp());
+// }
+
 void main() {
-  runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
-    child: MyApp(),
-  ));
+  runApp(MyApp());
   //runApp(MyApp());
 }
 
@@ -44,20 +51,20 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/cadastrar_cliente',
+      initialRoute: '/',
       routes: {
         '/': (contexto) => ClienteCadastroView(),
         //'/': (context) => PedidoVendaConsultaView(),
-        //'/': (context) => SplashPage(), //ok
+        // '/': (context) => SplashPage(), //ok
         '/login': (context) => LoginView(), // ok
         '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
         '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
-        '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
-        '/consultar_fornecedor': (context) => FornecedorConsultarView(),
+        // '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
+        // '/consultar_fornecedor': (context) => FornecedorConsultarView(),
         // '/consultar_produto': (context) => ProdutoConsultarView(),
-        '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
+        // '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
         // '/pedido_compra': (contexto) => PedidoCompraCadastroView()
       },
     );

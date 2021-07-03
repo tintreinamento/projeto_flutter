@@ -5,10 +5,10 @@ class PaisModel {
   PaisModel({this.id, this.nome});
 
   factory PaisModel.fromJson(Map<String, dynamic> parsedJson) {
-    return PaisModel(id: parsedJson['id'], nome: parsedJson['nome']);
+    return PaisModel(id: parsedJson['ID_PAIS'], nome: parsedJson['NOME']);
   }
 
   Map<String, dynamic> toJson() => {
-        'nome': nome,
+        'NOME': nome,
       };
 }

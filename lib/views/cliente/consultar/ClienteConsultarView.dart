@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
   final nomeController = TextEditingController();
 
   ClienteController clienteController = new ClienteController();
-  late Future<List<ClienteModel>> listaClientes;
+  Future<List<ClienteModel>>? listaClientes;
 
   bool isVazio(value) {
     if (value == null || value.isEmpty) {
@@ -43,10 +44,14 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
     }
   }
 
+  carregarCliente() {
+    listaClientes = clienteController.obtenhaTodos();
+  }
+
   @override
   void initState() {
     super.initState();
-    listaClientes = clienteController.obtenhaTodos();
+    carregarCliente();
   }
 
   @override
@@ -200,6 +205,24 @@ class _ClienteConsultarViewState extends State<ClienteConsultarView> {
   }
 }
 
+String getCpfCnpj(String value) {
+  String cpfCnpj = "";
+
+  if (value.length == 10) {
+    value = '0' + value;
+  } else if (value.length == 9) {
+    value = '00' + value;
+  }
+
+  if (value.length == 11) {
+    cpfCnpj = UtilBrasilFields.obterCpf(value);
+  } else if (value.length == 14) {
+    cpfCnpj = UtilBrasilFields.obterCnpj(value);
+  }
+
+  return cpfCnpj;
+}
+
 Widget cardCliente(ClienteModel clienteModel) {
   return ConstrainedBox(
     constraints: BoxConstraints(minWidth: 340.0),
@@ -230,7 +253,7 @@ Widget cardCliente(ClienteModel clienteModel) {
                       label: 'CPF/CNPJ: ',
                     ),
                     TextComponent(
-                      label: clienteModel.cpfCnpj,
+                      label: getCpfCnpj(clienteModel.cpf.toString()),
                     ),
                   ],
                 ),
@@ -243,7 +266,9 @@ Widget cardCliente(ClienteModel clienteModel) {
                       label: 'Telefone: ',
                     ),
                     TextComponent(
-                      label: clienteModel.telefone,
+                      label: UtilBrasilFields.obterTelefone(
+                          clienteModel.ddd.toString() +
+                              clienteModel.numeroTelefone.toString()),
                     ),
                   ],
                 ),

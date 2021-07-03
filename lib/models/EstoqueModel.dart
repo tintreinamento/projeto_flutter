@@ -1,30 +1,27 @@
-import 'dart:convert';
-
 class EstoqueModel {
-  String? nome;
-  String? quantidade;
+  var id;
+  var idProduto;
+  var quantidade;
+  var nome;
 
   EstoqueModel({
-    this.nome,
+    this.id,
+    this.idProduto,
     this.quantidade,
+    this.nome,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'nome': nome,
-      'quantidade': quantidade,
-    };
-  }
-
-  factory EstoqueModel.fromMap(Map<String, dynamic> map) {
+  factory EstoqueModel.fromJson(Map<String, dynamic> parsedJson) {
     return EstoqueModel(
-      nome: map['nome'],
-      quantidade: map['quantidade'],
-    );
+        id: parsedJson['ID_ESTOQUE'],
+        idProduto: parsedJson['ID_PRODUTO'],
+        quantidade: parsedJson['QUANTIDADE'],
+        nome: parsedJson['NOME']);
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory EstoqueModel.fromJson(String source) =>
-      EstoqueModel.fromMap(json.decode(source));
+  Map<String, dynamic> toJson() => {
+        'ID_PRODUTO': idProduto,
+        'QUANTIDADE': quantidade,
+        'NOME': nome,
+      };
 }

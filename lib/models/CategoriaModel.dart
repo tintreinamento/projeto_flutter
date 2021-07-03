@@ -5,8 +5,9 @@ class CategoriaModel {
   CategoriaModel({this.id, this.nome});
 
   factory CategoriaModel.fromJson(Map<String, dynamic> parsedJson) {
-    return CategoriaModel(id: parsedJson['id'], nome: parsedJson['nome']);
+    return CategoriaModel(
+        id: parsedJson['ID_CATEGORIA'], nome: parsedJson['NOME']);
   }
 
-  Map<String, dynamic> toJson() => {'nome': nome};
+  Map<String, dynamic> toJson() => {'NOME': nome};
 }

@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 import 'package:projeto_flutter/services/Auth.dart';
 
 class Api {
-  static const URL_API = 'http://localhost:1337/';
+  static const URL_API = 'http://10.66.8.161:1337/';
 
   Future<Response> obtenha(String query) async {
     Map<String, String> headers = {
