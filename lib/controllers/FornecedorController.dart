@@ -17,6 +17,14 @@ class FornecedorController {
     return colecaoDeFornecedores;
   }
 
+  Future<FornecedorModel> obtenhaPorId(int id) async {
+    final resposta = await new Api().obtenha('fornecedor/' + id.toString());
+
+    var stringJson = json.decode(resposta.body);
+
+    return new FornecedorModel.fromJson(stringJson);
+  }
+
   Future<FornecedorModel> obtenhaPorNome(String nome) async {
     final resposta = await new Api().obtenha('fornecedor/nome/' + nome);
 

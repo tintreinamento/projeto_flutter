@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (contexto) => ClienteCadastroView(),
+        '/': (contexto) => EstoqueView(),
         //'/': (context) => PedidoVendaConsultaView(),
         // '/': (context) => SplashPage(), //ok
         '/login': (context) => LoginView(), // ok
@@ -65,6 +65,7 @@ class MyApp extends StatelessWidget {
         // '/consultar_fornecedor': (context) => FornecedorConsultarView(),
         '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
         '/consultar_produto': (context) => ProdutoConsultarView(),
+        '/estoque': (context) => EstoqueView(),
         // '/pedido_compra': (contexto) => PedidoCompraCadastroView()
       },
     );
