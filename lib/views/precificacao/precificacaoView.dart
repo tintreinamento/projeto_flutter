@@ -1,13 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
+import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
+import 'package:projeto_flutter/controllers/ProdutoMargemController.dart';
+import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/ProdutoMargemModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 
@@ -18,13 +22,25 @@ class PrecificacaoView extends StatefulWidget {
   _PrecificacaoViewState createState() => _PrecificacaoViewState();
 }
 
+class ProdutoCategoriaModel {
+  var produto = new ProdutoModel();
+  var categoriaModel = new CategoriaModel();
+}
+
 class _PrecificacaoViewState extends State<PrecificacaoView> {
   final _formKeyPrecificacao = GlobalKey<FormState>();
-  final nomeController = TextEditingController();
+  final margemController = TextEditingController();
+  var produtoModelGlobal = new ProdutoModel();
+  var produtoMargemModelGlobal = new ProdutoMargemModel();
 
-  ProdutoController produtoController = new ProdutoController();
+  var produtoController = new ProdutoController();
+  var produtoMargemController = new ProdutoMargemController();
 
-  late Future<List<ProdutoModel>> listaProdutos;
+  late Future<List<ProdutoCategoriaModel>> listaProdutos;
+
+  TextEditingController valorCompraController = new TextEditingController();
+  TextEditingController valorVendaController = new TextEditingController();
+  NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
   bool isVazio(value) {
     if (value == null || value.isEmpty) {
@@ -43,63 +59,130 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
   @override
   void initState() {
     super.initState();
-    listaProdutos = produtoController.obtenhaTodos();
+
+    listaProdutos = produtoController.obtenhaTodosComCategoria();
   }
 
+  //Pop up para alterar a margem
   Future<void> _abrirDialog(BuildContext context) async {
-    ProdutoModel produtoModel = new ProdutoModel();
-    ProdutoMargemModel produtoMargemModel = new ProdutoMargemModel();
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(''),
-            content: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextComponent(label: 'ID Produto:\n'),
-                      TextComponent(label: 'Produto:\n')
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(produtoModel.id.toString() + '\n'),
-                      Text(produtoModel.nome.toString() + '\n')
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextComponent(label: 'Margem:\n'),
-                      TextComponent(label: 'Valor\nCompra:\n'),
-                      TextComponent(label: 'Valor\nVenda:\n'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(produtoMargemModel.margem.toString() + '\n'),
-                      Text(produtoModel.valorCompra.toString() + '\n'),
-                      Text(produtoModel.valorVenda.toString() + '\n')
-                    ],
-                  ),
-                ],
-              ),
+            title: Text(
+              'Alterar Margem',
+              textAlign: TextAlign.center,
             ),
-            actions: <Widget>[
-              ButtonComponent(
-                  label: 'Cadastrar',
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  }),
-            ],
+            content: Container(
+              height: MediaQuery.of(context).size.height * .4,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Expanded(
+                  //flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'ID Produto:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Produto:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(produtoModelGlobal.id.toString()),
+                      Text(produtoModelGlobal.nome.toString())
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Valor Compra:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Valor Venda:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(valorCompraController.text =
+                          formatter.format(produtoModelGlobal.valorCompra)),
+                      Text(valorVendaController.text =
+                          formatter.format(produtoModelGlobal.valorVenda)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: InputComponent(
+                          label: 'Margem',
+                          controller: margemController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ButtonComponent(
+                            label: 'Cadastrar',
+                            onPressed: () async {
+                              await cadastrarMargem();
+                              Navigator.of(context).pop();
+                            }),
+                      ],
+                    ))
+              ]),
+            ),
           );
         });
+  }
+
+  cadastrarMargem() async {
+    var produtoMargemController = new ProdutoMargemController();
+    var produtoController = new ProdutoController();
+    var colecaoDeProdutoMargem = await produtoMargemController.obtenhaTodos();
+
+    var margem = double.parse(margemController.text);
+
+    produtoMargemModelGlobal.margem = margem;
+    produtoMargemModelGlobal.idProduto = produtoModelGlobal.id;
+
+    var produtoMargemBanco = colecaoDeProdutoMargem
+        .where((element) => element.idProduto == produtoModelGlobal.id);
+
+    produtoModelGlobal.valorVenda = produtoModelGlobal.valorCompra +
+        (produtoModelGlobal.valorCompra * margem / 100);
+
+    await produtoController.atualize(produtoModelGlobal);
+
+    if (produtoMargemBanco.isNotEmpty) {
+      produtoMargemModelGlobal.id = produtoMargemBanco.single.id;
+      await produtoMargemController.atualize(produtoMargemModelGlobal);
+      return;
+    }
+
+    await produtoMargemController.crie(produtoMargemModelGlobal);
   }
 
   @override
@@ -107,19 +190,20 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
     //Map
     var lista = FutureBuilder(
         future: listaProdutos,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ProdutoModel>> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<List<ProdutoCategoriaModel>> snapshot) {
           if (snapshot.hasData) {
-            final listaProdutos = snapshot.data!.map((cliente) {
+            final listaProdutos = snapshot.data!.map((produtoCategoriaModel) {
               return Column(
                 children: [
-                  cardProduto(cliente),
+                  cardProduto(produtoCategoriaModel.produto,
+                      produtoCategoriaModel.categoriaModel),
                   SizedBox(
                     height: 10,
                   ),
                 ],
               );
-            }).toList();
+            });
 
             return Column(
               children: [
@@ -201,12 +285,10 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
         }));
   }
 
-  Widget cardProduto(ProdutoModel produtoModel) {
-    ProdutoMargemModel produtoMargemModel = new ProdutoMargemModel();
-
-    TextEditingController valorCompraController = new TextEditingController();
-    TextEditingController valorVendaController = new TextEditingController();
-    NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
+  //Lista de produtos
+  Widget cardProduto(ProdutoModel produtoModel, CategoriaModel categoriaModel) {
+    var margem =
+        (produtoModel.valorVenda * 100 / produtoModel.valorCompra) - 100;
 
     return ConstrainedBox(
       constraints: BoxConstraints(minWidth: 340.0),
@@ -221,7 +303,10 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
               children: [
                 Row(
                   children: [
-                    TextComponent(label: 'ID Produto: '),
+                    TextComponent(
+                      label: 'ID Produto: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Text(produtoModel.id.toString()),
                   ],
                 ),
@@ -229,7 +314,10 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextComponent(label: 'Nome: '),
+                    TextComponent(
+                      label: 'Nome: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Expanded(child: Text(produtoModel.nome.toString()))
                   ],
                 ),
@@ -237,7 +325,10 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextComponent(label: 'Descrição: '),
+                    TextComponent(
+                      label: 'Descrição: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Expanded(child: Text(produtoModel.descricao ?? ""))
                   ],
                 ),
@@ -245,8 +336,11 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextComponent(label: 'Categoria: '),
-                    Expanded(child: Text(produtoModel.id.toString()))
+                    TextComponent(
+                      label: 'Categoria: ',
+                      fontWeight: FontWeight.w700,
+                    ),
+                    Expanded(child: Text(categoriaModel.nome))
                   ],
                 ),
                 Row(
@@ -254,10 +348,14 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   children: [
                     TextComponent(
                       label: 'Valor\nCompra: ',
+                      fontWeight: FontWeight.w700,
                     ),
                     Text(valorCompraController.text =
                         formatter.format(produtoModel.valorCompra)),
-                    TextComponent(label: 'Valor\nVenda: '),
+                    TextComponent(
+                      label: 'Valor\nVenda: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Text(valorVendaController.text =
                         formatter.format(produtoModel.valorVenda))
                   ],
@@ -265,14 +363,37 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextComponent(label: 'Margem: '),
-                    Expanded(child: Text(produtoMargemModel.margem ?? "")),
-                    ButtonComponent(
-                      label: 'Alterar Margem',
-                      onPressed: () {
-                        _abrirDialog(context);
-                      },
-                    )
+                    TextComponent(
+                      label: 'Margem: ',
+                      fontWeight: FontWeight.w700,
+                    ),
+                    Expanded(child: Text(margem.toStringAsPrecision(4) + '%')),
+                    Container(
+                        width: 170,
+                        height: 30,
+                        margin: EdgeInsets.only(top: 18, bottom: 13),
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Color.fromRGBO(0, 94, 181, 1)),
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100),
+                              ))),
+                          onPressed: () {
+                            produtoModelGlobal = produtoModel;
+                            produtoMargemModelGlobal = produtoMargemModelGlobal;
+                            setState(() {});
+
+                            margemController.text =
+                                margem.toStringAsPrecision(4);
+                            _abrirDialog(context);
+                          },
+                          child: TextComponent(
+                            label: 'Alterar Margem',
+                          ),
+                        ))
                   ],
                 ),
               ],
