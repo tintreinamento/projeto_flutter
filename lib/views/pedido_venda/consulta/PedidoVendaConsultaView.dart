@@ -273,6 +273,7 @@ class _ItemPedidoState extends State<ItemPedido> {
 }
 
 class ItemPedidoCard extends StatelessWidget {
+  NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
   ItemPedidoModel? itemPedidoModel;
 
   ProdutoModel? produtoModel;
@@ -326,7 +327,8 @@ class ItemPedidoCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           TextComponent(
-                            label: itemPedidoModel!.valorTotal.toString(),
+                            label:
+                                formatter.format(itemPedidoModel!.valorTotal),
                           ),
                         ],
                       )
