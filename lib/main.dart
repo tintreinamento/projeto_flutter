@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/pedido_venda_consultar',
+      initialRoute: '/pedido_venda_cadastrar',
       routes: {
         '/': (context) => PedidoVendaConsultaView(),
         //'/': (context) => SplashPage(), //ok

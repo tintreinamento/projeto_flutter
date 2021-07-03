@@ -409,7 +409,7 @@ class CardProduto extends StatefulWidget {
 
 class _CardProdutoState extends State<CardProduto> {
   CategoriaModel? categoria;
-
+  NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
   List<CategoriaModel>? listaCategoria;
 
   String? categoriaNome;
@@ -434,6 +434,7 @@ class _CardProdutoState extends State<CardProduto> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: MediaQuery.of(context).size.height * .12,
       margin: EdgeInsets.only(bottom: 5.0),
       child: Row(
         children: [
@@ -449,7 +450,10 @@ class _CardProdutoState extends State<CardProduto> {
                       children: [
                         TextComponent(
                           label: 'Nome:',
+                          tamanho: 18,
+                          fontWeight: FontWeight.bold,
                         ),
+                        SizedBox(width: 5.0),
                         TextComponent(
                           label: widget.produto!.nome,
                         )
@@ -459,7 +463,10 @@ class _CardProdutoState extends State<CardProduto> {
                       children: [
                         TextComponent(
                           label: 'Categoria:',
+                          tamanho: 18,
+                          fontWeight: FontWeight.bold,
                         ),
+                        SizedBox(width: 5.0),
                         TextComponent(
                           label: categoria!.nome,
                         )
@@ -469,9 +476,12 @@ class _CardProdutoState extends State<CardProduto> {
                       children: [
                         TextComponent(
                           label: 'Preço:',
+                          tamanho: 18,
+                          fontWeight: FontWeight.bold,
                         ),
+                        SizedBox(width: 5.0),
                         TextComponent(
-                          label: widget.produto!.valorCompra.toString(),
+                          label: formatter.format(widget.produto!.valorCompra),
                         )
                       ],
                     )
