@@ -19,11 +19,16 @@ import 'package:projeto_flutter/views/precificacao/precificacaoView.dart';
 
 import 'package:provider/provider.dart';
 
+// void main() {
+//   runApp(MultiProvider(
+//     providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
+//     child: MyApp(),
+//   ));
+//   //runApp(MyApp());
+// }
+
 void main() {
-  runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
-    child: MyApp(),
-  ));
+  runApp(MyApp());
   //runApp(MyApp());
 }
 
@@ -61,8 +66,3 @@ class MyApp extends StatelessWidget {
         '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
         '/cadastrar_precificacao': (contexto) => PrecificacaoView(),
         '/pedido_compra': (contexto) => PedidoCompraCadastroView(),
-        '/estoque': (contexto) => EstoqueView()
-      },
-    );
-  }
-}

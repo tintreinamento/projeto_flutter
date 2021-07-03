@@ -7,10 +7,10 @@ class EstadoModel {
 
   factory EstadoModel.fromJson(Map<String, dynamic> parsedJson) {
     return EstadoModel(
-        id: parsedJson['id'],
-        idPais: parsedJson['id_pais'],
-        nome: parsedJson['nome']);
+        id: parsedJson['ID_ESTADO'],
+        idPais: parsedJson['ID_PAIS'],
+        nome: parsedJson['NOME']);
   }
 
-  Map<String, dynamic> toJson() => {'nome': nome, 'id_pais': idPais};
+  Map<String, dynamic> toJson() => {'NOME': nome, 'ID_PAIS': idPais};
 }

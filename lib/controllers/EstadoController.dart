@@ -4,7 +4,7 @@ import 'package:projeto_flutter/services/Api.dart';
 
 class EstadoController {
   Future<List<EstadoModel>> obtenhaTodos() async {
-    final resposta = await new Api().obtenha('estados');
+    final resposta = await new Api().obtenha('estado');
 
     List<EstadoModel> colecaoDeItemPedido = new List.empty(growable: true);
 
@@ -19,7 +19,7 @@ class EstadoController {
   }
 
   Future<EstadoModel> obtenhaPorId(int id) async {
-    final resposta = await new Api().obtenha('estados/' + id.toString());
+    final resposta = await new Api().obtenha('estado/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -27,7 +27,7 @@ class EstadoController {
   }
 
   Future<EstadoModel> crie(EstadoModel estado) async {
-    final resposta = await new Api().crie('estados', json.encode(estado));
+    final resposta = await new Api().crie('estado', json.encode(estado));
 
     var stringJson = json.decode(resposta.body);
 
@@ -35,8 +35,7 @@ class EstadoController {
   }
 
   Future<EstadoModel> delete(EstadoModel estado) async {
-    final resposta =
-        await new Api().delete('estados/' + estado.nome.toString());
+    final resposta = await new Api().delete('estado/' + estado.nome.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -45,7 +44,7 @@ class EstadoController {
 
   Future<EstadoModel> atualize(EstadoModel estado) async {
     final resposta = await new Api()
-        .atualize('estados/' + estado.nome.toString(), json.encode(estado));
+        .atualize('estado/' + estado.nome.toString(), json.encode(estado));
 
     var stringJson = json.decode(resposta.body);
 

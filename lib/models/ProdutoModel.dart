@@ -1,58 +1,42 @@
-import 'dart:convert';
-
-import 'package:projeto_flutter/models/EstoqueModel.dart';
-import 'package:projeto_flutter/models/FornecedorModel.dart';
-
 class ProdutoModel {
-  int? id;
-  String? nome;
-  String? descricao;
-  double? precoCompra = 0;
-  String? categoria;
-  String? margem;
-  FornecedorModel? fornecedor;
-  List<EstoqueModel>? estoque;
+  var id;
+  var idCategoria;
+  var idFornecedor;
+  var nome;
+  var descricao;
+  var valorCompra;
+  var valorVenda;
 
-  ProdutoModel({
-    this.id,
-    this.nome,
-    this.descricao,
-    this.precoCompra,
-    this.categoria,
-    this.margem,
-    this.fornecedor,
-    this.estoque,
-  });
+  ProdutoModel(
+      {this.id,
+      this.nome,
+      this.idCategoria,
+      this.idFornecedor,
+      this.descricao,
+      this.valorCompra,
+      this.valorVenda});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'nome': nome,
-      'descricao': descricao,
-      'precoCompra': precoCompra,
-      'categoria': categoria,
-      'margem': margem,
-      'fornecedor': fornecedor?.toMap(),
-      'estoque': estoque?.map((x) => x.toMap()).toList(),
-    };
+  String getNome() {
+    return this.nome;
   }
 
-  factory ProdutoModel.fromMap(Map<String, dynamic> map) {
+  factory ProdutoModel.fromJson(Map<String, dynamic> parsedJson) {
     return ProdutoModel(
-      id: map['id'],
-      nome: map['nome'],
-      descricao: map['descricao'],
-      precoCompra: map['precoCompra'],
-      categoria: map['categoria'],
-      margem: map['margem'],
-      fornecedor: FornecedorModel.fromMap(map['fornecedor']),
-      estoque: List<EstoqueModel>.from(
-          map['estoque']?.map((x) => EstoqueModel.fromMap(x))),
-    );
+        id: parsedJson['ID_PRODUTO'],
+        nome: parsedJson['NOME'],
+        idCategoria: parsedJson['ID_CATEGORIA'],
+        idFornecedor: parsedJson['ID_FORNECEDOR'],
+        descricao: parsedJson['DESCRICAO'],
+        valorCompra: parsedJson['VALOR_COMPRA'],
+        valorVenda: parsedJson['VALOR_VENDA']);
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory ProdutoModel.fromJson(String source) =>
-      ProdutoModel.fromMap(json.decode(source));
+  Map<String, dynamic> toJson() => {
+        'NOME': nome,
+        'ID_CATEGORIA': idCategoria,
+        'ID_FORNECEDOR': idFornecedor,
+        'DESCRICAO': descricao,
+        'VALOR_COMPRA': valorCompra,
+        'VALOR_VENDA': valorVenda
+      };
 }

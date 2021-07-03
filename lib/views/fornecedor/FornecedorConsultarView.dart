@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,6 @@ import 'package:projeto_flutter/componentes/InputComponent.dart';
 
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
-import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/FornecedorController.dart';
 import 'package:projeto_flutter/models/FornecedorModel.dart';
 
@@ -27,8 +28,8 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
   final _formKeyConsultaFornecedor = GlobalKey<FormState>();
   final nomeController = TextEditingController();
 
-  //FornecedorController fornecedorController = new FornecedorController();
-  //late Future<List<FornecedorModel>> listaFornecedores;
+  FornecedorController fornecedorController = new FornecedorController();
+  late Future<List<FornecedorModel>> listaFornecedores;
 
   bool isVazio(value) {
     if (value == null || value.isEmpty) {
@@ -38,18 +39,18 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
     }
   }
 
-  consultarFornecedor() async {
+  consultarFornecedor() {
     if (_formKeyConsultaFornecedor.currentState!.validate()) {
       //consulta
       setState(() {});
     }
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   listaFornecedores = fornecedorController.obtenhaTodos();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    listaFornecedores = fornecedorController.obtenhaTodos();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
         ],
       ),
     );
-    /*
+
     //Map
     var lista = FutureBuilder(
         future: listaFornecedores,
@@ -112,8 +113,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
           }
           return CircularProgressIndicator();
         });
-        */
-    /*
+
     final layoutVertical = Container(
       child: Column(
         children: [
@@ -187,7 +187,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
         ],
       ),
     );
-    
+
     return Scaffold(
         appBar: AppBarComponent(),
         drawer: DrawerComponent(),
@@ -200,153 +200,9 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
             }
           },
         ));
-        */
-
-    return Scaffold(
-      appBar: AppBarComponent(),
-      drawer: DrawerComponent(),
-      body: Container(
-          child: Column(
-        children: [
-          SubMenuComponent(
-            titulo: 'Fornecedor',
-            tituloPrimeiraRota: 'Cadastro',
-            primeiraRota: '/cadastrar_fornecedor',
-            tituloSegundaRota: 'Consultar',
-            segundaRota: '/consultar_fornecedor',
-          ),
-          Expanded(
-              child: SingleChildScrollView(
-            child: Container(
-              //width: double.infinity,
-              //height: MediaQuery.of(context).size.height,
-              margin: EdgeInsets.only(left: 20, top: 20, right: 20),
-              child: Column(
-                children: [
-                  MolduraComponent(
-                    label: 'Fornecedor',
-                    content: formConsulta,
-                  ),
-                  //MolduraComponent(
-                  //label: 'Fornecedores',
-                  if (true) Fornecedor(),
-                  //content: Fornecedor(),
-                  //),
-                ],
-              ),
-            ),
-          ))
-        ],
-      )),
-    );
   }
 }
 
-class Fornecedor extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    List<FornecedorCard> listaFornecedorCard = [];
-
-    for (int i = 0; i < 5; i++) {
-      listaFornecedorCard.add(FornecedorCard());
-    }
-
-    return Container(
-      child: MolduraComponent(
-        label: 'Fornecedores',
-        content: Column(
-          children: [...listaFornecedorCard],
-        ),
-      ),
-    );
-  }
-}
-
-class FornecedorCard extends StatelessWidget {
-  FornecedorCard({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        //height: MediaQuery.of(context).size.height * .1,
-        margin: EdgeInsets.only(bottom: 5.0),
-        child: Row(
-          children: [
-            Expanded(
-                flex: 2,
-                child: Container(
-                  padding: paddingPadrao,
-                  color: colorCinza,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          TextComponent(
-                            label: 'Nome: ',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextComponent(
-                            label: 'Fornecedor 1',
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          TextComponent(
-                            label: 'CPF/CNPJ: ',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextComponent(
-                            label: '999.999.999-99',
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          TextComponent(
-                            label: 'E-mail: ',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextComponent(
-                            label: 'fonecedor@email.com',
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          TextComponent(
-                            label: 'Telefone: ',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextComponent(
-                            label: '62 9 9999-9999',
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          TextComponent(
-                            label: 'Endereço: ',
-                            fontWeight: FontWeight.bold,
-                          ),
-                          TextComponent(
-                            label: 'Avenida Goiás, Goiâna, Goiás',
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                )),
-          ],
-        ));
-  }
-}
-
-
-/*
 Widget cardFornecedor(FornecedorModel fornecedorModel) {
   return ConstrainedBox(
     constraints: BoxConstraints(minWidth: 340.0),
@@ -382,7 +238,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                       label: 'CPF/CNPJ: ',
                     ),
                     TextComponent(
-                      label: fornecedorModel.cpfCnpj,
+                      label: (fornecedorModel.cpfCnpj).toString(),
                     ),
                   ],
                 ),
@@ -397,7 +253,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                       label: 'Telefone: ',
                     ),
                     TextComponent(
-                      label: fornecedorModel.telefone,
+                      label: (fornecedorModel.telefone).toString(),
                     ),
                   ],
                 ),
@@ -423,7 +279,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
               right: -10,
               child: FlatButton(
                   onPressed: () {
-                    // Navigator.pushNamed(context, '/login');
+                     //Navigator.pushNamed(context, '/cadastrar_fornecedor');
                   },
                   child: Container(
                       child:
@@ -432,4 +288,4 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
           ],
         )),
   );
-}*/
+}
