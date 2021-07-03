@@ -111,29 +111,31 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
         var fornecedorControllerApi = FornecedorController();
         var fornecedor = await fornecedorControllerApi.crie(fornecedorModel);
 
-        var estadoModel = EstadoModel(idPais: 315, nome: estadoController.text);
-        var estadoControllerApi = EstadoController();
-        var estado = await estadoControllerApi.crie(estadoModel);
-
-        var cidadeModel =
-            new CidadeModel(idEstado: estado.id, nome: cidadeController.text);
-
-        var cidadeControllerApi = CidadeController();
-        var cidade = await cidadeControllerApi.crie(cidadeModel);
-
-        var enderecoModel = EnderecoModel(
-            idCidade: cidade.id,
-            idEstado: estado.id,
-            idFornecedor: fornecedor.id,
-            idPais: 315,
-            cep: UtilBrasilFields.removeCaracteres(cepController.text),
-            logradouro: logradouroController.text,
-            numero: numeroController.text,
-            bairro: bairroController.text);
-
-        var enderecoControllerApi = EnderecoController();
-        await enderecoControllerApi.crie(enderecoModel);
         limpaCampos();
+
+        // var estadoModel = EstadoModel(idPais: 315, nome: estadoController.text);
+        // var estadoControllerApi = EstadoController();
+        // var estado = await estadoControllerApi.crie(estadoModel);
+
+        // var cidadeModel =
+        //     new CidadeModel(idEstado: estado.id, nome: cidadeController.text);
+
+        // var cidadeControllerApi = CidadeController();
+        // var cidade = await cidadeControllerApi.crie(cidadeModel);
+
+        // var enderecoModel = EnderecoModel(
+        //     idCidade: cidade.id,
+        //     idEstado: estado.id,
+        //     idFornecedor: fornecedor.id,
+        //     idPais: 315,
+        //     cep: UtilBrasilFields.removeCaracteres(cepController.text),
+        //     logradouro: logradouroController.text,
+        //     numero: numeroController.text,
+        //     bairro: bairroController.text);
+
+        // var enderecoControllerApi = EnderecoController();
+        // await enderecoControllerApi.crie(enderecoModel);
+        //limpaCampos();
       }
     }
   }

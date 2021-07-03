@@ -2,23 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-import 'package:projeto_flutter/componentes/DropDownComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
-import 'package:projeto_flutter/componentes/TextFormFieldComponent.dart';
-import 'package:projeto_flutter/componentes/inputDropDownComponent.dart';
-import 'package:projeto_flutter/componentes/styles.dart';
-import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
-import 'package:flutter/services.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:projeto_flutter/controllers/FornecedorController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
-import 'package:projeto_flutter/models/ProdutoModel.dart';
-import 'package:projeto_flutter/models/Produto.dart';
 import 'package:projeto_flutter/models/FornecedorModel.dart';
-import 'package:flutter/src/widgets/navigator.dart';
+import 'package:projeto_flutter/models/ProdutoModel.dart';
+import 'package:intl/intl.dart';
 
 class ProdutoCadastrarView extends StatefulWidget {
   const ProdutoCadastrarView({Key? key}) : super(key: key);
@@ -43,6 +36,9 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
   final categoriaController = TextEditingController();
   final valorCompraController = TextEditingController();
   int idFornecedorController = 0; //armazenar ID do Fornecedor para o produto
+
+  //model
+  ProdutoModel? produtoModel;
 
   pegarNome() {
     print(nomeController.text);
@@ -119,41 +115,60 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
     return null;
   }
 
+  String getCpfCnpj(String value) {
+    String cpfCnpj = "";
+
+    if (value.length == 10 || value.length == 13) {
+      value = '0' + value;
+    } else if (value.length == 9 || value.length == 12) {
+      value = '00' + value;
+    }
+
+    if (value.length == 11) {
+      cpfCnpj = UtilBrasilFields.obterCpf(value);
+    } else if (value.length == 14) {
+      cpfCnpj = UtilBrasilFields.obterCnpj(value);
+    }
+
+    return cpfCnpj;
+  }
+
   consultarFornecedor() async {
     //Consultando dados do cliente através da API
     FornecedorController fornecedorController = new FornecedorController();
-    final fornecedor =
-        await fornecedorController.obtenhaPorNome(nomeController.text);
+    final fornecedor = await fornecedorController.obtenhaPorCpfCnpj(
+        UtilBrasilFields.removeCaracteres(cpfCnpjController.text));
 
     //Caso exista o cliente cadastrado, preencha os campos com as respectivas informações
-    //nomeConsultaController = nomeController.text;
-    // cpfCnpjController.text = UtilBrasilFields.obterCnpj(fornecedor.cpfCnpj);
-    // emailController.text = fornecedor.email;
-    // telefoneController.text = fornecedor.telefone;
-    // idFornecedorController = fornecedor.id;
+    nomeController.text = fornecedor.nome;
+    emailController.text = fornecedor.email;
+    telefoneController.text =
+        UtilBrasilFields.obterTelefone(fornecedor.telefone.toString());
+    idFornecedorController = fornecedor.id;
   }
 
   //Botão para inserção do produto usando a API
-  // cadastrarProduto() {
-  //   if (_formKeyFornecedor.currentState!.validate()) {
-  //     if (_formKeyProduto.currentState!.validate()) {
-  //       //Cadastrar os dados na API
+  cadastrarProduto() {
+    if (_formKeyFornecedor.currentState!.validate()) {
+      if (_formKeyProduto.currentState!.validate()) {
+        //Cadastrar os dados na API
 
-  //       //   ProdutoModel produtoModel = ProdutoModel(
-  //       //       // nome: nomeProdutoController.text,
-  //       //       // descricao: descricaoController.text,
-  //       //       // idCategoria: categoriaController.text,
-  //       //       // valorCompra: valorCompraController.text,
-  //       //       // idFornecedor: idFornecedorController);
+        ProdutoModel produtoModel = ProdutoModel(
+            nome: nomeProdutoController.text,
+            descricao: descricaoController.text,
+            idCategoria: int.parse(categoriaController.text),
+            valorCompra: int.parse(valorCompraController.text),
+            valorVenda: 0,
+            idFornecedor: idFornecedorController);
 
-  //       //   // ProdutoController produtoController = ProdutoController();
+        ProdutoController produtoController = ProdutoController();
 
-  //       //   // produtoController.crie(produtoModel);
-  //       //   // limparCampos();
-  //       //   // showAlertDialog1(context);
-  //       // }
-  //     }
-  //   }
+        produtoController.crie(produtoModel);
+        limparCampos();
+        showAlertDialog1(context);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +176,18 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
       key: _formKeyFornecedor,
       child: Column(
         children: [
+          InputComponent(
+            label: 'CPF/CNPJ: ',
+            inputFormatter: [
+              FilteringTextInputFormatter.digitsOnly,
+              CpfOuCnpjFormatter()
+            ],
+            controller: cpfCnpjController,
+            validator: validarCpfCnpj,
+          ),
+          SizedBox(
+            height: 10,
+          ),
           InputComponent(
             label: 'Nome: ',
             controller: nomeController,
@@ -173,15 +200,6 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
           ),
           SizedBox(
             height: 10,
-          ),
-          InputComponent(
-            label: 'CPF/CNPJ: ',
-            inputFormatter: [
-              FilteringTextInputFormatter.digitsOnly,
-              CpfOuCnpjFormatter()
-            ],
-            controller: cpfCnpjController,
-            //validator: validarCpfCnpj,
           ),
           SizedBox(
             height: 10,
@@ -263,6 +281,10 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
               height: 10,
             ),
             InputComponent(
+              inputFormatter: [
+                FilteringTextInputFormatter.digitsOnly,
+                RealInputFormatter()
+              ],
               label: 'Valor de compra: ',
               controller: valorCompraController,
               validator: (value) {
@@ -312,7 +334,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
                       ),
                       ButtonComponent(
                         label: 'Cadastrar',
-                        // onPressed: cadastrarProduto,
+                        onPressed: cadastrarProduto,
                       ),
                     ],
                   ),
