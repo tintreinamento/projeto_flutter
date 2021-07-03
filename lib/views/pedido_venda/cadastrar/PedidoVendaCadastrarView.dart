@@ -15,6 +15,8 @@ import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/CategoriaController.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
+import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
+import 'package:projeto_flutter/controllers/PedidoController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/CategoriaModel.dart';
@@ -133,14 +135,21 @@ class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
   }
 }
 
-class FormCliente extends StatelessWidget {
-  BuildContext? context;
+class FormCliente extends StatefulWidget {
   GlobalKey<FormState> formCliente;
 
-  TextEditingController cpfCnpjController = TextEditingController();
-  TextEditingController nomeClienteController = TextEditingController();
-
   FormCliente({Key? key, required this.formCliente}) : super(key: key);
+
+  @override
+  _FormClienteState createState() => _FormClienteState();
+}
+
+class _FormClienteState extends State<FormCliente> {
+  // BuildContext? context;
+
+  TextEditingController cpfCnpjController = TextEditingController();
+
+  TextEditingController nomeClienteController = TextEditingController();
 
   isEmpty(value) {
     if (value == null || value.isEmpty) {
@@ -165,7 +174,7 @@ class FormCliente extends StatelessWidget {
     }
   }
 
-  carregarCliente() async {
+  carregarCliente(BuildContext context) async {
     ClienteController clienteController = new ClienteController();
     ClienteModel cliente = await clienteController.obtenhaPorCpf(
         UtilBrasilFields.removeCaracteres(cpfCnpjController.text));
@@ -174,15 +183,16 @@ class FormCliente extends StatelessWidget {
     nomeClienteController.text = cliente.nome!;
     //Seta cliente no pedido
 
-    //  this.context!.read<CarrinhoModel>().cliente = cliente;
+    this.context!.read<CarrinhoModel>().cliente = cliente;
+
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
     return Container(
         child: Form(
-      key: formCliente,
+      key: widget.formCliente,
       child: Column(
         children: [
           MolduraComponent(
@@ -203,7 +213,9 @@ class FormCliente extends StatelessWidget {
                 ),
                 ButtonComponent(
                   label: 'Consultar',
-                  onPressed: carregarCliente,
+                  onPressed: () {
+                    carregarCliente(context);
+                  },
                 )
               ],
             ),
@@ -381,20 +393,58 @@ class Produto extends StatefulWidget {
 
 class _ProdutoState extends State<Produto> {
   String? categoriaNome;
+  late Future<List<ProdutoModel>> listaProdutos;
+
+  void carregarProdutos() {
+    ProdutoController produtoController = new ProdutoController();
+    listaProdutos = produtoController.obtenhaTodos();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    carregarProdutos();
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<CardProduto> listaProdutosWidget =
-        widget.listaProdutos!.map((produto) {
-      print(produto.nome);
-      return CardProduto(produto: produto);
-    }).toList();
+    final listaProdutosWidget = FutureBuilder(
+      future: listaProdutos, // a previously-obtained Future<String> or null
+      builder:
+          (BuildContext context, AsyncSnapshot<List<ProdutoModel>> snapshot) {
+        var listaProdutosWidget;
+        List<Widget> children;
+        if (snapshot.hasData) {
+          listaProdutosWidget = snapshot.data!.map((produto) {
+            print(produto.nome);
+            return CardProduto(produto: produto);
+          }).toList();
+        } else if (snapshot.hasError) {
+          children = <Widget>[];
+        } else {
+          children = const <Widget>[];
+        }
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [...listaProdutosWidget],
+          ),
+        );
+      },
+    );
+
+    // List<CardProduto> listaProdutosWidget =
+    //     widget.listaProdutos!.map((produto) {
+    //   print(produto.nome);
+    //   return CardProduto(produto: produto);
+    // }).toList();
 
     return Container(
         child: SingleChildScrollView(
-            child: Column(
-      children: [...listaProdutosWidget],
-    )));
+      child: listaProdutosWidget,
+    ));
   }
 }
 
@@ -586,6 +636,31 @@ class Resumo extends StatelessWidget {
   NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
   Resumo({Key? key, this.abrirCarrinho}) : super(key: key);
 
+  finalizarPedido(BuildContext context) async {
+    var carrinho = context.read<CarrinhoModel>();
+    final pedidoController = PedidoController();
+    final itemPedidoController = ItemPedidoController();
+    PedidoModel pedido = new PedidoModel(
+        idCliente: carrinho.cliente.id,
+        idFuncionario: 1,
+        total: carrinho.totalPedido,
+        data: carrinho.dataPedido);
+
+    //Criando pedido
+    PedidoModel pedidoResposa = await pedidoController.crie(pedido);
+    print(pedidoResposa.id);
+    carrinho.itemPedido.forEach((element) {
+      element.idPedido = pedidoResposa.id;
+    });
+
+    //Realiza a baixa no estoque
+
+    //Enviado items
+    carrinho.itemPedido.forEach((element) async {
+      await itemPedidoController.crie(element);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -627,6 +702,9 @@ class Resumo extends StatelessWidget {
             )),
             Expanded(
                 child: GestureDetector(
+              onTap: () {
+                finalizarPedido(context);
+              },
               child: Container(
                 color: colorVerde,
                 child: Align(

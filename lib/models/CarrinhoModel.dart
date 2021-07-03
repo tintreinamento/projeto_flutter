@@ -1,3 +1,4 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
 import 'package:projeto_flutter/models/FuncionarioModel.dart';
@@ -5,7 +6,7 @@ import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 
 class CarrinhoModel extends ChangeNotifier {
-  String dataPedido = DateTime.now().toString();
+  String dataPedido = UtilData.obterDataDDMMAAAA(DateTime.now());
   double totalPedido = 0;
   FuncionarioModel? funcionario;
   ClienteModel cliente = new ClienteModel();
@@ -29,10 +30,10 @@ class CarrinhoModel extends ChangeNotifier {
 
     if (index < 0) {
       ItemPedidoModel item = new ItemPedidoModel(
-        idProduto: produto.id,
-        quantidade: 1,
-        valorUnitario: produto.valorVenda,
-      );
+          idProduto: produto.id,
+          quantidade: 1,
+          valorUnitario: produto.valorVenda);
+      item.valorTotal = produto.valorVenda * item.quantidade;
       itemPedido.add(item);
     } else {
       itemPedido[index].quantidade = itemPedido[index].quantidade! + 1;

@@ -23,7 +23,7 @@ class ClienteController {
 
     var stringJson = json.decode(resposta.body);
 
-    return new ClienteModel.fromJson(stringJson.single);
+    return new ClienteModel.fromJson(stringJson);
   }
 
   Future<ClienteModel> obtenhaPorId(int id) async {
