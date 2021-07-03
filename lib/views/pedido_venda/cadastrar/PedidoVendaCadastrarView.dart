@@ -3,6 +3,7 @@ import 'dart:js';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
@@ -107,9 +108,9 @@ class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
                             ),
                         ],
                       )),
-                      // ProdutoCarrinhoWidget(
-                      //   active: active,
-                      // ),
+                      ProdutoCarrinhoWidget(
+                        active: active,
+                      ),
                     ],
                   ),
                 ),
@@ -369,13 +370,22 @@ class FormConsultaProduto extends StatelessWidget {
   }
 }
 
-class Produto extends StatelessWidget {
+class Produto extends StatefulWidget {
   List<ProdutoModel>? listaProdutos;
+
   Produto({Key? key, this.listaProdutos}) : super(key: key);
 
   @override
+  _ProdutoState createState() => _ProdutoState();
+}
+
+class _ProdutoState extends State<Produto> {
+  String? categoriaNome;
+
+  @override
   Widget build(BuildContext context) {
-    List<CardProduto> listaProdutosWidget = listaProdutos!.map((produto) {
+    List<CardProduto> listaProdutosWidget =
+        widget.listaProdutos!.map((produto) {
       print(produto.nome);
       return CardProduto(produto: produto);
     }).toList();
@@ -388,29 +398,37 @@ class Produto extends StatelessWidget {
   }
 }
 
-class CardProduto extends StatelessWidget {
+class CardProduto extends StatefulWidget {
   ProdutoModel? produto;
-  List<CategoriaModel>? listaCategoria;
 
   CardProduto({Key? key, this.produto}) : super(key: key);
 
+  @override
+  _CardProdutoState createState() => _CardProdutoState();
+}
+
+class _CardProdutoState extends State<CardProduto> {
+  CategoriaModel? categoria;
+
+  List<CategoriaModel>? listaCategoria;
+
+  String? categoriaNome;
+
   getCategoria(value) async {
-    List<CategoriaModel> categoria = listaCategoria!.where((categoria) {
-      return categoria.id == value;
-    }).toList();
-
-    return categoria[0].nome;
-  }
-
-  carregarCategoria() async {
     CategoriaController categoriaController = new CategoriaController();
 
-    listaCategoria = await categoriaController.obtenhaTodos();
+    final categoria = await categoriaController.obtenhaPorId(value);
+
+    setState(() {
+      this.categoria = categoria;
+    });
   }
 
   @override
   void initState() {
     // TODO: implement initState
+
+    getCategoria(widget.produto!.idCategoria);
   }
 
   @override
@@ -433,7 +451,7 @@ class CardProduto extends StatelessWidget {
                           label: 'Nome:',
                         ),
                         TextComponent(
-                          label: produto!.nome,
+                          label: widget.produto!.nome,
                         )
                       ],
                     ),
@@ -443,7 +461,7 @@ class CardProduto extends StatelessWidget {
                           label: 'Categoria:',
                         ),
                         TextComponent(
-                          label: getCategoria(produto!.idCategoria),
+                          label: categoria!.nome,
                         )
                       ],
                     ),
@@ -453,7 +471,7 @@ class CardProduto extends StatelessWidget {
                           label: 'Preço:',
                         ),
                         TextComponent(
-                          label: produto!.valorCompra.toString(),
+                          label: widget.produto!.valorCompra.toString(),
                         )
                       ],
                     )
@@ -467,12 +485,12 @@ class CardProduto extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // TextComponent(
-                    //     // label: context
-                    //     //     .watch<CarrinhoModel>()
-                    //     //     .getQuantidade(produto!)
-                    //     //     .toString(),
-                    //     )
+                    TextComponent(
+                      label: context
+                          .watch<CarrinhoModel>()
+                          .getQuantidade(widget.produto!.id)
+                          .toString(),
+                    )
                   ],
                 ),
                 Row(
@@ -481,14 +499,14 @@ class CardProduto extends StatelessWidget {
                       child: ButtonCustom(
                         isAdd: true,
                         isRemoved: false,
-                        produto: produto,
+                        produto: widget.produto,
                       ),
                     ),
                     Expanded(
                       child: ButtonCustom(
                         isAdd: false,
                         isRemoved: true,
-                        produto: produto,
+                        produto: widget.produto,
                       ),
                     )
                   ],
@@ -517,7 +535,7 @@ class ButtonCustom extends StatelessWidget {
 
     if (isAdd) {
       gestureDetector = GestureDetector(
-        // onTap: () => context.read<CarrinhoModel>().addItemCarrinho(produto!),
+        onTap: () => context.read<CarrinhoModel>().addItemCarrinho(produto!),
         child: Container(
           color: colorVerde,
           child: Align(
@@ -533,7 +551,7 @@ class ButtonCustom extends StatelessWidget {
 
     if (isRemoved) {
       gestureDetector = GestureDetector(
-        //  onTap: () => context.read<CarrinhoModel>().removeItemCarrinho(produto!),
+        onTap: () => context.read<CarrinhoModel>().removeItemCarrinho(produto!),
         child: Container(
           color: colorVermelho,
           child: Align(
@@ -555,7 +573,7 @@ class ButtonCustom extends StatelessWidget {
 
 class Resumo extends StatelessWidget {
   Function? abrirCarrinho;
-
+  NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
   Resumo({Key? key, this.abrirCarrinho}) : super(key: key);
 
   @override
@@ -574,11 +592,25 @@ class Resumo extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // TextComponent(
-                    //     //label: "R\$ " +
-                    //     //  context.watch<CarrinhoModel>().getTotal().toString(),
-                    //     // cor: colorAzul,
-                    //     )
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          TextComponent(
+                            label: 'por',
+                            tamanho: 18,
+                            cor: colorAzul,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          TextComponent(
+                            label: formatter.format(
+                                context.watch<CarrinhoModel>().getTotal()),
+                            tamanho: 24,
+                            cor: colorAzul,
+                          )
+                        ]),
                   ],
                 ),
               ),
@@ -601,134 +633,136 @@ class Resumo extends StatelessWidget {
 
 //Animação
 
-// class ProdutoCarrinhoWidget extends StatefulWidget {
-//   final bool? active;
-//   final Function? onTap;
+class ProdutoCarrinhoWidget extends StatefulWidget {
+  final bool? active;
+  final Function? onTap;
 
-//   ProdutoCarrinhoWidget({Key? key, this.active, this.onTap}) : super(key: key);
+  ProdutoCarrinhoWidget({Key? key, this.active, this.onTap}) : super(key: key);
 
-//   @override
-//   _ProdutoCarrinhoWidgetState createState() => _ProdutoCarrinhoWidgetState();
-// }
+  @override
+  _ProdutoCarrinhoWidgetState createState() => _ProdutoCarrinhoWidgetState();
+}
 
-// class _ProdutoCarrinhoWidgetState extends State<ProdutoCarrinhoWidget> {
-//   @override
-//   Widget build(BuildContext context) {
-//     var size = MediaQuery.of(context).size;
-//     //final carrinhoCompra = context.watch<CarrinhoModel>();
+class _ProdutoCarrinhoWidgetState extends State<ProdutoCarrinhoWidget> {
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    final carrinhoCompra = context.watch<CarrinhoModel>();
 
-//     var listaItemCarrinho = carrinhoCompra.itemPedido.map((itemPedido) {
-//       return SizedBox(
-//         width: size.width,
-//         height: size.height * 0.20,
-//         child: ItemCarrinhoCard(itemPedido: itemPedido),
-//       );
-//     }).toList();
+    var listaItemCarrinho = carrinhoCompra.itemPedido.map((itemPedido) {
+      return SizedBox(
+        width: size.width,
+        height: size.height * 0.20,
+        child: ItemCarrinhoCard(itemPedido: itemPedido),
+      );
+    }).toList();
 
-//     return AnimatedPositioned(
-//         child: Container(
-//           decoration: BoxDecoration(
-//               color: colorCinza, borderRadius: BorderRadius.circular(16)),
-//           width: MediaQuery.of(context).size.width * 0.95,
-//           height: MediaQuery.of(context).size.height * 0.70,
-//           margin: marginPadrao,
-//           padding: EdgeInsets.all(10),
-//           child: Container(
-//             decoration: BoxDecoration(
-//                 color: colorCinza, borderRadius: BorderRadius.circular(16)),
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 TextComponent(
-//                   label: 'Carrinho de compras',
-//                   tamanho: 16,
-//                   cor: colorAzul,
-//                 ),
-//                 SizedBox(
-//                   height: MediaQuery.of(context).size.height * 0.60,
-//                   child: SingleChildScrollView(
-//                     child: Column(
-//                       children: [...listaItemCarrinho],
-//                     ),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ),
-//         ),
-//         curve: Curves.decelerate,
-//         bottom: widget.active! ? 0 : -700,
-//         duration: Duration(milliseconds: 500));
-//   }
-// }
+    return AnimatedPositioned(
+        child: Container(
+          decoration: BoxDecoration(
+              color: colorCinza, borderRadius: BorderRadius.circular(16)),
+          width: MediaQuery.of(context).size.width * 0.95,
+          height: MediaQuery.of(context).size.height * 0.70,
+          margin: marginPadrao,
+          padding: EdgeInsets.all(10),
+          child: Container(
+            decoration: BoxDecoration(
+                color: colorCinza, borderRadius: BorderRadius.circular(16)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextComponent(
+                  label: 'Carrinho de compras',
+                  tamanho: 16,
+                  cor: colorAzul,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.60,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [...listaItemCarrinho],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        curve: Curves.decelerate,
+        bottom: widget.active! ? 0 : -700,
+        duration: Duration(milliseconds: 500));
+  }
+}
 
-// class ItemCarrinhoCard extends StatelessWidget {
-//   ItemPedidoModel itemPedido;
+class ItemCarrinhoCard extends StatelessWidget {
+  ItemPedidoModel itemPedido;
 
-//   ItemCarrinhoCard({Key? key, required this.itemPedido}) : super(key: key);
+  ItemCarrinhoCard({Key? key, required this.itemPedido}) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     //var size = MediaQuery.of(context).size;
-//     return Container(
-//       padding: paddingPadrao,
-//       margin: marginPadrao,
-//       decoration: BoxDecoration(
-//           color: colorBranco, borderRadius: BorderRadius.circular(16)),
-//       child: Row(
-//         children: [
-//           Expanded(
-//             flex: 2,
-//             child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                 children: [
-//                   Flexible(
-//                     child: Row(
-//                       children: [
-//                         TextComponent(label: 'Nome: '),
-//                         TextComponent(
-//                             label: itemPedido.produto!.nome.toString()),
-//                       ],
-//                     ),
-//                   ),
-//                   Flexible(
-//                     child: Row(
-//                       children: [
-//                         TextComponent(label: 'Categoria: '),
-//                         TextComponent(
-//                             label: itemPedido.produto!.nome.toString()),
-//                       ],
-//                     ),
-//                   ),
-//                   Flexible(
-//                     child: Row(
-//                       children: [
-//                         TextComponent(label: 'Preço: '),
-//                         TextComponent(
-//                             label: itemPedido.produto!.precoCompra.toString()),
-//                       ],
-//                     ),
-//                   )
-//                 ]),
-//           ),
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.center,
-//               children: [
-//                 Expanded(
-//                   flex: 6,
-//                   child: Row(
-//                     children: [
-//                       TextComponent(label: itemPedido.quantidade!.toString()),
-//                     ],
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: paddingPadrao,
+      margin: marginPadrao,
+      decoration: BoxDecoration(
+          color: colorBranco, borderRadius: BorderRadius.circular(16)),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Flexible(
+                    child: Row(
+                      children: [
+                        TextComponent(label: 'Nome: '),
+                        TextComponent(label: itemPedido.idProduto.toString()),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: Row(
+                      children: [
+                        TextComponent(label: 'Categoria: '),
+                        TextComponent(label: itemPedido.idProduto.toString()),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    child: Row(
+                      children: [
+                        TextComponent(label: 'Preço: '),
+                        TextComponent(label: itemPedido.idProduto.toString()),
+                      ],
+                    ),
+                  )
+                ]),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: Row(
+                    children: [
+                      TextComponent(
+                          label: context
+                              .read<CarrinhoModel>()
+                              .getQuantidade(itemPedido.idProduto)
+                              .toString()),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

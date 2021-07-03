@@ -19,18 +19,18 @@ import 'package:projeto_flutter/views/precificacao/precificacaoView.dart';
 
 import 'package:provider/provider.dart';
 
-// void main() {
-//   runApp(MultiProvider(
-//     providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
-//     child: MyApp(),
-//   ));
-//   //runApp(MyApp());
-// }
-
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
+    child: MyApp(),
+  ));
   //runApp(MyApp());
 }
+
+// void main() {
+//   runApp(MyApp());
+//   runApp(MyApp());
+// }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/pedido_venda_consultar',
       routes: {
         '/': (contexto) => ClienteCadastroView(),
         //'/': (context) => PedidoVendaConsultaView(),
