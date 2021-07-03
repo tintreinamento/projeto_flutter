@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'package:projeto_flutter/controllers/CategoriaController.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
+import 'package:projeto_flutter/views/precificacao/precificacaoView.dart';
 
 class ProdutoController {
   Future<List<ProdutoModel>> obtenhaTodos() async {
@@ -16,6 +18,25 @@ class ProdutoController {
     });
 
     return colecaoDeProdutos;
+  }
+
+  Future<List<ProdutoCategoriaModel>> obtenhaTodosComCategoria() async {
+    var colecaoDeProdutos = await obtenhaTodos();
+    var categorias = await new CategoriaController().obtenhaTodos();
+
+    List<ProdutoCategoriaModel> colecaoProdutoComCategoria =
+        new List.empty(growable: true);
+
+    colecaoDeProdutos.forEach((element) async {
+      var produtoCategoria = new ProdutoCategoriaModel();
+      produtoCategoria.categoriaModel = categorias
+          .firstWhere((categoria) => categoria.id == element.idCategoria);
+      produtoCategoria.produto = element;
+
+      colecaoProdutoComCategoria.add(produtoCategoria);
+    });
+
+    return colecaoProdutoComCategoria;
   }
 
   Future<ProdutoModel> obtenhaPorNome(String nome) async {

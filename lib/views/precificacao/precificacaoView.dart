@@ -1,4 +1,3 @@
-import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -12,6 +11,7 @@ import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/controllers/ProdutoMargemController.dart';
+import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/ProdutoMargemModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 
@@ -20,6 +20,11 @@ class PrecificacaoView extends StatefulWidget {
 
   @override
   _PrecificacaoViewState createState() => _PrecificacaoViewState();
+}
+
+class ProdutoCategoriaModel {
+  var produto = new ProdutoModel();
+  var categoriaModel = new CategoriaModel();
 }
 
 class _PrecificacaoViewState extends State<PrecificacaoView> {
@@ -31,8 +36,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
   var produtoController = new ProdutoController();
   var produtoMargemController = new ProdutoMargemController();
 
-  late Future<List<ProdutoModel>> listaProdutos;
-  var listaProdutoMargem;
+  late Future<List<ProdutoCategoriaModel>> listaProdutos;
 
   TextEditingController valorCompraController = new TextEditingController();
   TextEditingController valorVendaController = new TextEditingController();
@@ -56,8 +60,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
   void initState() {
     super.initState();
 
-    listaProdutos = produtoController.obtenhaTodos();
-    listaProdutoMargem = produtoMargemController.obtenhaTodos();
+    listaProdutos = produtoController.obtenhaTodosComCategoria();
   }
 
   //Pop up para alterar a margem
@@ -66,86 +69,91 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(''),
-            content: Container(
-              height: MediaQuery.of(context).size.height * .3,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    //flex: 2,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'ID Produto:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Produto:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(produtoModelGlobal.id.toString()),
-                        Text(produtoModelGlobal.nome.toString())
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Valor Compra:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Valor Venda:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(valorCompraController.text =
-                            formatter.format(produtoModelGlobal.valorCompra)),
-                        Text(valorVendaController.text =
-                            formatter.format(produtoModelGlobal.valorVenda)),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: InputComponent(
-                            label: 'Margem',
-                            controller: margemController,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+            title: Text(
+              'Alterar Margem',
+              textAlign: TextAlign.center,
             ),
-            actions: <Widget>[
-              ButtonComponent(
-                  label: 'Cadastrar',
-                  onPressed: () async {
-                    await cadastrarMargem();
-                    Navigator.of(context).pop();
-                  }),
-            ],
+            content: Container(
+              height: MediaQuery.of(context).size.height * .4,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Expanded(
+                  //flex: 2,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'ID Produto:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Produto:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(produtoModelGlobal.id.toString()),
+                      Text(produtoModelGlobal.nome.toString())
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Valor Compra:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Valor Venda:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(valorCompraController.text =
+                          formatter.format(produtoModelGlobal.valorCompra)),
+                      Text(valorVendaController.text =
+                          formatter.format(produtoModelGlobal.valorVenda)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Flexible(
+                        child: InputComponent(
+                          label: 'Margem',
+                          controller: margemController,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    flex: 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ButtonComponent(
+                            label: 'Cadastrar',
+                            onPressed: () async {
+                              await cadastrarMargem();
+                              Navigator.of(context).pop();
+                            }),
+                      ],
+                    ))
+              ]),
+            ),
           );
         });
   }
@@ -182,19 +190,20 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
     //Map
     var lista = FutureBuilder(
         future: listaProdutos,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ProdutoModel>> snapshot) {
+        builder: (BuildContext context,
+            AsyncSnapshot<List<ProdutoCategoriaModel>> snapshot) {
           if (snapshot.hasData) {
-            final listaProdutos = snapshot.data!.map((produtoModel) {
+            final listaProdutos = snapshot.data!.map((produtoCategoriaModel) {
               return Column(
                 children: [
-                  cardProduto(produtoModel),
+                  cardProduto(produtoCategoriaModel.produto,
+                      produtoCategoriaModel.categoriaModel),
                   SizedBox(
                     height: 10,
                   ),
                 ],
               );
-            }).toList();
+            });
 
             return Column(
               children: [
@@ -277,7 +286,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
   }
 
   //Lista de produtos
-  Widget cardProduto(ProdutoModel produtoModel) {
+  Widget cardProduto(ProdutoModel produtoModel, CategoriaModel categoriaModel) {
     var margem =
         (produtoModel.valorVenda * 100 / produtoModel.valorCompra) - 100;
 
@@ -294,7 +303,10 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
               children: [
                 Row(
                   children: [
-                    TextComponent(label: 'ID Produto: '),
+                    TextComponent(
+                      label: 'ID Produto: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Text(produtoModel.id.toString()),
                   ],
                 ),
@@ -302,7 +314,10 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextComponent(label: 'Nome: '),
+                    TextComponent(
+                      label: 'Nome: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Expanded(child: Text(produtoModel.nome.toString()))
                   ],
                 ),
@@ -310,7 +325,10 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextComponent(label: 'Descrição: '),
+                    TextComponent(
+                      label: 'Descrição: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Expanded(child: Text(produtoModel.descricao ?? ""))
                   ],
                 ),
@@ -318,8 +336,11 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextComponent(label: 'Categoria: '),
-                    Expanded(child: Text(produtoModel.id.toString()))
+                    TextComponent(
+                      label: 'Categoria: ',
+                      fontWeight: FontWeight.w700,
+                    ),
+                    Expanded(child: Text(categoriaModel.nome))
                   ],
                 ),
                 Row(
@@ -327,10 +348,14 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                   children: [
                     TextComponent(
                       label: 'Valor\nCompra: ',
+                      fontWeight: FontWeight.w700,
                     ),
                     Text(valorCompraController.text =
                         formatter.format(produtoModel.valorCompra)),
-                    TextComponent(label: 'Valor\nVenda: '),
+                    TextComponent(
+                      label: 'Valor\nVenda: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Text(valorVendaController.text =
                         formatter.format(produtoModel.valorVenda))
                   ],
@@ -338,7 +363,10 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextComponent(label: 'Margem: '),
+                    TextComponent(
+                      label: 'Margem: ',
+                      fontWeight: FontWeight.w700,
+                    ),
                     Expanded(child: Text(margem.toStringAsPrecision(4) + '%')),
                     Container(
                         width: 170,
