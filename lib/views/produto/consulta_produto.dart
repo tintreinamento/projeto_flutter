@@ -7,6 +7,8 @@ import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
+import 'package:projeto_flutter/controllers/CategoriaController.dart';
+import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 
 class ProdutoConsultarView extends StatefulWidget {
@@ -18,9 +20,12 @@ class ProdutoConsultarView extends StatefulWidget {
 
 class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
   final _formKeyConsultaProduto = GlobalKey<FormState>();
+  final _formKeyConsultaCategoriaProduto = GlobalKey<FormState>();
   final nomeController = TextEditingController();
+  final idProdutoController = TextEditingController();
 
   ProdutoController produtoController = new ProdutoController();
+  CategoriaController categoriaController = new CategoriaController();
   late Future<List<ProdutoModel>> listaProdutos;
 
   bool isVazio(value) {
@@ -34,11 +39,18 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
   consultarProduto() {
     if (_formKeyConsultaProduto.currentState!.validate()) {
       produtoController
+          //.obtenhaPorId(idProdutoController.value)
           .obtenhaPorNome(nomeController.text.toString())
           .then((value) => listaProdutos);
       setState(() {});
     }
   }
+
+  /* consultarCategoria() {
+    if (_formKeyConsultaCategoriaProduto.currentContext!.validate()) {
+      categoriaController.obtenhaPorId(idProdutoController.toString())
+    }
+  } */
 
   @override
   void initState() {
@@ -76,14 +88,22 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
         builder:
             (BuildContext context, AsyncSnapshot<List<ProdutoModel>> snapshot) {
           if (snapshot.hasData) {
-            final listaProdutos = snapshot.data!.map((produto) {
-              return Column(
-                children: [
-                  cardProduto(produto),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+            final listaOrdenada = snapshot.data!.where((produto) {
+              return produto.nome!
+                  .toLowerCase()
+                  .startsWith(nomeController.text.toLowerCase());
+            });
+
+            final listaProdutos = listaOrdenada.map((produto) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    cardProduto(produto),
+                    SizedBox(
+                      height: 10,
+                    )
+                  ],
+                ),
               );
             }).toList();
 
@@ -180,13 +200,8 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
         }));
   }
 
-  /* String converterMoeda(value) {
-    NumberFormat formatter =
-        NumberFormat.simpleCurrency(locale: 'pt-BR', decimalDigits: 2);
-    return formatter.format(value.toString());
-  } */
-
   Widget cardProduto(ProdutoModel produtoModel) {
+    CategoriaModel categoriaModel = new CategoriaModel();
     return ConstrainedBox(
       constraints: BoxConstraints(minWidth: 340.0),
       child: Container(
@@ -209,7 +224,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Nome: '),
-                    Expanded(child: Text('produtoModel.nome'))
+                    Expanded(child: Text(produtoModel.nome))
                   ],
                 ),
                 Row(
@@ -217,7 +232,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Descrição: '),
-                    Expanded(child: Text('produtoModel.descricao'))
+                    Expanded(child: Text(produtoModel.descricao ?? ""))
                   ],
                 ),
                 Row(
@@ -225,19 +240,19 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextComponent(label: 'Categoria: '),
-                    Expanded(child: Text('produtoModel.idCategoria.toString()'))
+                    Expanded(child: Text(produtoModel.idCategoria.toString()))
                   ],
                 ),
                 Row(
                   children: [
                     TextComponent(label: 'Valor Compra: '),
-                    Text('produtoModel.valorCompra.toString()')
+                    Text(produtoModel.valorCompra.toString())
                   ],
                 ),
                 Row(
                   children: [
                     TextComponent(label: 'Valor Venda: '),
-                    Text('produtoModel.valorVenda.toString()')
+                    Text(produtoModel.valorVenda.toString())
                   ],
                 )
               ],
