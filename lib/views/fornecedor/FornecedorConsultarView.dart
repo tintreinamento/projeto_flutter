@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:flutter/material.dart';
@@ -279,7 +277,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
               right: -10,
               child: FlatButton(
                   onPressed: () {
-                     //Navigator.pushNamed(context, '/cadastrar_fornecedor');
+                    //Navigator.pushNamed(context, '/cadastrar_fornecedor');
                   },
                   child: Container(
                       child:
