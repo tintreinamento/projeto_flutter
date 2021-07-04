@@ -31,7 +31,11 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
       color: colorVermelho,
       child: Row(
         children: [
-          TextComponent(label: widget.titulo, cor: colorBranco, tamanho: 17.0),
+          TextComponent(
+              fontWeight: FontWeight.bold,
+              label: widget.titulo,
+              cor: colorBranco,
+              tamanho: 17.0),
           Flexible(
               child: Padding(
             padding: EdgeInsets.only(left: 20),
@@ -40,6 +44,7 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
                   Navigator.pushNamed(context, widget.primeiraRota);
                 },
                 child: TextComponent(
+                  fontWeight: FontWeight.bold,
                   label: widget.tituloPrimeiraRota,
                   cor: colorBranco,
                 )),
@@ -52,6 +57,7 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
                   Navigator.of(context).pushNamed(widget.segundaRota);
                 },
                 child: TextComponent(
+                  fontWeight: FontWeight.bold,
                   label: widget.tituloSegundaRota,
                   cor: colorBranco,
                 )),

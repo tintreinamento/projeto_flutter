@@ -30,6 +30,8 @@ class _ButtonComponentState extends State<ButtonComponent> {
             widget.onPressed();
           },
           child: TextComponent(
+            fontWeight: FontWeight.bold,
+            tamanho: 18,
             label: widget.label,
           ),
         ));

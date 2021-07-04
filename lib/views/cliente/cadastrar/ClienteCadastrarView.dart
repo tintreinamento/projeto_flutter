@@ -133,39 +133,41 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
   }
 
   cadastrarCliente() async {
-    //  if (_formKeyCliente.currentState!.validate()) {
-    //    if (_formKeyEndereco.currentState!.validate()) {
-    //Cadastrar os dados na API
-    ClienteController clienteController = new ClienteController();
+    if (_formKeyCliente.currentState!.validate()) {
+      if (_formKeyEndereco.currentState!.validate()) {
+        //Cadastrar os dados na API
+        ClienteController clienteController = new ClienteController();
 
-    var telefone = UtilBrasilFields.removeCaracteres(telefoneController.text);
-    var ddd = telefone.substring(0, 2);
-    var numeroTelefone = telefone.substring(2, telefone.length - 1);
+        var telefone =
+            UtilBrasilFields.removeCaracteres(telefoneController.text);
+        var ddd = telefone.substring(0, 2);
+        var numeroTelefone = telefone.substring(2, telefone.length - 1);
 
-    ClienteModel clienteModel = new ClienteModel(
-        nome: nomeController.text,
-        cpf: int.parse(
-            UtilBrasilFields.removeCaracteres(cpfCnpjController.text)),
-        dataNascimento: dataNascimentoController.text,
-        estadoCivil: getEstadoCivil(estadoCivilController.text),
-        email: emailController.text,
-        sexo: getSexo(sexoController.text),
-        ddd: ddd,
-        numeroTelefone: numeroTelefone,
-        logradouro: logradouroController.text,
-        numero: int.parse(numeroController.text),
-        bairro: bairroController.text,
-        cidade: cidadeController.text,
-        cep: int.parse(UtilBrasilFields.removeCaracteres(cepController.text)),
-        uf: estadoController.text);
+        ClienteModel clienteModel = new ClienteModel(
+            nome: nomeController.text,
+            cpf: int.parse(
+                UtilBrasilFields.removeCaracteres(cpfCnpjController.text)),
+            dataNascimento: dataNascimentoController.text,
+            estadoCivil: getEstadoCivil(estadoCivilController.text),
+            email: emailController.text,
+            sexo: getSexo(sexoController.text),
+            ddd: ddd,
+            numeroTelefone: numeroTelefone,
+            logradouro: logradouroController.text,
+            numero: int.parse(numeroController.text),
+            bairro: bairroController.text,
+            cidade: cidadeController.text,
+            cep: int.parse(
+                UtilBrasilFields.removeCaracteres(cepController.text)),
+            uf: estadoController.text);
 
-    //Cria o cliente
-    var clienteRetorno = await clienteController.crie(clienteModel);
-    print(clienteRetorno.nome);
-    print('teste');
-    showDialog();
-    //}
-    // }
+        //Cria o cliente
+        var clienteRetorno = await clienteController.crie(clienteModel);
+        print(clienteRetorno.nome);
+        print('teste');
+        showDialog();
+      }
+    }
   }
 
   showDialog() {

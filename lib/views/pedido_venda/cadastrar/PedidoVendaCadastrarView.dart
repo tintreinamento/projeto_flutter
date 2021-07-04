@@ -13,16 +13,31 @@ import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/CategoriaController.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
+import 'package:projeto_flutter/controllers/EstoqueController.dart';
 import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
 import 'package:projeto_flutter/controllers/PedidoController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
+import 'package:projeto_flutter/models/EstoqueModel.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 import 'package:provider/provider.dart';
+import 'package:select_form_field/select_form_field.dart';
+
+TextEditingController cpfCnpjController = TextEditingController();
+
+TextEditingController nomeClienteController = TextEditingController();
+
+TextEditingController cepController = TextEditingController();
+TextEditingController logradouroController = TextEditingController();
+TextEditingController complementoController = TextEditingController();
+TextEditingController numeroController = TextEditingController();
+TextEditingController bairroController = TextEditingController();
+TextEditingController cidadeController = TextEditingController();
+TextEditingController estadoController = TextEditingController();
 
 class PedidoVendaCadastraView extends StatefulWidget {
   const PedidoVendaCadastraView({Key? key}) : super(key: key);
@@ -42,13 +57,32 @@ class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
   GlobalKey<FormState> formEndereco = new GlobalKey<FormState>();
   GlobalKey<FormState> formConsultaProduto = new GlobalKey<FormState>();
 
+  String searchProduto = "";
+
+  void limparPedido() {
+    cpfCnpjController.clear();
+    nomeClienteController.clear();
+    cepController.clear();
+    logradouroController.clear();
+    numeroController.clear();
+    bairroController.clear();
+    cidadeController.clear();
+    estadoController.clear();
+    setState(() {});
+  }
+
   //Busca produto
   void buscarProduto(String nomeProduto) {
-    auxListaProdutos = listaProdutos!.where((produto) {
-      return produto.nome!.toLowerCase().startsWith(nomeProduto.toLowerCase());
-    }).toList();
+    setState(() {
+      searchProduto = nomeProduto;
+    });
+    // var auxListaProdutos = listaProdutos!.where((produto) {
+    //   return produto.nome!.toLowerCase().startsWith(nomeProduto.toLowerCase());
+    // }).toList();
 
-    setState(() {});
+    // setState(() {
+    //   this.auxListaProdutos = auxListaProdutos;
+    // });
   }
 
   void carregarProdutos() async {
@@ -68,68 +102,60 @@ class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
 
   abrirCarrinho() {
     setState(() {
-      active = !active;
+      active = false; // caso resolve a api !active;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: ResponsiveComponent(
-      mobile: Container(
-        child: Scaffold(
-          appBar: AppBarComponent(),
-          drawer: DrawerComponent(),
-          body: Container(
-            child: Column(
-              children: [
-                SubMenuComponent(
-                    titulo: 'Pedido Venda',
-                    tituloPrimeiraRota: 'Cadastrar',
-                    primeiraRota: '/pedido_venda_cadastrar',
-                    tituloSegundaRota: 'Consultar',
-                    segundaRota: '/pedido_venda_consultar'),
-                Expanded(
-                  flex: 15,
-                  child: Stack(
+    return Scaffold(
+      appBar: AppBarComponent(),
+      drawer: DrawerComponent(),
+      body: Container(
+        child: Column(
+          children: [
+            SubMenuComponent(
+                titulo: 'Pedido Venda',
+                tituloPrimeiraRota: 'Cadastrar',
+                primeiraRota: '/pedido_venda_cadastrar',
+                tituloSegundaRota: 'Consultar',
+                segundaRota: '/pedido_venda_consultar'),
+            Expanded(
+              flex: 15,
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                      child: Column(
                     children: [
-                      SingleChildScrollView(
-                          child: Column(
-                        children: [
-                          FormCliente(formCliente: formCliente),
-                          FormEndereco(formEndereco: formEndereco),
-                          FormConsultaProduto(
-                            formConsultaProduto: formConsultaProduto,
-                            buscarProduto: buscarProduto,
-                          ),
-                          if (listaProdutos != null)
-                            Produto(
-                              listaProdutos: auxListaProdutos,
-                            ),
-                        ],
-                      )),
-                      ProdutoCarrinhoWidget(
-                        active: active,
+                      FormCliente(formCliente: formCliente),
+                      FormConsultaProduto(
+                        formConsultaProduto: formConsultaProduto,
+                        buscarProduto: buscarProduto,
                       ),
+                      if (listaProdutos != null)
+                        Produto(
+                          searchProduto: searchProduto,
+                          listaProdutos: auxListaProdutos,
+                        ),
                     ],
+                  )),
+                  ProdutoCarrinhoWidget(
+                    active: active,
                   ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Resumo(abrirCarrinho: abrirCarrinho),
-                )
-              ],
+                ],
+              ),
             ),
-          ),
+            Expanded(
+              flex: 2,
+              child: Resumo(
+                  limparPedido: limparPedido,
+                  formCliente: formCliente,
+                  abrirCarrinho: abrirCarrinho),
+            )
+          ],
         ),
       ),
-      tablet: Container(
-        color: colorCinza,
-      ),
-      desktop: Container(
-        color: colorVerde,
-      ),
-    ));
+    );
   }
 }
 
@@ -144,10 +170,6 @@ class FormCliente extends StatefulWidget {
 
 class _FormClienteState extends State<FormCliente> {
   // BuildContext? context;
-
-  TextEditingController cpfCnpjController = TextEditingController();
-
-  TextEditingController nomeClienteController = TextEditingController();
 
   isEmpty(value) {
     if (value == null || value.isEmpty) {
@@ -181,8 +203,14 @@ class _FormClienteState extends State<FormCliente> {
     nomeClienteController.text = cliente.nome!;
     //Seta cliente no pedido
 
-    this.context!.read<CarrinhoModel>().cliente = cliente;
+    cepController.text = cliente.cep.toString();
+    logradouroController.text = cliente.logradouro;
+    numeroController.text = cliente.numero.toString();
+    bairroController.text = cliente.bairro;
+    cidadeController.text = cliente.cidade;
+    estadoController.text = cliente.uf;
 
+    this.context!.read<CarrinhoModel>().cliente = cliente;
     setState(() {});
   }
 
@@ -231,60 +259,7 @@ class _FormClienteState extends State<FormCliente> {
                 ),
               ],
             ),
-          )
-        ],
-      ),
-    ));
-  }
-}
-
-class FormEndereco extends StatelessWidget {
-  GlobalKey<FormState> formEndereco;
-
-  TextEditingController cepController = TextEditingController();
-  TextEditingController logradouroController = TextEditingController();
-  TextEditingController complementoController = TextEditingController();
-  TextEditingController numeroController = TextEditingController();
-  TextEditingController bairroController = TextEditingController();
-  TextEditingController cidadeController = TextEditingController();
-  TextEditingController estadoController = TextEditingController();
-
-  FormEndereco({Key? key, required this.formEndereco}) : super(key: key);
-
-  isEmpty(value) {
-    if (value == null || value.isEmpty) {
-      return 'Campo vazio !';
-    }
-    return null;
-  }
-
-  isCpfCnpjValidator(cpfCnpj) {
-    if (cpfCnpj == null || cpfCnpj.isEmpty) {
-      return 'Campo vazio !';
-    } else {
-      var auxCpfCnpj = UtilBrasilFields.removeCaracteres(cpfCnpj);
-      if (auxCpfCnpj.length == 11 &&
-          !UtilBrasilFields.isCPFValido(auxCpfCnpj)) {
-        return 'CPF inválido !';
-      }
-      if (auxCpfCnpj.length == 14 &&
-          !UtilBrasilFields.isCNPJValido(auxCpfCnpj)) {
-        return 'CNPJ inválido !';
-      }
-    }
-  }
-
-  carregarEndereco() {
-    print('t');
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: Form(
-      key: formEndereco,
-      child: Column(
-        children: [
+          ),
           MolduraComponent(
             label: 'Endereço',
             content: Column(
@@ -304,13 +279,6 @@ class FormEndereco extends StatelessWidget {
                 InputComponent(
                   label: 'Logradouro: ',
                   controller: logradouroController,
-                  validator: (value) {
-                    return isEmpty(value);
-                  },
-                ),
-                InputComponent(
-                  label: 'Complemento: ',
-                  controller: complementoController,
                   validator: (value) {
                     return isEmpty(value);
                   },
@@ -382,8 +350,9 @@ class FormConsultaProduto extends StatelessWidget {
 
 class Produto extends StatefulWidget {
   List<ProdutoModel>? listaProdutos;
+  String? searchProduto;
 
-  Produto({Key? key, this.listaProdutos}) : super(key: key);
+  Produto({Key? key, this.listaProdutos, this.searchProduto}) : super(key: key);
 
   @override
   _ProdutoState createState() => _ProdutoState();
@@ -414,7 +383,13 @@ class _ProdutoState extends State<Produto> {
         var listaProdutosWidget;
         List<Widget> children;
         if (snapshot.hasData) {
-          listaProdutosWidget = snapshot.data!.map((produto) {
+          var listaOrdenadaProduto = snapshot.data!.where((produto) {
+            return produto.nome!
+                .toLowerCase()
+                .startsWith(widget.searchProduto!.toLowerCase());
+          });
+
+          listaProdutosWidget = listaOrdenadaProduto.map((produto) {
             print(produto.nome);
             return CardProduto(produto: produto);
           }).toList();
@@ -459,9 +434,10 @@ class _CardProdutoState extends State<CardProduto> {
   CategoriaModel? categoria;
   NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
   List<CategoriaModel>? listaCategoria;
+  List<Map<String, dynamic>>? selectEstoque;
 
   String? categoriaNome;
-
+  final estoqueController = EstoqueController();
   getCategoria(value) async {
     CategoriaController categoriaController = new CategoriaController();
 
@@ -469,6 +445,16 @@ class _CardProdutoState extends State<CardProduto> {
 
     setState(() {
       this.categoria = categoria;
+    });
+  }
+
+  getEstoque() async {
+    var estoque =
+        await estoqueController.obtenhaEstoqueProduto(widget.produto!.id.to);
+    setState(() {
+      estoque.forEach((element) {
+        selectEstoque!.add({'value': element.id, 'label': element.nome});
+      });
     });
   }
 
@@ -482,12 +468,12 @@ class _CardProdutoState extends State<CardProduto> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * .12,
+      height: MediaQuery.of(context).size.height * .14,
       margin: EdgeInsets.only(bottom: 5.0),
       child: Row(
         children: [
           Expanded(
-              flex: 3,
+              flex: 4,
               child: Container(
                 padding: paddingPadrao,
                 color: colorCinza,
@@ -507,6 +493,9 @@ class _CardProdutoState extends State<CardProduto> {
                         )
                       ],
                     ),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Row(
                       children: [
                         TextComponent(
@@ -520,6 +509,9 @@ class _CardProdutoState extends State<CardProduto> {
                         )
                       ],
                     ),
+                    SizedBox(
+                      height: 5,
+                    ),
                     Row(
                       children: [
                         TextComponent(
@@ -529,45 +521,52 @@ class _CardProdutoState extends State<CardProduto> {
                         ),
                         SizedBox(width: 5.0),
                         TextComponent(
-                          label: formatter.format(widget.produto!.valorCompra),
+                          label: formatter.format(widget.produto!.valorVenda),
                         )
                       ],
-                    )
+                    ),
                   ],
                 ),
               )),
           Expanded(
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextComponent(
-                      label: context
-                          .watch<CarrinhoModel>()
-                          .getQuantidade(widget.produto!.id)
-                          .toString(),
-                    )
-                  ],
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextComponent(
+                        tamanho: 28,
+                        fontWeight: FontWeight.bold,
+                        label: context
+                            .watch<CarrinhoModel>()
+                            .getQuantidade(widget.produto!.id)
+                            .toString(),
+                      )
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: ButtonCustom(
-                        isAdd: true,
-                        isRemoved: false,
-                        produto: widget.produto,
+                Container(
+                  height: 40,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ButtonCustom(
+                          isAdd: true,
+                          isRemoved: false,
+                          produto: widget.produto,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: ButtonCustom(
-                        isAdd: false,
-                        isRemoved: true,
-                        produto: widget.produto,
-                      ),
-                    )
-                  ],
+                      Expanded(
+                        child: ButtonCustom(
+                          isAdd: false,
+                          isRemoved: true,
+                          produto: widget.produto,
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
@@ -601,6 +600,8 @@ class ButtonCustom extends StatelessWidget {
             child: TextComponent(
               label: '+',
               cor: colorBranco,
+              tamanho: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -630,33 +631,86 @@ class ButtonCustom extends StatelessWidget {
 }
 
 class Resumo extends StatelessWidget {
+  GlobalKey<FormState>? formCliente;
+  Function? limparPedido;
   Function? abrirCarrinho;
   NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
-  Resumo({Key? key, this.abrirCarrinho}) : super(key: key);
+  Resumo({Key? key, this.formCliente, this.abrirCarrinho, this.limparPedido})
+      : super(key: key);
 
   finalizarPedido(BuildContext context) async {
-    var carrinho = context.read<CarrinhoModel>();
-    final pedidoController = PedidoController();
-    final itemPedidoController = ItemPedidoController();
-    PedidoModel pedido = new PedidoModel(
-        idCliente: carrinho.cliente.id,
-        idFuncionario: 1,
-        total: carrinho.totalPedido,
-        data: carrinho.dataPedido);
+    if (formCliente!.currentState!.validate()) {
+      var carrinho = context.read<CarrinhoModel>();
+      final pedidoController = PedidoController();
+      final itemPedidoController = ItemPedidoController();
+      PedidoModel pedido = new PedidoModel(
+          idCliente: carrinho.cliente.id,
+          idFuncionario: 1,
+          total: carrinho.totalPedido,
+          data: carrinho.dataPedido);
 
-    //Criando pedido
-    PedidoModel pedidoResposa = await pedidoController.crie(pedido);
-    print(pedidoResposa.id);
-    carrinho.itemPedido.forEach((element) {
-      element.idPedido = pedidoResposa.id;
-    });
+      //Criando pedido
+      PedidoModel pedidoResposta = await pedidoController.crie(pedido);
+      print(pedidoResposta.id);
+      carrinho.itemPedido.forEach((element) {
+        element.idPedido = pedidoResposta.id;
+      });
 
-    //Realiza a baixa no estoque
+      //Realiza a baixa no estoque
 
-    //Enviado items
-    carrinho.itemPedido.forEach((element) async {
-      await itemPedidoController.crie(element);
-    });
+      //Enviado items
+      carrinho.itemPedido.forEach((element) async {
+        await itemPedidoController.crie(element);
+      });
+
+      //limpa form
+
+      //  formCliente!.currentState!.reset();
+      limparPedido!();
+      context.read<CarrinhoModel>().limparCarrinho(); //Chama notificação
+      _showMyDialog(context, pedidoResposta);
+    }
+  }
+
+  Future<void> _showMyDialog(
+      BuildContext context, PedidoModel pedidoModel) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: TextComponent(
+            label: 'Pedido: #' + pedidoModel.id.toString(),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextComponent(
+                  label: 'Data do pedido: ' +
+                      UtilData.obterDataDDMMAAAA(
+                          DateTime.parse(pedidoModel.data)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextComponent(
+                  label:
+                      'Total do pedido:' + formatter.format(pedidoModel.total),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confimar pedido'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -682,6 +736,7 @@ class Resumo extends StatelessWidget {
                           TextComponent(
                             label: 'por',
                             tamanho: 18,
+                            fontWeight: FontWeight.bold,
                             cor: colorAzul,
                           ),
                           SizedBox(
@@ -692,6 +747,7 @@ class Resumo extends StatelessWidget {
                                 context.watch<CarrinhoModel>().getTotal()),
                             tamanho: 24,
                             cor: colorAzul,
+                            fontWeight: FontWeight.bold,
                           )
                         ]),
                   ],

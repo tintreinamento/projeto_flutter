@@ -4,7 +4,7 @@ import 'package:projeto_flutter/services/Api.dart';
 
 class EstoqueController {
   Future<List<EstoqueModel>> obtenhaTodos() async {
-    final resposta = await new Api().obtenha('estoques');
+    final resposta = await new Api().obtenha('estoque');
 
     List<EstoqueModel> colecaoDeEstoques = new List.empty(growable: true);
 
@@ -17,9 +17,9 @@ class EstoqueController {
     return colecaoDeEstoques;
   }
 
-
-Future<List<EstoqueModel>> obtenhaEstoqueProduto(int id) async {
-    final resposta = await new Api().obtenha('estoque/produto/' + id.toString());
+  Future<List<EstoqueModel>> obtenhaEstoqueProduto(int id) async {
+    final resposta =
+        await new Api().obtenha('estoque/produto/' + id.toString());
 
     List<EstoqueModel> colecaoDeEstoques = new List.empty(growable: true);
 
@@ -31,7 +31,6 @@ Future<List<EstoqueModel>> obtenhaEstoqueProduto(int id) async {
     });
     return colecaoDeEstoques;
   }
-
 
   Future<EstoqueModel> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('estoque/' + id.toString());
@@ -58,8 +57,7 @@ Future<List<EstoqueModel>> obtenhaEstoqueProduto(int id) async {
   }
 
   Future<EstoqueModel> delete(EstoqueModel estoque) async {
-    final resposta =
-        await new Api().delete('estoque/' + estoque.id.toString());
+    final resposta = await new Api().delete('estoque/' + estoque.id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -69,7 +67,6 @@ Future<List<EstoqueModel>> obtenhaEstoqueProduto(int id) async {
   Future<EstoqueModel> atualize(EstoqueModel estoque) async {
     final resposta = await new Api()
         .atualize('estoque/' + estoque.id.toString(), json.encode(estoque));
-        
 
     var stringJson = json.decode(resposta.body);
 

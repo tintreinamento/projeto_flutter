@@ -51,10 +51,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/pedido_venda_consultar',
+      initialRoute: '/pedido_venda_cadastrar',
       routes: {
-        '/': (context) => SplashPage(),
-        '/login': (context) => LoginView(),
+        '/': (context) => PedidoVendaConsultaView(),
+        //'/': (context) => SplashPage(), //ok
+        //'/login': (context) => LoginView(), // ok
         '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
         '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
@@ -62,7 +63,6 @@ class MyApp extends StatelessWidget {
         '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
         '/consultar_fornecedor': (context) => FornecedorConsultarView(),
         '/consultar_produto': (context) => ProdutoConsultarView(),
-        '/estoque': (context) => EstoqueView(),
         // '/pedido_compra': (contexto) => PedidoCompraCadastroView()
         '/cadastrar_precificacao': (context) => PrecificacaoView(),
       },

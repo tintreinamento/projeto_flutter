@@ -72,4 +72,12 @@ class CarrinhoModel extends ChangeNotifier {
 
     return totalPedido;
   }
+
+  void limparCarrinho() {
+    dataPedido = UtilData.obterDataDDMMAAAA(DateTime.now());
+    totalPedido = 0;
+    // funcionario = "";
+    cliente = ClienteModel();
+    itemPedido = [];
+  }
 }
