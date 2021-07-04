@@ -19,18 +19,18 @@ import 'package:projeto_flutter/views/precificacao/precificacaoView.dart';
 
 import 'package:provider/provider.dart';
 
-// void main() {
-//   runApp(MultiProvider(
-//     providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
-//     child: MyApp(),
-//   ));
-//   //runApp(MyApp());
-// }
-
 void main() {
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
+    child: MyApp(),
+  ));
   //runApp(MyApp());
 }
+
+// void main() {
+//   runApp(MyApp());
+//   runApp(MyApp());
+// }
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -51,21 +51,20 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/pedido_venda_cadastrar',
       routes: {
-        '/': (contexto) => ClienteCadastroView(),
-        //'/': (context) => PedidoVendaConsultaView(),
-        // '/': (context) => SplashPage(), //ok
-        '/login': (context) => LoginView(), // ok
+        '/': (context) => PedidoVendaConsultaView(),
+        //'/': (context) => SplashPage(), //ok
+        //'/login': (context) => LoginView(), // ok
         '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
         '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
         '/consultar_cliente': (contexto) => ClienteConsultarView(),
-        // '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
-        // '/consultar_fornecedor': (context) => FornecedorConsultarView(),
-        '/cadastrar_produto': (contexto) => ProdutoCadastrarView(),
+        '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
+        '/consultar_fornecedor': (context) => FornecedorConsultarView(),
         '/consultar_produto': (context) => ProdutoConsultarView(),
         // '/pedido_compra': (contexto) => PedidoCompraCadastroView()
+        '/cadastrar_precificacao': (context) => PrecificacaoView(),
       },
     );
   }

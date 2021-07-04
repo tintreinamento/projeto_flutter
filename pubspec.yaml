@@ -23,6 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -34,6 +35,7 @@ dependencies:
   provider: ^5.0.0
   intl: ^0.17.0
   localstorage: ^4.0.0+1
+  select_form_field: "^2.0.0"
 
 
 dev_dependencies:

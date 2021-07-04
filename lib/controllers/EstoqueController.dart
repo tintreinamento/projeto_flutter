@@ -4,7 +4,22 @@ import 'package:projeto_flutter/services/Api.dart';
 
 class EstoqueController {
   Future<List<EstoqueModel>> obtenhaTodos() async {
-    final resposta = await new Api().obtenha('estoques');
+    final resposta = await new Api().obtenha('estoque');
+
+    List<EstoqueModel> colecaoDeEstoques = new List.empty(growable: true);
+
+    List<dynamic> stringJson = json.decode(resposta.body);
+
+    stringJson.forEach((element) {
+      var estoque = new EstoqueModel.fromJson(element);
+      colecaoDeEstoques.add(estoque);
+    });
+    return colecaoDeEstoques;
+  }
+
+  Future<List<EstoqueModel>> obtenhaEstoqueProduto(int id) async {
+    final resposta =
+        await new Api().obtenha('estoque/produto/' + id.toString());
 
     List<EstoqueModel> colecaoDeEstoques = new List.empty(growable: true);
 
@@ -42,8 +57,7 @@ class EstoqueController {
   }
 
   Future<EstoqueModel> delete(EstoqueModel estoque) async {
-    final resposta =
-        await new Api().delete('estoque/' + estoque.nome.toString());
+    final resposta = await new Api().delete('estoque/' + estoque.id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -52,7 +66,7 @@ class EstoqueController {
 
   Future<EstoqueModel> atualize(EstoqueModel estoque) async {
     final resposta = await new Api()
-        .atualize('estoque/' + estoque.nome.toString(), json.encode(estoque));
+        .atualize('estoque/' + estoque.id.toString(), json.encode(estoque));
 
     var stringJson = json.decode(resposta.body);
 

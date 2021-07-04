@@ -10,14 +10,18 @@ import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
+import 'package:projeto_flutter/controllers/CategoriaController.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
 import 'package:projeto_flutter/controllers/FuncionarioController.dart';
 import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
 import 'package:projeto_flutter/controllers/PedidoController.dart';
+import 'package:projeto_flutter/controllers/ProdutoController.dart';
+import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
 import 'package:projeto_flutter/models/FuncionarioModel.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
+import 'package:projeto_flutter/models/ProdutoModel.dart';
 
 class PedidoVendaConsultaView extends StatefulWidget {
   @override
@@ -41,44 +45,12 @@ class _PedidoVendaConsultaViewState extends State<PedidoVendaConsultaView> {
     pedidoModel =
         await pedidoController.obtenhaPorId(int.parse(idPedidoController.text));
 
-    // PedidoController pedidoController = new PedidoController();
-    // // pedidoModel = await pedidoController.obtenhaPorId(idPedidoController.text);
-    // // print(pedidoModel!.itemPedido![0].produto!.nome);
-    // List<ItemPedidoModel> listaDeItens = <ItemPedidoModel>[];
-    // ItemPedidoModel item = new ItemPedidoModel();
-    // pedidoModel = new PedidoModel(
-    //   id: 1,
-    //   dataPedido: '2021-06-19',
-    //   totalPedido: 2.300,
-    //   cliente: new ClienteModel(
-    //       nome: 'Vítor',
-    //       cpfCnpj: '04299121104',
-    //       dataNascimento: '1999-09-17',
-    //       estadoCivil: '1',
-    //       email: 'vitor@gmail.com',
-    //       sexo: '1',
-    //       telefone: '62991216763'),
-    //   funcionario: new FuncionarioModel(
-    //     nome: 'Teste',
-    //     cpfCnpj: '3273628136',
-    //   ),
-    // );
     _active = !_active;
     setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    List<ItemPedido>? listaItemPedido = [];
-
-    // if (pedidoModel != null) {
-    //   listaItemPedido = pedidoModel!.itemPedido!.map((itemPedido) {
-    //     return ItemPedido(
-    //       itemPedidoModel: itemPedido,
-    //     );
-    //   }).toList();
-    // }
-
     return Scaffold(
       appBar: AppBarComponent(),
       drawer: DrawerComponent(),
@@ -232,23 +204,39 @@ class ItemPedido extends StatefulWidget {
   ItemPedido({Key? key, this.pedidoModel}) : super(key: key);
 
   @override
-  _ItemPedidoState createState() => _ItemPedidoState();
+  _ItemPedidoState createState() => _ItemPedidoState(pedidoModel);
 }
 
 class _ItemPedidoState extends State<ItemPedido> {
-  List<ItemPedidoModel>? listaItemPedido;
+  var listaItemPedido = new List.empty(growable: true);
+  PedidoModel? pedidoModel;
+  ProdutoModel? produtoModel;
+  CategoriaModel? categoriaModel;
+
+  _ItemPedidoState(PedidoModel? pedidoModel) {
+    this.pedidoModel = pedidoModel;
+  }
 
   getItemPedidos() async {
     ItemPedidoController itemPedidoController = new ItemPedidoController();
     listaItemPedido = await itemPedidoController.obtenhaTodos();
 
+    listaItemPedido = listaItemPedido.map((element) {
+      if (element.idPedido == pedidoModel?.id) {
+        return element;
+      }
+    }).toList();
+
+    listaItemPedido.removeWhere((element) => element == null);
+
+    produtoModel = (await new ProdutoController()
+        .obtenhaPorId(listaItemPedido.first.idProduto));
+
+    categoriaModel = (await new CategoriaController()
+        .obtenhaPorId(produtoModel?.idCategoria));
+
     setState(() {});
   }
-
-  // getSelecionaItemPedido(value) {
-
-  //   //print(listaItemPedido![0].valorTotal);
-  // }
 
   @override
   void initState() {
@@ -262,21 +250,16 @@ class _ItemPedidoState extends State<ItemPedido> {
   @override
   Widget build(BuildContext context) {
     //1
-    listaItemPedido = listaItemPedido!.where((element) {
+    listaItemPedido = listaItemPedido.where((element) {
       return element.idPedido == widget.pedidoModel!.id;
     }).toList();
     //2
-    final listaItemPedidoCard = listaItemPedido!.map((element) {
+    final listaItemPedidoCard = listaItemPedido.map((element) {
       return ItemPedidoCard(
-        itemPedidoModel: element,
-      );
+          itemPedidoModel: element,
+          produtoModel: this.produtoModel,
+          categoriaModel: this.categoriaModel);
     }).toList();
-
-    // List<ItemPedidoCard> listaItemPedidoCard = [];
-
-    // for (int i = 0; i < 10; i++) {
-    //   listaItemPedidoCard.add(ItemPedidoCard());
-    // }
 
     return Container(
       child: MolduraComponent(
@@ -290,8 +273,15 @@ class _ItemPedidoState extends State<ItemPedido> {
 }
 
 class ItemPedidoCard extends StatelessWidget {
+  NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
   ItemPedidoModel? itemPedidoModel;
-  ItemPedidoCard({Key? key, this.itemPedidoModel}) : super(key: key);
+
+  ProdutoModel? produtoModel;
+  CategoriaModel? categoriaModel;
+
+  ItemPedidoCard(
+      {Key? key, this.itemPedidoModel, this.produtoModel, this.categoriaModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -315,7 +305,7 @@ class ItemPedidoCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           TextComponent(
-                            label: itemPedidoModel!.idProduto.toString(),
+                            label: produtoModel?.nome,
                           ),
                         ],
                       ),
@@ -326,7 +316,7 @@ class ItemPedidoCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           TextComponent(
-                            label: 'Categoria y',
+                            label: categoriaModel?.nome,
                           ),
                         ],
                       ),
@@ -337,7 +327,8 @@ class ItemPedidoCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           TextComponent(
-                            label: itemPedidoModel!.valorTotal.toString(),
+                            label:
+                                formatter.format(itemPedidoModel!.valorTotal),
                           ),
                         ],
                       )

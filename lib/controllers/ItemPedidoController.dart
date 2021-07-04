@@ -31,7 +31,7 @@ class ItemPedidoController {
     final resposta = await new Api().crie('item-pedido', json.encode(pedido));
 
     var stringJson = json.decode(resposta.body);
-
+    print(stringJson);
     return new ItemPedidoModel.fromJson(stringJson);
   }
 

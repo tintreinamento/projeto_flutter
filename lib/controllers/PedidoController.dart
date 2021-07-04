@@ -29,16 +29,15 @@ class PedidoController {
   }
 
   Future<PedidoModel> crie(PedidoModel pedido) async {
-    final resposta = await new Api().crie('pedidopedi', json.encode(pedido));
+    final resposta = await new Api().crie('pedido', json.encode(pedido));
 
     var stringJson = json.decode(resposta.body);
-
+    print(stringJson);
     return new PedidoModel.fromJson(stringJson);
   }
 
   Future<PedidoModel> delete(PedidoModel pedido) async {
-    final resposta =
-        await new Api().delete('pedidopedi/' + pedido.id.toString());
+    final resposta = await new Api().delete('pedido/' + pedido.id.toString());
 
     var stringJson = json.decode(resposta.body);
 
@@ -47,7 +46,7 @@ class PedidoController {
 
   Future<PedidoModel> atualize(PedidoModel pedido) async {
     final resposta = await new Api()
-        .atualize('pedidopedi/' + pedido.id.toString(), json.encode(pedido));
+        .atualize('pedido/' + pedido.id.toString(), json.encode(pedido));
 
     var stringJson = json.decode(resposta.body);
 
