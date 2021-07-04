@@ -139,6 +139,11 @@ class FormConsulta extends StatelessWidget {
 }
 
 class DetalhePedido extends StatelessWidget {
+  TextEditingController funcionarioController = new TextEditingController();
+  TextEditingController fornecedorController = new TextEditingController();
+  TextEditingController dataController = new TextEditingController();
+  TextEditingController valorController = new TextEditingController();
+
   DetalhePedido({
     Key? key,
   }) : super(key: key);
@@ -154,7 +159,7 @@ class DetalhePedido extends StatelessWidget {
                 label: 'Funcionário:',
               ),
               InputComponent(
-                label: 'Cliente:',
+                label: 'Fornecedor:',
               ),
               InputComponent(
                 label: 'Data do pedido:',
@@ -179,7 +184,7 @@ class ItemPedido extends StatelessWidget {
 
     return Container(
       child: MolduraComponent(
-        label: 'ITENS PEDIDO',
+        label: 'PRODUTO',
         content: Column(
           children: [...listaItemPedidoCard],
         ),
@@ -196,7 +201,7 @@ class ItemPedidoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height * .1,
+        height: MediaQuery.of(context).size.height * .2,
         margin: EdgeInsets.only(bottom: 5.0),
         child: Row(
           children: [
@@ -244,7 +249,7 @@ class ItemPedidoCard extends StatelessWidget {
                     ],
                   ),
                 )),
-            Expanded(
+            /*  Expanded(
                 child: Container(
               padding: paddingPadrao,
               color: colorBranco,
@@ -258,7 +263,7 @@ class ItemPedidoCard extends StatelessWidget {
                   ),
                 ],
               ),
-            )),
+            ),*/
           ],
         ));
   }
