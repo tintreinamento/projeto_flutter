@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
-
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
