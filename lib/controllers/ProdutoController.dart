@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'package:projeto_flutter/controllers/CategoriaController.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
+import 'package:projeto_flutter/views/estoque/EstoqueView.dart';
 import 'package:projeto_flutter/views/precificacao/precificacaoView.dart';
+
+import 'FornecedorController.dart';
 
 class ProdutoController {
   Future<List<ProdutoModel>> obtenhaTodos() async {
@@ -34,6 +37,32 @@ class ProdutoController {
       produtoCategoria.produto = element;
 
       colecaoProdutoComCategoria.add(produtoCategoria);
+    });
+
+    return colecaoProdutoComCategoria;
+  }
+
+  Future<List<ProdutoCategoriaFornecedorModel>>
+      obtenhaTodosComCategoriaFornecedor() async {
+    var colecaoDeProdutos = await obtenhaTodos();
+    var categorias = await new CategoriaController().obtenhaTodos();
+    var fornecedores = await new FornecedorController().obtenhaTodos();
+
+    List<ProdutoCategoriaFornecedorModel> colecaoProdutoComCategoria =
+        new List.empty(growable: true);
+
+    colecaoDeProdutos.forEach((element) async {
+      var produtoCategoriaFornecedor = new ProdutoCategoriaFornecedorModel();
+
+      produtoCategoriaFornecedor.fornecedorModel = fornecedores
+          .firstWhere((fornecedor) => fornecedor.id == element.idFornecedor);
+
+      produtoCategoriaFornecedor.categoriaModel = categorias
+          .firstWhere((categoria) => categoria.id == element.idCategoria);
+
+      produtoCategoriaFornecedor.produto = element;
+
+      colecaoProdutoComCategoria.add(produtoCategoriaFornecedor);
     });
 
     return colecaoProdutoComCategoria;

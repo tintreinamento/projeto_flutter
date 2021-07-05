@@ -210,7 +210,7 @@ class _FormClienteState extends State<FormCliente> {
     cidadeController.text = cliente.cidade;
     estadoController.text = cliente.uf;
 
-    this.context!.read<CarrinhoModel>().cliente = cliente;
+    this.context.read<CarrinhoModel>().cliente = cliente;
     setState(() {});
   }
 

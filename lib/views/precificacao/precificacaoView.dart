@@ -369,7 +369,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                     ),
                     Expanded(child: Text(margem.toStringAsPrecision(4) + '%')),
                     Container(
-                        width: 170,
+                        width: 150,
                         height: 30,
                         margin: EdgeInsets.only(top: 18, bottom: 13),
                         child: ElevatedButton(
