@@ -26,7 +26,7 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 8),
       height: 48.0,
       color: colorVermelho,
       child: Row(
