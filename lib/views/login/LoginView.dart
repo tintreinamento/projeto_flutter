@@ -22,7 +22,7 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController senhaController = new TextEditingController();
 
   autenticar() async {
-    AutenticacaoController autenticacaoController = AutenticacaoController();
+    /*AutenticacaoController autenticacaoController = AutenticacaoController();
 
     AutenticacaoModel autenticacaoModel = await autenticacaoController.crie(
         usuarioController.text, senhaController.text);
@@ -32,7 +32,8 @@ class _LoginViewState extends State<LoginView> {
 
     if (Auth.isAuthenticated()) {
       Navigator.of(context).pushNamed('/pedido_venda_cadastrar');
-    }
+    }*/
+    Navigator.of(context).pushNamed('/pedido_venda_cadastrar');
   }
 
   @override
