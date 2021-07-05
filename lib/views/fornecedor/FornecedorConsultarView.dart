@@ -191,11 +191,11 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
         drawer: DrawerComponent(),
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxHeight > 600) {
+            // if (constraints.maxHeight > 600) {
               return layoutVertical;
-            } else {
-              return layoutHorizontal;
-            }
+            // } else {
+            //   return layoutHorizontal;
+            // }
           },
         ));
   }
