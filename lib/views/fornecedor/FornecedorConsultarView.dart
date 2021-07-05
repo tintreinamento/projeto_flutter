@@ -272,17 +272,17 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                 )
               ],
             ),
-            Positioned(
-              top: 50,
-              right: -10,
-              child: FlatButton(
-                  onPressed: () {
-                    //Navigator.pushNamed(context, '/cadastrar_fornecedor');
-                  },
-                  child: Container(
-                      child:
-                          Image(image: AssetImage('assets/images/edit.png')))),
-            ),
+            // Positioned(
+            //   top: 50,
+            //   right: -10,
+            //   child: FlatButton(
+            //       onPressed: () {
+            //         //Navigator.pushNamed(context, '/cadastrar_fornecedor');
+            //       },
+            //       child: Container(
+            //           child:
+            //               Image(image: AssetImage('assets/images/edit.png')))),
+            // ),
           ],
         )),
   );
