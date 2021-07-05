@@ -73,7 +73,6 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
         ],
       ),
     );
-
     //Map
     var lista = FutureBuilder(
         future: listaFornecedores,
@@ -191,11 +190,11 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
         drawer: DrawerComponent(),
         body: LayoutBuilder(
           builder: (context, constraints) {
-            if (constraints.maxHeight > 600) {
+            // if (constraints.maxHeight > 600) {
               return layoutVertical;
-            } else {
-              return layoutHorizontal;
-            }
+            // } else {
+            //   return layoutHorizontal;
+            // }
           },
         ));
   }
@@ -219,10 +218,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: 'Nome: ',
                     ),
-                    /*Expanded(child: Text( fornecedorModel.nome)),*/
-                    TextComponent(
-                      label: fornecedorModel.nome,
-                    ),
+                    Expanded(child: Text( fornecedorModel.nome)),
                   ],
                 ),
                 SizedBox(
@@ -235,9 +231,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: 'CPF/CNPJ: ',
                     ),
-                    TextComponent(
-                      label: (fornecedorModel.cpfCnpj).toString(),
-                    ),
+                    Expanded(child: Text( (fornecedorModel.cpfCnpj).toString())),
                   ],
                 ),
                 SizedBox(
@@ -250,9 +244,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: 'Telefone: ',
                     ),
-                    TextComponent(
-                      label: (fornecedorModel.telefone).toString(),
-                    ),
+                    Expanded(child: Text( (fornecedorModel.telefone).toString())),
                   ],
                 ),
                 SizedBox(
@@ -265,24 +257,11 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: 'E-mail: ',
                     ),
-                    TextComponent(
-                      label: fornecedorModel.email,
-                    ),
+                    Expanded(child: Text( fornecedorModel.email)),
                   ],
                 )
               ],
             ),
-            // Positioned(
-            //   top: 50,
-            //   right: -10,
-            //   child: FlatButton(
-            //       onPressed: () {
-            //         //Navigator.pushNamed(context, '/cadastrar_fornecedor');
-            //       },
-            //       child: Container(
-            //           child:
-            //               Image(image: AssetImage('assets/images/edit.png')))),
-            // ),
           ],
         )),
   );
