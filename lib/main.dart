@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/pedido_venda_cadastrar',
+      initialRoute: '/',
       routes: {
         '/': (context) => SplashPage(), //ok
         '/login': (context) => LoginView(), // ok
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
         '/consultar_fornecedor': (context) => FornecedorConsultarView(),
         '/consultar_produto': (context) => ProdutoConsultarView(),
-        //'/pedido_compra_cadastrar': (contexto) => PedidoCompraCadastroView(),
+        '/pedido_compra_cadastrar': (contexto) => PedidoCompraCadastroView(),
         '/pedido_compra_consultar': (contexto) => PedidoCompraConsultaView(),
         //'/estoque': (contexto) => EstoqueView(),
         '/cadastrar_precificacao': (context) => PrecificacaoView(),
