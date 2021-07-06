@@ -35,7 +35,7 @@ class EnderecoController {
 
     var stringJson = json.decode(resposta.body);
 
-    return new EnderecoModel.fromJson(stringJson.single);
+    return new EnderecoModel.fromJson(stringJson);
   }
 
   Future<EnderecoModel> obtenhaPorIdFornecedor(int id) async {
@@ -44,7 +44,7 @@ class EnderecoController {
 
     var stringJson = json.decode(resposta.body);
 
-    return new EnderecoModel.fromJson(stringJson.single);
+    return new EnderecoModel.fromJson(stringJson);
   }
 
   Future<EnderecoModel> crie(EnderecoModel endereco) async {

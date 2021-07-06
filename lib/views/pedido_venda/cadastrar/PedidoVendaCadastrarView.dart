@@ -25,7 +25,6 @@ import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 import 'package:provider/provider.dart';
-import 'package:select_form_field/select_form_field.dart';
 
 TextEditingController cpfCnpjController = TextEditingController();
 
