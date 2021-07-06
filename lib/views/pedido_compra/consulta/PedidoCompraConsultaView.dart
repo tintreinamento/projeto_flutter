@@ -141,8 +141,6 @@ class DetalhePedido extends StatelessWidget {
     fornecedorModel.then((value) {
       fornecedorController.text = value.nome;
     });
-
-    //return clienteModel.then((value) => null);
   }
 
   getFuncionario(value) async {
@@ -152,15 +150,11 @@ class DetalhePedido extends StatelessWidget {
     funcionarioModel.then((value) {
       funcionarioController.text = value.nome;
     });
-
-    //return clienteModel.then((value) => null);
   }
 
   @override
   Widget build(BuildContext context) {
     NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
-    // clienteController.text =
-    //     getCliente(pedidoModel!.idCliente).then((value) {}) as String;
 
     getFuncionario(pedidoModel!.idFuncionario);
     getfornecedor(pedidoModel!.data);
@@ -246,7 +240,6 @@ class _ItemPedidoState extends State<ItemPedido> {
     super.initState();
 
     getItemPedidos();
-    //getSelecionaItemPedido(widget.pedidoModel!.id);
   }
 
   @override
@@ -288,7 +281,6 @@ class ItemPedidoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        //height: MediaQuery.of(context).size.height * .1,
         margin: EdgeInsets.only(bottom: 5.0),
         child: Row(
           children: [
