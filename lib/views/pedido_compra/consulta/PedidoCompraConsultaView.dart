@@ -59,7 +59,7 @@ class _PedidoCompraConsultaViewState extends State<PedidoCompraConsultaView> {
           SubMenuComponent(
               titulo: 'Pedido Compra',
               tituloPrimeiraRota: 'Cadastrar',
-              primeiraRota: '/pedido_compra',
+              primeiraRota: '/pedido_compra_cadastrar',
               tituloSegundaRota: 'Consultar',
               segundaRota: '/pedido_compra_consultar'),
           Expanded(
@@ -265,7 +265,7 @@ class _ItemPedidoState extends State<ItemPedido> {
 
     return Container(
       child: MolduraComponent(
-        label: 'ITENS PEDIDO',
+        label: 'PRODUTO',
         content: Column(
           children: [...listaItemPedidoCard],
         ),
