@@ -112,6 +112,10 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
       return 'CPF/CNPJ inválido!';
     }
 
+    if (isVazio(cpfLimpo)) {
+      return 'Campo CPF/CNPJ vazio';
+    }
+
     return null;
   }
 
@@ -169,7 +173,6 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -269,6 +272,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
               height: 10,
             ),
             InputComponent(
+              inputFormatter: [FilteringTextInputFormatter.digitsOnly],
               label: 'Categoria: ',
               controller: categoriaController,
               validator: (value) {
