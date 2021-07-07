@@ -170,6 +170,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final formFornecedor = Form(
@@ -315,8 +316,8 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
               Expanded(
                   child: SingleChildScrollView(
                 child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height,
+                  //width: double.infinity,
+                  //height: MediaQuery.of(context).size.height,
                   margin: EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: Column(
                     children: [
