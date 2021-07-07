@@ -38,12 +38,42 @@ class _PedidoCompraConsultaViewState extends State<PedidoCompraConsultaView> {
 
   consultarPedido() async {
     PedidoController pedidoController = new PedidoController();
+    try {
+      pedidoModel = await pedidoController
+          .obtenhaPorId(int.parse(idPedidoController.text));
 
-    pedidoModel =
-        await pedidoController.obtenhaPorId(int.parse(idPedidoController.text));
+      _active = !_active;
+      setState(() {});
+    } catch (e) {
+      mensagemErro();
+    }
+  }
 
-    _active = !_active;
-    setState(() {});
+  Future<void> mensagemErro() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Erro'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Falha na busca, verifique!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
