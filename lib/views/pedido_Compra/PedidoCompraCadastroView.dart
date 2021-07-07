@@ -456,7 +456,7 @@ class _CardProdutoState extends State<CardProduto> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * .14,
+      height: MediaQuery.of(context).size.height * .15,
       margin: EdgeInsets.only(bottom: 5.0),
       child: Row(
         children: [
@@ -469,6 +469,8 @@ class _CardProdutoState extends State<CardProduto> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextComponent(
                           label: 'Nome:',
@@ -476,15 +478,12 @@ class _CardProdutoState extends State<CardProduto> {
                           fontWeight: FontWeight.bold,
                         ),
                         SizedBox(width: 5.0),
-                        TextComponent(
-                          label: widget.produto!.nome,
-                        )
+                        Expanded(child: Text(widget.produto!.nome)),
                       ],
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextComponent(
                           label: 'Categoria:',
@@ -492,15 +491,15 @@ class _CardProdutoState extends State<CardProduto> {
                           fontWeight: FontWeight.bold,
                         ),
                         SizedBox(width: 5.0),
-                        TextComponent(
-                          label: categoria!.nome,
-                        )
+                        Expanded(child: Text(categoria!.nome)),
                       ],
                     ),
                     SizedBox(
                       height: 5,
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextComponent(
                           label: 'Preço:',
@@ -508,8 +507,9 @@ class _CardProdutoState extends State<CardProduto> {
                           fontWeight: FontWeight.bold,
                         ),
                         SizedBox(width: 5.0),
-                        TextComponent(
-                          label: formatter.format(widget.produto!.valorVenda),
+                        Expanded(
+                          child: Text(
+                              formatter.format(widget.produto!.valorVenda)),
                         )
                       ],
                     ),
