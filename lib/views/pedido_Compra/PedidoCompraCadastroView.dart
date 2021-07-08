@@ -438,13 +438,13 @@ class _CardProdutoState extends State<CardProduto> {
   }
 
   getEstoque() async {
-    var estoque =
-        await estoqueController.obtenhaEstoqueProduto(widget.produto!.id);
-    setState(() {
-      estoque.forEach((element) {
-        selectEstoque!.add({'value': element.id, 'label': element.nome});
-      });
-    });
+    // var estoque =
+    //     await estoqueController.obtenhaEstoqueProduto(widget.produto!.id);
+    // setState(() {
+    //   estoque.forEach((element) {
+    //     selectEstoque!.add({'value': element.id, 'label': element.nome});
+    //   });
+    // });
   }
 
   @override
