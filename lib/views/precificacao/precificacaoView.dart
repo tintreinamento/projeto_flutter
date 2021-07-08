@@ -67,6 +67,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
   Future<void> _abrirDialog(BuildContext context) async {
     showDialog(
         context: context,
+        barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
@@ -129,13 +130,19 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                 ),
                 Expanded(
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Flexible(
-                        child: InputComponent(
-                          label: 'Margem',
-                          controller: margemController,
-                        ),
+                      Text(
+                        '\nMargem: ',
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
+                      Flexible(
+                          child: TextField(
+                        textAlign: TextAlign.center,
+                        controller: margemController,
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                      ))
                     ],
                   ),
                 ),
@@ -165,24 +172,56 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
 
     var margem = double.parse(margemController.text);
 
-    produtoMargemModelGlobal.margem = margem;
-    produtoMargemModelGlobal.idProduto = produtoModelGlobal.id;
+    if (margem >= 100.00) {
+      mensagemErroMargemErrada();
+      return _abrirDialog(context);
+    } else {
+      produtoMargemModelGlobal.margem = margem;
+      produtoMargemModelGlobal.idProduto = produtoModelGlobal.id;
 
-    var produtoMargemBanco = colecaoDeProdutoMargem
-        .where((element) => element.idProduto == produtoModelGlobal.id);
+      var produtoMargemBanco = colecaoDeProdutoMargem
+          .where((element) => element.idProduto == produtoModelGlobal.id);
 
-    produtoModelGlobal.valorVenda = produtoModelGlobal.valorCompra +
-        (produtoModelGlobal.valorCompra * margem / 100);
+      produtoModelGlobal.valorVenda = produtoModelGlobal.valorCompra +
+          (produtoModelGlobal.valorCompra * margem / 100);
 
-    await produtoController.atualize(produtoModelGlobal);
+      await produtoController.atualize(produtoModelGlobal);
 
-    if (produtoMargemBanco.isNotEmpty) {
-      produtoMargemModelGlobal.id = produtoMargemBanco.single.id;
-      await produtoMargemController.atualize(produtoMargemModelGlobal);
-      return;
+      if (produtoMargemBanco.isNotEmpty) {
+        produtoMargemModelGlobal.id = produtoMargemBanco.single.id;
+        await produtoMargemController.atualize(produtoMargemModelGlobal);
+        return;
+      }
+
+      await produtoMargemController.crie(produtoMargemModelGlobal);
     }
+  }
 
-    await produtoMargemController.crie(produtoMargemModelGlobal);
+  Future<void> mensagemErroMargemErrada() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Erro'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Margem superior a 100.00%, insira margem menor!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
