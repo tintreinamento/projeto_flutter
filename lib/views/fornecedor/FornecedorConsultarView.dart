@@ -37,11 +37,44 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
     }
   }
 
-  consultarFornecedor() {
+  consultarFornecedor() async {
     if (_formKeyConsultaFornecedor.currentState!.validate()) {
-      //consulta
+      var fornecedores = (await fornecedorController.obtenhaTodos())
+                .where((element) => element.nome.toLowerCase().contains(nomeController.text.toLowerCase()));
+      if (fornecedores.length == 0) {
+        mensagem('Nenhum fornecedor com esse nome encontrado!');
+        nomeController.clear();
+      }
+
       setState(() {});
     }
+  }
+
+  Future<void> mensagem(String msg) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Mensagem'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(msg),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -83,9 +116,8 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
             final listaOrdenada = snapshot.data!.where((fornecedor) {
               return fornecedor.nome!
                   .toLowerCase()
-                  .startsWith(nomeController.text.toLowerCase());
+                  .contains(nomeController.text.toLowerCase());
             });
-
             final listaFornecedores = listaOrdenada.map((fornecedor) {
               return SingleChildScrollView(
                 child: Column(
@@ -98,7 +130,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
                 ),
               );
             }).toList();
-
+            
             return Column(
               children: [
                 ...listaFornecedores,
