@@ -96,6 +96,15 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
     estadoController.clear();
   }
 
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = new RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
+
   cadastrarFornecedor() async {
     if (_formKeyFornecedor.currentState!.validate()) {
       if (_formKeyEndereco.currentState!.validate()) {
@@ -137,37 +146,36 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
         await enderecoControllerApi.crie(enderecoModel);
         limpaCampos();
         efetivaCadastro();
-        
       }
     }
   }
 
   Future<void> efetivaCadastro() async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Mensagem'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: const <Widget>[
-              Text('Fornecedor cadastrado com sucesso!'),
-            ],
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Mensagem'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Fornecedor cadastrado com sucesso!'),
+              ],
+            ),
           ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('OK'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -207,8 +215,11 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             label: 'E-mail: ',
             controller: emailController,
             validator: (value) {
+              print(isEmail(value.toString()));
               if (isVazio(value)) {
                 return 'Campo e-mail vazio !';
+              } else if (isEmail(value.toString()) == false) {
+                return 'Campo de e-mail inválido!';
               }
               return null;
             },
@@ -221,13 +232,13 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
               FilteringTextInputFormatter.digitsOnly,
               TelefoneInputFormatter()
             ],
-            label: 'Telefone: ',
+            label: 'Celular: ',
             controller: telefoneController,
             validator: (value) {
               if (isVazio(value)) {
                 return 'Campo telefone vazio !';
-              } else if (value!.length < 15){
-                  return 'Número de telefone inválido!';
+              } else if (value!.length < 15) {
+                return 'Número de telefone inválido!';
               }
               return null;
             },
@@ -301,10 +312,10 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             SizedBox(
               height: 10,
             ),
-             InputComponent(
-            //   inputFormatter: [
-            //   FilteringTextInputFormatter.singleLineFormatter,
-            // ],
+            InputComponent(
+              //   inputFormatter: [
+              //   FilteringTextInputFormatter.singleLineFormatter,
+              // ],
               label: 'Cidade: ',
               controller: cidadeController,
               validator: (value) {
