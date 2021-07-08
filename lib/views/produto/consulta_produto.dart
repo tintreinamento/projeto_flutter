@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
@@ -20,12 +21,16 @@ class ProdutoConsultarView extends StatefulWidget {
 
 class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
   final _formKeyConsultaProduto = GlobalKey<FormState>();
-  final _formKeyConsultaCategoriaProduto = GlobalKey<FormState>();
   final nomeController = TextEditingController();
   final idProdutoController = TextEditingController();
 
   ProdutoController produtoController = new ProdutoController();
   CategoriaController categoriaController = new CategoriaController();
+
+  TextEditingController valorCompraController = new TextEditingController();
+  TextEditingController valorVendaController = new TextEditingController();
+  NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
+
   late Future<List<ProdutoModel>> listaProdutos;
 
   bool isVazio(value) {
@@ -39,18 +44,11 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
   consultarProduto() {
     if (_formKeyConsultaProduto.currentState!.validate()) {
       produtoController
-          //.obtenhaPorId(idProdutoController.value)
           .obtenhaPorNome(nomeController.text.toString())
           .then((value) => listaProdutos);
       setState(() {});
     }
   }
-
-  /* consultarCategoria() {
-    if (_formKeyConsultaCategoriaProduto.currentContext!.validate()) {
-      categoriaController.obtenhaPorId(idProdutoController.toString())
-    }
-  } */
 
   @override
   void initState() {
@@ -202,6 +200,7 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
 
   Widget cardProduto(ProdutoModel produtoModel) {
     CategoriaModel categoriaModel = new CategoriaModel();
+
     return ConstrainedBox(
       constraints: BoxConstraints(minWidth: 340.0),
       child: Container(
@@ -246,13 +245,15 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
                 Row(
                   children: [
                     TextComponent(label: 'Valor Compra: '),
-                    Text(produtoModel.valorCompra.toString())
+                    Text(valorCompraController.text =
+                        formatter.format(produtoModel.valorCompra))
                   ],
                 ),
                 Row(
                   children: [
                     TextComponent(label: 'Valor Venda: '),
-                    Text(produtoModel.valorVenda.toString())
+                    Text(valorCompraController.text =
+                        formatter.format(produtoModel.valorVenda))
                   ],
                 )
               ],

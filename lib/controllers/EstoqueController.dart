@@ -17,27 +17,12 @@ class EstoqueController {
     return colecaoDeEstoques;
   }
 
-  Future<List<EstoqueModel>> obtenhaEstoqueProduto(int id) async {
-    final resposta =
-        await new Api().obtenha('estoque/produto/' + id.toString());
-
-    List<EstoqueModel> colecaoDeEstoques = new List.empty(growable: true);
-
-    List<dynamic> stringJson = json.decode(resposta.body);
-
-    stringJson.forEach((element) {
-      var estoque = new EstoqueModel.fromJson(element);
-      colecaoDeEstoques.add(estoque);
-    });
-    return colecaoDeEstoques;
-  }
-
   Future<EstoqueModel> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('estoque/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
 
-    return new EstoqueModel.fromJson(stringJson.single);
+    return new EstoqueModel.fromJson(stringJson);
   }
 
   Future<EstoqueModel> obtenhaPorNome(String nome) async {
@@ -45,7 +30,7 @@ class EstoqueController {
 
     var stringJson = json.decode(resposta.body);
 
-    return new EstoqueModel.fromJson(stringJson.single);
+    return new EstoqueModel.fromJson(stringJson);
   }
 
   Future<EstoqueModel> crie(EstoqueModel estoque) async {
