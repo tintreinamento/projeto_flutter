@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 
+import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
-import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
@@ -16,42 +16,127 @@ import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/EstoqueModel.dart';
 import 'package:projeto_flutter/models/FornecedorModel.dart';
-import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
-import 'package:projeto_flutter/views/pedido_compra/consulta/PedidoCompraConsultaView.dart';
 
 class EstoqueView extends StatefulWidget {
   @override
   _EstoqueViewState createState() => _EstoqueViewState();
 }
 
+class ProdutoCategoriaFornecedorModel {
+  var produto = new ProdutoModel();
+  var categoriaModel = new CategoriaModel();
+  var fornecedorModel = new FornecedorModel();
+  var estoques = new List.empty(growable: true);
+}
+
 class _EstoqueViewState extends State<EstoqueView> {
   bool _active = false;
-  Future<ProdutoModel>? produtoModel;
+  ProdutoModel? produtoModel;
+  ProdutoCategoriaFornecedorModel? produtoCFMG;
 
-  GlobalKey<FormState> formkeyConsulta = GlobalKey<FormState>();
+  var formkeyConsulta = GlobalKey<FormState>();
+  var nomePedidoController = TextEditingController();
+  var nomeEstoqueController = TextEditingController();
+  var quantidadeEstoqueController = TextEditingController();
 
-  TextEditingController idPedidoController = TextEditingController();
-
-  // Pedido
-  // EstoqueModel? estoqueModel;
+  obtenhaEstoques(int id) async {
+    return await new EstoqueController().obtenhaEstoqueProduto(id);
+  }
 
   consultarEstoque() async {
     _active = !_active;
+
+    var nome = nomePedidoController.text;
+    var produtos =
+        (await new ProdutoController().obtenhaTodosComCategoriaFornecedor())
+            .where((element) =>
+                element.produto.nome.toLowerCase().contains(nome.toLowerCase()))
+            .toList();
+
+    produtos.forEach((element) async {
+      element.estoques = await obtenhaEstoques(element.produto.id);
+    });
+
+    if (produtos.length > 1) {
+      abraDialogConsulta(produtos);
+    } else if (produtos.length == 1) {
+      produtos.single.estoques =
+          await obtenhaEstoques(produtos.single.produto.id);
+      produtoModel = produtos.single.produto;
+      produtoCFMG = produtos.single;
+    } else {
+      produtoModel = null;
+    }
+
     setState(() {});
   }
 
-  carregarProduto() {
-    ProdutoController produtoController = new ProdutoController();
-    produtoModel = produtoController.obtenhaPorId(152);
+  atualizeEstoqueAoCadastrar(
+      ProdutoCategoriaFornecedorModel? _produtoCFMG) async {
+    _produtoCFMG!.estoques = await obtenhaEstoques(_produtoCFMG.produto.id);
+    produtoCFMG = _produtoCFMG;
+    produtoModel = _produtoCFMG.produto;
+
+    setState(() {});
+  }
+
+  cadastrarEstoque() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              actions: [
+                InputComponent(
+                  label: 'Nome',
+                  controller: nomeEstoqueController,
+                ),
+                InputComponent(
+                  label: 'Quantidade',
+                  controller: quantidadeEstoqueController,
+                ),
+                ButtonComponent(
+                  label: 'Cadastrar',
+                  onPressed: () async {
+                    await new EstoqueController().crie(EstoqueModel(
+                        nome: nomeEstoqueController.text,
+                        quantidade: int.parse(quantidadeEstoqueController.text),
+                        idProduto: produtoModel?.id));
+                    atualizeEstoqueAoCadastrar(produtoCFMG);
+                    setState(() {});
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            ));
+  }
+
+  abraDialogConsulta(List<ProdutoCategoriaFornecedorModel> produtos) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              AlertDialog(
+                content: Container(
+                  height: MediaQuery.of(context).size.height * .7,
+                  width: MediaQuery.of(context).size.height * .5,
+                  child: ListView.builder(
+                    itemCount: produtos.length,
+                    itemBuilder: (context, position) {
+                      return cardProduto(context, produtos[position]);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
-    carregarProduto();
   }
 
   @override
@@ -75,39 +160,23 @@ class _EstoqueViewState extends State<EstoqueView> {
                     children: [
                       FormConsulta(
                         formKeyConsultar: formkeyConsulta,
-                        idPedidoController: idPedidoController,
                         onPressed: consultarEstoque,
+                        nomePedidoController: nomePedidoController,
                       ),
-                      FutureBuilder(
-                          future: produtoModel,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<ProdutoModel> snapshot) {
-                            var children;
-                            if (snapshot.hasData) {
-                              children = [
-                                DetalheProduto(
-                                  produtoModel: snapshot.data,
-                                ),
-                                Estoque(produtoModel: snapshot.data),
-                                Buttons()
-                              ];
-                            } else if (snapshot.hasError) {
-                              children = TextComponent(
-                                label: 'Error ao carregar produto !',
-                              );
-                            } else {
-                              children = Container(
-                                height: 60,
-                                width: 60,
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                            return Container(
-                              child: Column(
-                                children: [...children],
+                      if (produtoModel != null)
+                        Container(
+                          child: Column(
+                            children: [
+                              DetalheProduto(
+                                produtoModel: this.produtoModel,
                               ),
-                            );
-                          }),
+                              Estoque(produtoModel: this.produtoCFMG),
+                              ButtonComponent(
+                                  label: 'Cadastrar Novo',
+                                  onPressed: cadastrarEstoque)
+                            ],
+                          ),
+                        ),
                     ],
                   ),
                 )),
@@ -116,15 +185,117 @@ class _EstoqueViewState extends State<EstoqueView> {
       ),
     );
   }
+
+  var formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
+
+  Widget cardProduto(
+      BuildContext context, ProdutoCategoriaFornecedorModel produtoCFM) {
+    return InkWell(
+      onTap: () {
+        produtoModel = produtoCFM.produto;
+        produtoCFMG = produtoCFM;
+        setState(() {});
+        Navigator.of(context).pop();
+      },
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minWidth: 340.0),
+        child: Container(
+          color: Color.fromRGBO(255, 255, 255, 0),
+          padding: EdgeInsets.only(bottom: 10.0),
+          child: Container(
+            padding: EdgeInsets.all(10.0),
+            width: MediaQuery.of(context).size.width,
+            color: Color.fromRGBO(235, 231, 231, 1),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        TextComponent(
+                          label: 'ID Produto: ',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        Text(produtoCFM.produto.id.toString()),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextComponent(
+                          label: 'Nome: ',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        Expanded(
+                            child: Text(produtoCFM.produto.nome.toString()))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextComponent(
+                          label: 'Descrição: ',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        Expanded(
+                            child: Text(produtoCFM.produto.descricao ?? ""))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextComponent(
+                          label: 'Categoria: ',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        Expanded(child: Text(produtoCFM.categoriaModel.nome))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextComponent(
+                          label: 'Valor Compra: ',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        Text(formatter.format(produtoCFM.produto.valorCompra))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextComponent(
+                          label: 'Valor Venda: ',
+                          fontWeight: FontWeight.w700,
+                        ),
+                        Text(formatter.format(produtoCFM.produto.valorVenda))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class FormConsulta extends StatelessWidget {
   GlobalKey<FormState>? formKeyConsultar;
   Function? onPressed;
-  TextEditingController? idPedidoController;
+  TextEditingController? nomePedidoController;
 
   FormConsulta(
-      {this.formKeyConsultar, this.idPedidoController, this.onPressed});
+      {this.formKeyConsultar, this.onPressed, this.nomePedidoController});
 
   @override
   Widget build(BuildContext context) {
@@ -137,91 +308,13 @@ class FormConsulta extends StatelessWidget {
               children: [
                 InputComponent(
                   label: 'Nome:',
-                  //  controller: idPedidoController,
+                  controller: nomePedidoController,
                 ),
-                ButtonComponent(
-                  label: 'Consultar',
-                  onPressed: _abrirDialog,
-                )
+                ButtonComponent(label: 'Consultar', onPressed: this.onPressed)
               ],
             )),
       ),
     );
-  }
-
-  Future<void> _abrirDialog(BuildContext context) async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(''),
-            content: Container(
-              height: MediaQuery.of(context).size.height * .3,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Expanded(
-                    //flex: 2,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'ID Produto:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Produto:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('produtoModelGlobal.id.toString()'),
-                        Text('produtoModelGlobal.nome.toString()')
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Valor Compra:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Valor Venda:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('valorCompraController.text = formatter.format(produtoModelGlobal.valorCompra)'),
-                        Text('valorVendaController.text = formatter.format(produtoModelGlobal.valorVenda)'),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              ButtonComponent(
-                  label: 'Cadastrar',
-                  onPressed: () async {
-                    
-                    Navigator.of(context).pop();
-                  }),
-            ],
-          );
-        });
   }
 }
 
@@ -258,107 +351,81 @@ class _DetalheProdutoState extends State<DetalheProduto> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getCategoria();
     getFornecedor();
   }
 
-  @override
   Widget cardProduto() {
-
-    return ConstrainedBox(constraints: BoxConstraints(minWidth: 340.0),
-    child: Container(
-      child: MolduraComponent(
-          label: 'Produto',
-          content: Column(
-            children: [
-              Row(
+    return ConstrainedBox(
+        constraints: BoxConstraints(minWidth: 340.0),
+        child: Container(
+          child: MolduraComponent(
+              label: 'Produto',
+              content: Column(
                 children: [
-                  TextComponent(label: 'Nome: '),
-                  TextComponent(
-                    label: widget.produtoModel!.nome,
-                  )
+                  Row(
+                    children: [
+                      TextComponent(label: 'Nome: '),
+                      TextComponent(
+                        label: widget.produtoModel!.nome,
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      TextComponent(label: 'Categoria: '),
+                      TextComponent(
+                        label: categoriaModel!.nome,
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      TextComponent(label: 'Fornecedor: '),
+                      TextComponent(label: fornecedorModel!.nome)
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      TextComponent(label: 'Descrição: '),
+                      TextComponent(
+                        label:
+                            widget.produtoModel!.descricao ?? "Sem descrição",
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      TextComponent(label: 'Valor Compra: '),
+                      TextComponent(
+                        label:
+                            formatter.format(widget.produtoModel!.valorCompra),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      TextComponent(label: 'Valor Venda: '),
+                      TextComponent(
+                        label:
+                            formatter.format(widget.produtoModel!.valorVenda),
+                      )
+                    ],
+                  ),
                 ],
-              ),
-              Row(
-                children: [
-                  TextComponent(label: 'Categoria: '),
-                  TextComponent(
-                    label: categoriaModel!.nome,
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  TextComponent(label: 'Fornecedor: '),
-                  TextComponent(label: fornecedorModel!.nome)
-                ],
-              ),
-              Row(
-                children: [
-                  TextComponent(label: 'Descrição: '),
-                  TextComponent(
-                    label: widget.produtoModel!.descricao,
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  TextComponent(label: 'Valor Compra: '),
-                  TextComponent(
-                    label: formatter.format(widget.produtoModel!.valorCompra),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  TextComponent(label: 'Valor Venda: '),
-                  TextComponent(
-                    label: formatter.format(widget.produtoModel!.valorVenda),
-                  )
-                ],
-              ),
-            ],
-          )),
-    ));
+              )),
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
-}
-
-class Buttons extends StatelessWidget {
-  GlobalKey<FormState>? formKeyCadastrar;
-  Function? onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Form(
-        key: formKeyCadastrar,
-        child: (Column(
-          children: [
-            ButtonComponent(
-              label: 'Cadastrar Novo Estoque',
-              //  controller: idPedidoController,
-            ),
-            ButtonComponent(
-              label: 'Atualizar',
-              onPressed: onPressed,
-            )
-          ],
-        )),
-      ),
-    );
+    return Container(child: cardProduto());
   }
 }
 
 class Estoque extends StatefulWidget {
-  ProdutoModel? produtoModel;
+  ProdutoCategoriaFornecedorModel? produtoModel;
   Estoque({Key? key, this.produtoModel}) : super(key: key);
 
   @override
@@ -366,25 +433,19 @@ class Estoque extends StatefulWidget {
 }
 
 class _EstoqueState extends State<Estoque> {
-  Future<List<EstoqueModel>>? listaEstoqueModel;
-  carregarEstoque() {
-    final estoqueControlller = EstoqueController();
-    listaEstoqueModel =
-        estoqueControlller.obtenhaEstoqueProduto(widget.produtoModel!.id);
-  }
+  List<EstoqueModel>? listaEstoqueModel;
 
   @override
   void initState() {
     super.initState();
-    carregarEstoque();
   }
 
   atualizarEstoque(EstoqueModel estoqueModel, int quantidade) async {
     estoqueModel.quantidade += quantidade;
 
-    EstoqueController estoqueController = new EstoqueController();
+    var estoqueController = new EstoqueController();
 
-    final estoque = await estoqueController.atualize(estoqueModel);
+    await estoqueController.atualize(estoqueModel);
 
     setState(() {});
   }
@@ -392,9 +453,9 @@ class _EstoqueState extends State<Estoque> {
   removerEstoque(EstoqueModel estoqueModel, int quantidade) async {
     estoqueModel.quantidade -= quantidade;
 
-    EstoqueController estoqueController = new EstoqueController();
+    var estoqueController = new EstoqueController();
 
-    final estoque = await estoqueController.atualize(estoqueModel);
+    await estoqueController.atualize(estoqueModel);
 
     setState(() {});
   }
@@ -402,28 +463,18 @@ class _EstoqueState extends State<Estoque> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: FutureBuilder(
-          future: listaEstoqueModel,
-          builder: (BuildContext context,
-              AsyncSnapshot<List<EstoqueModel>> snapshot) {
-            var listaEstoque;
-            if (snapshot.hasData) {
-              listaEstoque = snapshot.data!.map((estoque) {
-                return ItemEstoqueCard(
-                  itemEstoque: estoque,
-                  atualizarEstoque: atualizarEstoque,
-                  removerEstoque: removerEstoque,
-                );
-              });
-            } else if (snapshot.hasError) {
-              print('falha ao carregar estoques !');
-            }
-
-            return Column(
-              children: [...listaEstoque],
+        height: MediaQuery.of(context).size.height * .4,
+        width: MediaQuery.of(context).size.height * .4,
+        child: ListView.builder(
+          itemCount: widget.produtoModel!.estoques.length,
+          itemBuilder: (context, position) {
+            return ItemEstoqueCard(
+              itemEstoque: widget.produtoModel!.estoques[position],
+              atualizarEstoque: atualizarEstoque,
+              removerEstoque: removerEstoque,
             );
-          }),
-    );
+          },
+        ));
   }
 }
 
@@ -486,8 +537,16 @@ class _ItemEstoqueCardState extends State<ItemEstoqueCard> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                              child: ButtonComponent(
-                            label: 'Atualizar',
+                              child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color.fromRGBO(0, 94, 181, 1)),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ))),
                             onPressed: () => showDialog(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
@@ -508,6 +567,11 @@ class _ItemEstoqueCardState extends State<ItemEstoqueCard> {
                                         )
                                       ],
                                     )),
+                            child: TextComponent(
+                              fontWeight: FontWeight.bold,
+                              tamanho: 15,
+                              label: '+',
+                            ),
                           ))
                         ],
                       ),
@@ -526,8 +590,16 @@ class _ItemEstoqueCardState extends State<ItemEstoqueCard> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                              child: ButtonComponent(
-                            label: 'Remover',
+                              child: ElevatedButton(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Color.fromRGBO(0, 94, 181, 1)),
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                ))),
                             onPressed: () => showDialog(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
@@ -537,9 +609,9 @@ class _ItemEstoqueCardState extends State<ItemEstoqueCard> {
                                           controller: quantidadeController,
                                         ),
                                         ButtonComponent(
-                                          label: 'Salvar',
+                                          label: 'Remove',
                                           onPressed: () {
-                                            widget.removerEstoque!(
+                                            widget.atualizarEstoque!(
                                                 widget.itemEstoque!,
                                                 int.parse(
                                                     quantidadeController.text));
@@ -548,6 +620,11 @@ class _ItemEstoqueCardState extends State<ItemEstoqueCard> {
                                         )
                                       ],
                                     )),
+                            child: TextComponent(
+                              fontWeight: FontWeight.bold,
+                              tamanho: 15,
+                              label: '-',
+                            ),
                           ))
                         ],
                       ),

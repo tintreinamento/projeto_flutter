@@ -96,6 +96,15 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
     estadoController.clear();
   }
 
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = new RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
+
   cadastrarFornecedor() async {
     if (_formKeyFornecedor.currentState!.validate()) {
       if (_formKeyEndereco.currentState!.validate()) {
@@ -111,33 +120,61 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
         var fornecedorControllerApi = FornecedorController();
         var fornecedor = await fornecedorControllerApi.crie(fornecedorModel);
 
+        // limpaCampos();
+
+        var estadoModel = EstadoModel(idPais: 315, nome: estadoController.text);
+        var estadoControllerApi = EstadoController();
+        var estado = await estadoControllerApi.crie(estadoModel);
+
+        var cidadeModel =
+            new CidadeModel(idEstado: estado.id, nome: cidadeController.text);
+
+        var cidadeControllerApi = CidadeController();
+        var cidade = await cidadeControllerApi.crie(cidadeModel);
+
+        var enderecoModel = EnderecoModel(
+            idCidade: cidade.id,
+            idEstado: estado.id,
+            idFornecedor: fornecedor.id,
+            idPais: 315,
+            cep: UtilBrasilFields.removeCaracteres(cepController.text),
+            logradouro: logradouroController.text,
+            numero: numeroController.text,
+            bairro: bairroController.text);
+
+        var enderecoControllerApi = EnderecoController();
+        await enderecoControllerApi.crie(enderecoModel);
         limpaCampos();
-
-        // var estadoModel = EstadoModel(idPais: 315, nome: estadoController.text);
-        // var estadoControllerApi = EstadoController();
-        // var estado = await estadoControllerApi.crie(estadoModel);
-
-        // var cidadeModel =
-        //     new CidadeModel(idEstado: estado.id, nome: cidadeController.text);
-
-        // var cidadeControllerApi = CidadeController();
-        // var cidade = await cidadeControllerApi.crie(cidadeModel);
-
-        // var enderecoModel = EnderecoModel(
-        //     idCidade: cidade.id,
-        //     idEstado: estado.id,
-        //     idFornecedor: fornecedor.id,
-        //     idPais: 315,
-        //     cep: UtilBrasilFields.removeCaracteres(cepController.text),
-        //     logradouro: logradouroController.text,
-        //     numero: numeroController.text,
-        //     bairro: bairroController.text);
-
-        // var enderecoControllerApi = EnderecoController();
-        // await enderecoControllerApi.crie(enderecoModel);
-        //limpaCampos();
+        efetivaCadastro();
       }
     }
+  }
+
+  Future<void> efetivaCadastro() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Mensagem'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Fornecedor cadastrado com sucesso!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -178,8 +215,11 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             label: 'E-mail: ',
             controller: emailController,
             validator: (value) {
+              print(isEmail(value.toString()));
               if (isVazio(value)) {
                 return 'Campo e-mail vazio !';
+              } else if (isEmail(value.toString()) == false) {
+                return 'Campo de e-mail inválido!';
               }
               return null;
             },
@@ -192,11 +232,13 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
               FilteringTextInputFormatter.digitsOnly,
               TelefoneInputFormatter()
             ],
-            label: 'Telefone: ',
+            label: 'Celular: ',
             controller: telefoneController,
             validator: (value) {
               if (isVazio(value)) {
                 return 'Campo telefone vazio !';
+              } else if (value!.length < 15) {
+                return 'Número de telefone inválido!';
               }
               return null;
             },
@@ -242,6 +284,9 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
               height: 10,
             ),
             InputComponent(
+              inputFormatter: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
               label: 'Número: ',
               controller: numeroController,
               validator: (value) {
@@ -268,6 +313,9 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
               height: 10,
             ),
             InputComponent(
+              //   inputFormatter: [
+              //   FilteringTextInputFormatter.singleLineFormatter,
+              // ],
               label: 'Cidade: ',
               controller: cidadeController,
               validator: (value) {

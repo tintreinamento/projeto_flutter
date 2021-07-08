@@ -287,17 +287,17 @@ Widget cardCliente(ClienteModel clienteModel) {
                 )
               ],
             ),
-            Positioned(
-              top: 50,
-              right: -10,
-              child: FlatButton(
-                  onPressed: () {
-                    // Navigator.pushNamed(context, '/login');
-                  },
-                  child: Container(
-                      child:
-                          Image(image: AssetImage('assets/images/edit.png')))),
-            ),
+            // Positioned(
+            //   top: 50,
+            //   right: -10,
+            //   child: FlatButton(
+            //       onPressed: () {
+            //         // Navigator.pushNamed(context, '/login');
+            //       },
+            //       child: Container(
+            //           child:
+            //               Image(image: AssetImage('assets/images/edit.png')))),
+            // ),
           ],
         )),
   );

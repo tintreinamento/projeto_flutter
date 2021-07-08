@@ -23,7 +23,7 @@ class EstadoController {
 
     var stringJson = json.decode(resposta.body);
 
-    return new EstadoModel.fromJson(stringJson.single);
+    return new EstadoModel.fromJson(stringJson);
   }
 
   Future<EstadoModel> crie(EstadoModel estado) async {

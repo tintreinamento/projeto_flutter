@@ -22,7 +22,7 @@ class CidadeController {
     final resposta = await new Api().obtenha('cidade/' + id.toString());
 
     var stringJson = json.decode(resposta.body);
-    return new CidadeModel.fromJson(stringJson.single);
+    return new CidadeModel.fromJson(stringJson);
   }
 
   Future<CidadeModel> crie(CidadeModel cidade) async {

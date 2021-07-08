@@ -190,11 +190,11 @@ class _ProdutoConsultarViewState extends State<ProdutoConsultarView> {
         appBar: AppBarComponent(),
         drawer: DrawerComponent(),
         body: LayoutBuilder(builder: (context, constraint) {
-          if (constraint.maxHeight > 600) {
-            return layoutVertical;
-          } else {
-            return layoutHorizontal;
-          }
+          //if (constraint.maxHeight > 1) {
+          return layoutVertical;
+          //} else {
+          //  return layoutHorizontal;
+          // }
         }));
   }
 

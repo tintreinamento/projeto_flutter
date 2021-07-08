@@ -112,6 +112,10 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
       return 'CPF/CNPJ inválido!';
     }
 
+    if (isVazio(cpfLimpo)) {
+      return 'Campo CPF/CNPJ vazio';
+    }
+
     return null;
   }
 
@@ -268,6 +272,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
               height: 10,
             ),
             InputComponent(
+              inputFormatter: [FilteringTextInputFormatter.digitsOnly],
               label: 'Categoria: ',
               controller: categoriaController,
               validator: (value) {
@@ -315,8 +320,8 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
               Expanded(
                   child: SingleChildScrollView(
                 child: Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height,
+                  //width: double.infinity,
+                  //height: MediaQuery.of(context).size.height,
                   margin: EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: Column(
                     children: [
