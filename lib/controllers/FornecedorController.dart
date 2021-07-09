@@ -3,11 +3,8 @@ import 'package:projeto_flutter/models/FornecedorModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
 class FornecedorController {
-  Future<List<FornecedorModel>?> obtenhaTodos() async {
+  Future<List<FornecedorModel>> obtenhaTodos() async {
     final resposta = await new Api().obtenha('fornecedor');
-    if (resposta!.body == null) {
-      return null;
-    }
     List<FornecedorModel> colecaoDeFornecedores =
         new List.empty(growable: true);
     List<dynamic> stringJson = json.decode(resposta.body);

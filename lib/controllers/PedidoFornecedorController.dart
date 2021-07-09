@@ -30,7 +30,7 @@ if(resposta!.body == null){
     }
     var stringJson = json.decode(resposta.body);
 
-    return new PedidoFornecedorModel.fromJson(stringJson.single);
+    return new PedidoFornecedorModel.fromJson(stringJson);
   }
 
   Future<PedidoFornecedorModel> crie(PedidoFornecedorModel pedido) async {

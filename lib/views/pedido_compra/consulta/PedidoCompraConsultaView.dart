@@ -1,4 +1,6 @@
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
@@ -7,11 +9,17 @@ import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
-import 'package:projeto_flutter/controllers/PedidoController.dart';
-import 'package:projeto_flutter/models/ClienteModel.dart';
-import 'package:projeto_flutter/models/FuncionarioModel.dart';
-import 'package:projeto_flutter/models/ItemPedidoModel.dart';
-import 'package:projeto_flutter/models/PedidoModel.dart';
+import 'package:projeto_flutter/controllers/CategoriaController.dart';
+import 'package:projeto_flutter/controllers/FornecedorController.dart';
+import 'package:projeto_flutter/controllers/FuncionarioController.dart';
+import 'package:projeto_flutter/controllers/ItemPedidoFornecedorController.dart';
+import 'package:projeto_flutter/controllers/PedidoFornecedorController.dart';
+import 'package:projeto_flutter/controllers/ProdutoController.dart';
+import 'package:projeto_flutter/models/CategoriaModel.dart';
+import 'package:projeto_flutter/models/ItemPedidoFornecedorModel.dart';
+import 'package:projeto_flutter/models/PedidoFornecedorModel.dart';
+
+import 'package:projeto_flutter/models/ProdutoModel.dart';
 
 class PedidoCompraConsultaView extends StatefulWidget {
   @override
@@ -27,47 +35,52 @@ class _PedidoCompraConsultaViewState extends State<PedidoCompraConsultaView> {
   TextEditingController idPedidoController = TextEditingController();
 
   //Pedido
-  PedidoModel? pedidoModel;
+  PedidoFornecedorModel? pedidoModel;
 
   consultarPedido() async {
-    // PedidoController pedidoController = new PedidoController();
-    // // pedidoModel = await pedidoController.obtenhaPorId(idPedidoController.text);
-    // // print(pedidoModel!.itemPedido![0].produto!.nome);
-    // List<ItemPedidoModel> listaDeItens = <ItemPedidoModel>[];
-    // ItemPedidoModel item = new ItemPedidoModel();
-    // pedidoModel = new PedidoModel(
-    //   id: 1,
-    //   dataPedido: '2021-06-19',
-    //   totalPedido: 2.300,
-    //   cliente: new ClienteModel(
-    //       nome: 'Vítor',
-    //       cpfCnpj: '04299121104',
-    //       dataNascimento: '1999-09-17',
-    //       estadoCivil: '1',
-    //       email: 'vitor@gmail.com',
-    //       sexo: '1',
-    //       telefone: '62991216763'),
-    //   funcionario: new FuncionarioModel(
-    //     nome: 'Teste',
-    //     cpfCnpj: '3273628136',
-    //   ),
-    // );
-    _active = !_active;
-    setState(() {});
+    PedidoFornecedorController pedidoFornecedorController =
+        new PedidoFornecedorController();
+
+    try {
+      pedidoModel = await pedidoFornecedorController
+          .obtenhaPorId(int.parse(idPedidoController.text));
+      _active = !_active;
+      setState(() {});
+    } catch (e) {
+      print("oi");
+      mensagemErro();
+    }
+  }
+
+  Future<void> mensagemErro() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Erro'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Falha na busca, verifique!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    List<ItemPedido>? listaItemPedido = [];
-
-    // if (pedidoModel != null) {
-    //   listaItemPedido = pedidoModel!.itemPedido!.map((itemPedido) {
-    //     return ItemPedido(
-    //       itemPedidoModel: itemPedido,
-    //     );
-    //   }).toList();
-    // }
-
     return Scaffold(
       appBar: AppBarComponent(),
       drawer: DrawerComponent(),
@@ -92,9 +105,13 @@ class _PedidoCompraConsultaViewState extends State<PedidoCompraConsultaView> {
                       ),
                       if (_active)
                         DetalhePedido(
-                            // pedidoModel: pedidoModel,
-                            ),
-                      if (_active) ItemPedido(),
+                          pedidoModel: pedidoModel,
+                          // pedidoModel: pedidoModel,
+                        ),
+                      if (_active)
+                        ItemPedido(
+                          pedidoModel: pedidoModel,
+                        ),
                     ],
                   ),
                 )),
@@ -138,17 +155,44 @@ class FormConsulta extends StatelessWidget {
 }
 
 class DetalhePedido extends StatelessWidget {
+  PedidoFornecedorModel? pedidoModel;
+
   TextEditingController funcionarioController = new TextEditingController();
   TextEditingController fornecedorController = new TextEditingController();
   TextEditingController dataController = new TextEditingController();
   TextEditingController valorController = new TextEditingController();
 
-  DetalhePedido({
-    Key? key,
-  }) : super(key: key);
+  DetalhePedido({Key? key, this.pedidoModel}) : super(key: key);
+
+  getfornecedor(value) async {
+    FornecedorController fornecedor = new FornecedorController();
+    final fornecedorModel = fornecedor.obtenhaPorId(value);
+
+    fornecedorModel.then((value) {
+      fornecedorController.text = value.nome;
+    });
+  }
+
+  getFuncionario(value) async {
+    FuncionarioController funcionario = new FuncionarioController();
+    final funcionarioModel = funcionario.obtenhaPorId(value);
+
+    funcionarioModel.then((value) {
+      funcionarioController.text = value.nome;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
+
+    getFuncionario(pedidoModel!.idFuncionario);
+    getfornecedor(pedidoModel!.idFornecedor);
+
+    dataController.text = UtilData.obterDataDDMMAAAA(
+        DateTime.parse(pedidoModel!.data.toString().substring(0, 10)));
+    valorController.text = formatter.format(pedidoModel!.total);
+
     return Container(
       child: MolduraComponent(
           label: 'DETALHE',
@@ -156,15 +200,19 @@ class DetalhePedido extends StatelessWidget {
             children: [
               InputComponent(
                 label: 'Funcionário:',
+                controller: funcionarioController,
               ),
               InputComponent(
                 label: 'Fornecedor:',
+                controller: fornecedorController,
               ),
               InputComponent(
                 label: 'Data do pedido:',
+                controller: dataController,
               ),
               InputComponent(
                 label: 'Valor do pedido:',
+                controller: valorController,
               ),
             ],
           )),
@@ -172,14 +220,68 @@ class DetalhePedido extends StatelessWidget {
   }
 }
 
-class ItemPedido extends StatelessWidget {
+class ItemPedido extends StatefulWidget {
+  PedidoFornecedorModel? pedidoModel;
+
+  ItemPedido({Key? key, this.pedidoModel}) : super(key: key);
+
+  @override
+  _ItemPedidoState createState() => _ItemPedidoState(pedidoModel);
+}
+
+class _ItemPedidoState extends State<ItemPedido> {
+  var listaItemPedido = new List.empty(growable: true);
+  PedidoFornecedorModel? pedidoModel;
+  ProdutoModel? produtoModel;
+  CategoriaModel? categoriaModel;
+
+  _ItemPedidoState(PedidoFornecedorModel? pedidoModel) {
+    this.pedidoModel = pedidoModel;
+  }
+
+  getItemPedidos() async {
+    ItemPedidoFornecedorController itemPedidoController =
+        new ItemPedidoFornecedorController();
+    listaItemPedido = await itemPedidoController.obtenhaTodos();
+
+    listaItemPedido = listaItemPedido.map((element) {
+      if (element.idPedido == pedidoModel?.id) {
+        return element;
+      }
+    }).toList();
+
+    listaItemPedido.removeWhere((element) => element == null);
+
+    produtoModel = (await new ProdutoController()
+        .obtenhaPorId(listaItemPedido.first.idProduto));
+
+    categoriaModel = (await new CategoriaController()
+        .obtenhaPorId(produtoModel?.idCategoria));
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    getItemPedidos();
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<ItemPedidoCard> listaItemPedidoCard = [];
-
-    for (int i = 0; i < 5; i++) {
-      listaItemPedidoCard.add(ItemPedidoCard());
-    }
+    //1
+    listaItemPedido = listaItemPedido.where((element) {
+      return element.idPedido == widget.pedidoModel!.id;
+    }).toList();
+    //2
+    final listaItemPedidoCard = listaItemPedido.map((element) {
+      return ItemPedidoCard(
+          itemPedidoModel: element,
+          produtoModel: this.produtoModel,
+          categoriaModel: this.categoriaModel);
+    }).toList();
 
     return Container(
       child: MolduraComponent(
@@ -193,14 +295,19 @@ class ItemPedido extends StatelessWidget {
 }
 
 class ItemPedidoCard extends StatelessWidget {
-  ItemPedidoCard({
-    Key? key,
-  }) : super(key: key);
+  NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
+  ItemPedidoFornecedorModel? itemPedidoModel;
+
+  ProdutoModel? produtoModel;
+  CategoriaModel? categoriaModel;
+
+  ItemPedidoCard(
+      {Key? key, this.itemPedidoModel, this.produtoModel, this.categoriaModel})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height * .2,
         margin: EdgeInsets.only(bottom: 5.0),
         child: Row(
           children: [
@@ -219,7 +326,7 @@ class ItemPedidoCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           TextComponent(
-                            label: 'Produto x ',
+                            label: produtoModel?.nome,
                           ),
                         ],
                       ),
@@ -230,7 +337,7 @@ class ItemPedidoCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           TextComponent(
-                            label: 'Categoria y',
+                            label: categoriaModel?.nome,
                           ),
                         ],
                       ),
@@ -241,14 +348,15 @@ class ItemPedidoCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                           TextComponent(
-                            label: '1000,00',
+                            label:
+                                formatter.format(itemPedidoModel!.valorTotal),
                           ),
                         ],
                       )
                     ],
                   ),
                 )),
-            /*  Expanded(
+            Expanded(
                 child: Container(
               padding: paddingPadrao,
               color: colorBranco,
@@ -258,11 +366,11 @@ class ItemPedidoCard extends StatelessWidget {
                 children: [
                   TextComponent(
                     fontWeight: FontWeight.bold,
-                    label: '3',
+                    label: itemPedidoModel!.quantidade.toString(),
                   ),
                 ],
               ),
-            ),*/
+            )),
           ],
         ));
   }

@@ -4,8 +4,18 @@ import 'package:projeto_flutter/componentes/TextComponent.dart';
 class ButtonComponent extends StatefulWidget {
   var label;
   var onPressed;
+  double width;
+  double height;
+  double fontSize;
 
-  ButtonComponent({Key? key, this.label, this.onPressed}) : super(key: key);
+  ButtonComponent(
+      {Key? key,
+      this.label,
+      this.onPressed,
+      this.width: 220,
+      this.height: 30,
+      this.fontSize: 18})
+      : super(key: key);
 
   @override
   _ButtonComponentState createState() => _ButtonComponentState();
@@ -15,8 +25,8 @@ class _ButtonComponentState extends State<ButtonComponent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: 220,
-        height: 30,
+        width: widget.width,
+        height: widget.height,
         margin: EdgeInsets.only(top: 18, bottom: 13),
         child: ElevatedButton(
           style: ButtonStyle(
@@ -30,10 +40,9 @@ class _ButtonComponentState extends State<ButtonComponent> {
             widget.onPressed();
           },
           child: TextComponent(
-            fontWeight: FontWeight.bold,
-            tamanho: 18,
-            label: widget.label,
-          ),
+              fontWeight: FontWeight.bold,
+              tamanho: widget.fontSize,
+              label: widget.label),
         ));
   }
 }

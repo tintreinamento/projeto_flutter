@@ -1,356 +1,379 @@
-// import 'package:brasil_fields/brasil_fields.dart';
-// import 'package:flutter/material.dart';
-// import 'package:intl/intl.dart';
-// import 'package:projeto_flutter/componentes/AppBarComponent.dart';
+import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 
-// import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-// import 'package:projeto_flutter/componentes/DrawerComponent.dart';
-// import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
-// import 'package:projeto_flutter/componentes/InputComponent.dart';
-// import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
-// import 'package:projeto_flutter/componentes/TextComponent.dart';
-// import 'package:projeto_flutter/componentes/styles.dart';
-// import 'package:projeto_flutter/controllers/CategoriaController.dart';
-// import 'package:projeto_flutter/controllers/ClienteController.dart';
-// import 'package:projeto_flutter/controllers/FuncionarioController.dart';
-// import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
-// import 'package:projeto_flutter/controllers/PedidoController.dart';
-// import 'package:projeto_flutter/controllers/ProdutoController.dart';
-// import 'package:projeto_flutter/models/CategoriaModel.dart';
-// import 'package:projeto_flutter/models/ClienteModel.dart';
-// import 'package:projeto_flutter/models/FuncionarioModel.dart';
-// import 'package:projeto_flutter/models/ItemPedidoModel.dart';
-// import 'package:projeto_flutter/models/PedidoModel.dart';
-// import 'package:projeto_flutter/models/ProdutoModel.dart';
+import 'package:projeto_flutter/componentes/ButtonComponent.dart';
+import 'package:projeto_flutter/componentes/DrawerComponent.dart';
+import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
+import 'package:projeto_flutter/componentes/InputComponent.dart';
+import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
+import 'package:projeto_flutter/componentes/TextComponent.dart';
+import 'package:projeto_flutter/componentes/styles.dart';
+import 'package:projeto_flutter/controllers/CategoriaController.dart';
+import 'package:projeto_flutter/controllers/ClienteController.dart';
+import 'package:projeto_flutter/controllers/FuncionarioController.dart';
+import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
+import 'package:projeto_flutter/controllers/PedidoController.dart';
+import 'package:projeto_flutter/controllers/ProdutoController.dart';
+import 'package:projeto_flutter/models/CategoriaModel.dart';
+import 'package:projeto_flutter/models/ItemPedidoModel.dart';
+import 'package:projeto_flutter/models/PedidoModel.dart';
+import 'package:projeto_flutter/models/ProdutoModel.dart';
 
-// class PedidoVendaConsultaView extends StatefulWidget {
-//   @override
-//   _PedidoVendaConsultaViewState createState() =>
-//       _PedidoVendaConsultaViewState();
-// }
+class PedidoVendaConsultaView extends StatefulWidget {
+  @override
+  _PedidoVendaConsultaViewState createState() =>
+      _PedidoVendaConsultaViewState();
+}
 
-// class _PedidoVendaConsultaViewState extends State<PedidoVendaConsultaView> {
-//   bool _active = false;
+class _PedidoVendaConsultaViewState extends State<PedidoVendaConsultaView> {
+  bool _active = false;
 
-//   GlobalKey<FormState> formkeyConsulta = GlobalKey<FormState>();
+  GlobalKey<FormState> formkeyConsulta = GlobalKey<FormState>();
 
-//   TextEditingController idPedidoController = TextEditingController();
+  TextEditingController idPedidoController = TextEditingController();
 
-//   //Pedido
-//   PedidoModel? pedidoModel;
+  //Pedido
+  PedidoModel? pedidoModel;
 
-//   consultarPedido() async {
-//     PedidoController pedidoController = new PedidoController();
+  consultarPedido() async {
+    PedidoController pedidoController = new PedidoController();
+    try {
+      pedidoModel = await pedidoController
+          .obtenhaPorId(int.parse(idPedidoController.text));
 
-//     pedidoModel =
-//         await pedidoController.obtenhaPorId(int.parse(idPedidoController.text));
+      _active = !_active;
+      setState(() {});
+    } catch (e) {
+      mensagemErro();
+    }
+  }
 
-//     _active = !_active;
-//     setState(() {});
-//   }
+  Future<void> mensagemErro() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Erro'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Falha na busca, verifique!'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBarComponent(),
-//       drawer: DrawerComponent(),
-//       body: Container(
-//         child: Column(children: [
-//           SubMenuComponent(
-//               titulo: 'Pedido Venda',
-//               tituloPrimeiraRota: 'Cadastrar',
-//               primeiraRota: '/pedido_venda_cadastrar',
-//               tituloSegundaRota: 'Consultar',
-//               segundaRota: '/pedido_venda_consultar'),
-//           Expanded(
-//             child: Container(
-//                 padding: paddingPadrao,
-//                 child: SingleChildScrollView(
-//                   child: Column(
-//                     children: [
-//                       FormConsulta(
-//                         formKeyConsultar: formkeyConsulta,
-//                         idPedidoController: idPedidoController,
-//                         onPressed: consultarPedido,
-//                       ),
-//                       if (_active)
-//                         DetalhePedido(
-//                           pedidoModel: pedidoModel,
-//                           // pedidoModel: pedidoModel,
-//                         ),
-//                       if (_active)
-//                         ItemPedido(
-//                           pedidoModel: pedidoModel,
-//                         ),
-//                     ],
-//                   ),
-//                 )),
-//           )
-//         ]),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBarComponent(),
+      drawer: DrawerComponent(),
+      body: Container(
+        child: Column(children: [
+          SubMenuComponent(
+              titulo: 'Pedido Venda',
+              tituloPrimeiraRota: 'Cadastrar',
+              primeiraRota: '/pedido_venda_cadastrar',
+              tituloSegundaRota: 'Consultar',
+              segundaRota: '/pedido_venda_consultar'),
+          Expanded(
+            child: Container(
+                padding: paddingPadrao,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      FormConsulta(
+                        formKeyConsultar: formkeyConsulta,
+                        idPedidoController: idPedidoController,
+                        onPressed: consultarPedido,
+                      ),
+                      if (_active)
+                        DetalhePedido(
+                          pedidoModel: pedidoModel,
+                          // pedidoModel: pedidoModel,
+                        ),
+                      if (_active)
+                        ItemPedido(
+                          pedidoModel: pedidoModel,
+                        ),
+                    ],
+                  ),
+                )),
+          )
+        ]),
+      ),
+    );
+  }
+}
 
-// class FormConsulta extends StatelessWidget {
-//   GlobalKey<FormState>? formKeyConsultar;
-//   Function? onPressed;
-//   TextEditingController? idPedidoController;
+class FormConsulta extends StatelessWidget {
+  GlobalKey<FormState>? formKeyConsultar;
+  Function? onPressed;
+  TextEditingController? idPedidoController;
 
-//   FormConsulta(
-//       {this.formKeyConsultar, this.idPedidoController, this.onPressed});
+  FormConsulta(
+      {this.formKeyConsultar, this.idPedidoController, this.onPressed});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       child: Form(
-//         key: formKeyConsultar,
-//         child: MolduraComponent(
-//             label: 'PEDIDO',
-//             content: Column(
-//               children: [
-//                 InputComponent(
-//                   label: 'ID Pedido:',
-//                   controller: idPedidoController,
-//                 ),
-//                 ButtonComponent(
-//                   label: 'Consultar',
-//                   onPressed: onPressed,
-//                 )
-//               ],
-//             )),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Form(
+        key: formKeyConsultar,
+        child: MolduraComponent(
+            label: 'PEDIDO',
+            content: Column(
+              children: [
+                InputComponent(
+                  label: 'ID Pedido:',
+                  controller: idPedidoController,
+                ),
+                ButtonComponent(
+                  label: 'Consultar',
+                  onPressed: onPressed,
+                )
+              ],
+            )),
+      ),
+    );
+  }
+}
 
-// class DetalhePedido extends StatelessWidget {
-//   PedidoModel? pedidoModel;
+class DetalhePedido extends StatelessWidget {
+  PedidoModel? pedidoModel;
 
-//   TextEditingController funcionarioController = new TextEditingController();
-//   TextEditingController clienteController = new TextEditingController();
-//   TextEditingController dataController = new TextEditingController();
-//   TextEditingController valorController = new TextEditingController();
+  TextEditingController funcionarioController = new TextEditingController();
+  TextEditingController clienteController = new TextEditingController();
+  TextEditingController dataController = new TextEditingController();
+  TextEditingController valorController = new TextEditingController();
 
-//   DetalhePedido({Key? key, this.pedidoModel}) : super(key: key);
+  DetalhePedido({Key? key, this.pedidoModel}) : super(key: key);
 
-//   getCliente(value) async {
-//     ClienteController cliente = new ClienteController();
-//     final clienteModel = cliente.obtenhaPorId(value);
+  getCliente(value) async {
+    ClienteController cliente = new ClienteController();
+    final clienteModel = cliente.obtenhaPorId(value);
 
-//     clienteModel.then((value) {
-//       clienteController.text = value.nome;
-//     });
+    clienteModel.then((value) {
+      clienteController.text = value!.nome;
+    });
 
-//     //return clienteModel.then((value) => null);
-//   }
+    //return clienteModel.then((value) => null);
+  }
 
-//   getFuncionario(value) async {
-//     FuncionarioController funcionario = new FuncionarioController();
-//     final funcionarioModel = funcionario.obtenhaPorId(value);
+  getFuncionario(value) async {
+    FuncionarioController funcionario = new FuncionarioController();
+    final funcionarioModel = funcionario.obtenhaPorId(value);
 
-//     funcionarioModel.then((value) {
-//       funcionarioController.text = value.nome;
-//     });
+    funcionarioModel.then((value) {
+      funcionarioController.text = value!.nome;
+    });
 
-//     //return clienteModel.then((value) => null);
-//   }
+    //return clienteModel.then((value) => null);
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
-//     // clienteController.text =
-//     //     getCliente(pedidoModel!.idCliente).then((value) {}) as String;
+  @override
+  Widget build(BuildContext context) {
+    NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
+    // clienteController.text =
+    //     getCliente(pedidoModel!.idCliente).then((value) {}) as String;
 
-//     getFuncionario(pedidoModel!.idFuncionario);
-//     getCliente(pedidoModel!.idCliente);
+    getFuncionario(pedidoModel!.idFuncionario);
+    getCliente(pedidoModel!.idCliente);
 
-//     print(clienteController.text);
+    print(clienteController.text);
 
-//     dataController.text = UtilData.obterDataDDMMAAAA(
-//         DateTime.parse(pedidoModel!.data.toString().substring(0, 10)));
-//     valorController.text = formatter.format(pedidoModel!.total);
+    dataController.text = UtilData.obterDataDDMMAAAA(
+        DateTime.parse(pedidoModel!.data.toString().substring(0, 10)));
+    valorController.text = formatter.format(pedidoModel!.total);
 
-//     return Container(
-//       child: MolduraComponent(
-//           label: 'DETALHE',
-//           content: Column(
-//             children: [
-//               InputComponent(
-//                 label: 'Funcionário:',
-//                 controller: funcionarioController,
-//               ),
-//               InputComponent(
-//                 label: 'Cliente:',
-//                 controller: clienteController,
-//               ),
-//               InputComponent(
-//                 label: 'Data do pedido:',
-//                 controller: dataController,
-//               ),
-//               InputComponent(
-//                 label: 'Valor do pedido:',
-//                 controller: valorController,
-//               ),
-//             ],
-//           )),
-//     );
-//   }
-// }
+    return Container(
+      child: MolduraComponent(
+          label: 'DETALHE',
+          content: Column(
+            children: [
+              InputComponent(
+                label: 'Funcionário:',
+                controller: funcionarioController,
+              ),
+              InputComponent(
+                label: 'Cliente:',
+                controller: clienteController,
+              ),
+              InputComponent(
+                label: 'Data do pedido:',
+                controller: dataController,
+              ),
+              InputComponent(
+                label: 'Valor do pedido:',
+                controller: valorController,
+              ),
+            ],
+          )),
+    );
+  }
+}
 
-// class ItemPedido extends StatefulWidget {
-//   PedidoModel? pedidoModel;
+class ItemPedido extends StatefulWidget {
+  PedidoModel? pedidoModel;
 
-//   ItemPedido({Key? key, this.pedidoModel}) : super(key: key);
+  ItemPedido({Key? key, this.pedidoModel}) : super(key: key);
 
-//   @override
-//   _ItemPedidoState createState() => _ItemPedidoState(pedidoModel);
-// }
+  @override
+  _ItemPedidoState createState() => _ItemPedidoState(pedidoModel);
+}
 
-// class _ItemPedidoState extends State<ItemPedido> {
-//   var listaItemPedido = new List.empty(growable: true);
-//   PedidoModel? pedidoModel;
-//   ProdutoModel? produtoModel;
-//   CategoriaModel? categoriaModel;
+class _ItemPedidoState extends State<ItemPedido> {
+  var listaItemPedido = new List.empty(growable: true);
+  PedidoModel? pedidoModel;
+  ProdutoModel? produtoModel;
+  CategoriaModel? categoriaModel;
 
-//   _ItemPedidoState(PedidoModel? pedidoModel) {
-//     this.pedidoModel = pedidoModel;
-//   }
+  _ItemPedidoState(PedidoModel? pedidoModel) {
+    this.pedidoModel = pedidoModel;
+  }
 
-//   getItemPedidos() async {
-//     ItemPedidoController itemPedidoController = new ItemPedidoController();
-//     listaItemPedido = await itemPedidoController.obtenhaTodos();
+  getItemPedidos() async {
+    ItemPedidoController itemPedidoController = new ItemPedidoController();
+    listaItemPedido = (await itemPedidoController.obtenhaTodos())!;
 
-//     listaItemPedido = listaItemPedido.map((element) {
-//       if (element.idPedido == pedidoModel?.id) {
-//         return element;
-//       }
-//     }).toList();
+    listaItemPedido = listaItemPedido.map((element) {
+      if (element.idPedido == pedidoModel?.id) {
+        return element;
+      }
+    }).toList();
 
-//     listaItemPedido.removeWhere((element) => element == null);
+    listaItemPedido.removeWhere((element) => element == null);
 
-//     produtoModel = (await new ProdutoController()
-//         .obtenhaPorId(listaItemPedido.first.idProduto));
+    produtoModel = (await new ProdutoController()
+        .obtenhaPorId(listaItemPedido.first.idProduto));
 
-//     categoriaModel = (await new CategoriaController()
-//         .obtenhaPorId(produtoModel?.idCategoria));
+    categoriaModel = (await new CategoriaController()
+        .obtenhaPorId(produtoModel?.idCategoria));
 
-//     setState(() {});
-//   }
+    setState(() {});
+  }
 
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
 
-//     getItemPedidos();
-//     //getSelecionaItemPedido(widget.pedidoModel!.id);
-//   }
+    getItemPedidos();
+    //getSelecionaItemPedido(widget.pedidoModel!.id);
+  }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     //1
-//     listaItemPedido = listaItemPedido.where((element) {
-//       return element.idPedido == widget.pedidoModel!.id;
-//     }).toList();
-//     //2
-//     final listaItemPedidoCard = listaItemPedido.map((element) {
-//       return ItemPedidoCard(
-//           itemPedidoModel: element,
-//           produtoModel: this.produtoModel,
-//           categoriaModel: this.categoriaModel);
-//     }).toList();
+  @override
+  Widget build(BuildContext context) {
+    //1
+    listaItemPedido = listaItemPedido.where((element) {
+      return element.idPedido == widget.pedidoModel!.id;
+    }).toList();
+    //2
+    final listaItemPedidoCard = listaItemPedido.map((element) {
+      return ItemPedidoCard(
+          itemPedidoModel: element,
+          produtoModel: this.produtoModel,
+          categoriaModel: this.categoriaModel);
+    }).toList();
 
-//     return Container(
-//       child: MolduraComponent(
-//         label: 'ITENS PEDIDO',
-//         content: Column(
-//           children: [...listaItemPedidoCard],
-//         ),
-//       ),
-//     );
-//   }
-// }
+    return Container(
+      child: MolduraComponent(
+        label: 'ITENS PEDIDO',
+        content: Column(
+          children: [...listaItemPedidoCard],
+        ),
+      ),
+    );
+  }
+}
 
-// class ItemPedidoCard extends StatelessWidget {
-//   NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
-//   ItemPedidoModel? itemPedidoModel;
+class ItemPedidoCard extends StatelessWidget {
+  NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
+  ItemPedidoModel? itemPedidoModel;
 
-//   ProdutoModel? produtoModel;
-//   CategoriaModel? categoriaModel;
+  ProdutoModel? produtoModel;
+  CategoriaModel? categoriaModel;
 
-//   ItemPedidoCard(
-//       {Key? key, this.itemPedidoModel, this.produtoModel, this.categoriaModel})
-//       : super(key: key);
+  ItemPedidoCard(
+      {Key? key, this.itemPedidoModel, this.produtoModel, this.categoriaModel})
+      : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//         //height: MediaQuery.of(context).size.height * .1,
-//         margin: EdgeInsets.only(bottom: 5.0),
-//         child: Row(
-//           children: [
-//             Expanded(
-//                 flex: 2,
-//                 child: Container(
-//                   padding: paddingPadrao,
-//                   color: colorCinza,
-//                   child: Column(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Row(
-//                         children: [
-//                           TextComponent(
-//                             label: 'Nome: ',
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                           TextComponent(
-//                             label: produtoModel?.nome,
-//                           ),
-//                         ],
-//                       ),
-//                       Row(
-//                         children: [
-//                           TextComponent(
-//                             label: 'Categoria: ',
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                           TextComponent(
-//                             label: categoriaModel?.nome,
-//                           ),
-//                         ],
-//                       ),
-//                       Row(
-//                         children: [
-//                           TextComponent(
-//                             label: 'Valor Compra: ',
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                           TextComponent(
-//                             label:
-//                                 formatter.format(itemPedidoModel!.valorTotal),
-//                           ),
-//                         ],
-//                       )
-//                     ],
-//                   ),
-//                 )),
-//             Expanded(
-//                 child: Container(
-//               padding: paddingPadrao,
-//               color: colorBranco,
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 children: [
-//                   TextComponent(
-//                     fontWeight: FontWeight.bold,
-//                     label: itemPedidoModel!.quantidade.toString(),
-//                   ),
-//                 ],
-//               ),
-//             )),
-//           ],
-//         ));
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        //height: MediaQuery.of(context).size.height * .1,
+        margin: EdgeInsets.only(bottom: 5.0),
+        child: Row(
+          children: [
+            Expanded(
+                flex: 2,
+                child: Container(
+                  padding: paddingPadrao,
+                  color: colorCinza,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          TextComponent(
+                            label: 'Nome: ',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          Expanded(child: Text(produtoModel?.nome)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextComponent(
+                            label: 'Categoria: ',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          Expanded(child: Text(categoriaModel?.nome)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextComponent(
+                            label: 'Valor Compra: ',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          Expanded(
+                              child: Text(formatter
+                                  .format(itemPedidoModel!.valorTotal))),
+                        ],
+                      )
+                    ],
+                  ),
+                )),
+            Expanded(
+                child: Container(
+              padding: paddingPadrao,
+              color: colorBranco,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextComponent(
+                    fontWeight: FontWeight.bold,
+                    label: itemPedidoModel!.quantidade.toString(),
+                  ),
+                ],
+              ),
+            )),
+          ],
+        ));
+  }
+}

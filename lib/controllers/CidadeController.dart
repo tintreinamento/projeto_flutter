@@ -27,7 +27,7 @@ if(resposta!.body == null){
       return null;
     }
     var stringJson = json.decode(resposta.body);
-    return new CidadeModel.fromJson(stringJson.single);
+    return new CidadeModel.fromJson(stringJson);
   }
 
   Future<CidadeModel> crie(CidadeModel cidade) async {
