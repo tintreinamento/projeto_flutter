@@ -2,7 +2,7 @@
     package="com.example.projeto_flutter">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="projeto_flutter"
+        android:label="Pedido Venda"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
