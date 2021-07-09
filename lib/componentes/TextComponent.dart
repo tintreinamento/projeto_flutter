@@ -26,15 +26,23 @@ class TextComponent extends StatefulWidget {
 class _TextComponentState extends State<TextComponent> {
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+
+    if (widget.fontSize == null) {
+      widget.fontSize = 12;
+    }
+
     return Text(
-      widget.label,
-      style: TextStyle(
-          height: widget.height,
-          fontFamily: fontFamilia,
-          fontWeight: widget.fontWeight,
-          fontSize: widget.tamanho,
-          fontStyle: fontEstilo,
-          color: widget.cor),
-    );
+        widget.label,
+        overflow: TextOverflow.fade,
+        maxLines: 3,
+        style: TextStyle(
+            height: widget.height,
+            fontFamily: fontFamilia,
+            fontWeight: widget.fontWeight,
+            fontSize: widget.fontSize! * mediaQuery.textScaleFactor,
+            fontStyle: fontEstilo,
+            color: widget.cor),
+      );
   }
 }

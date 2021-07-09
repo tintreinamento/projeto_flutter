@@ -15,19 +15,20 @@ class MolduraComponent extends StatelessWidget {
         overflow: Overflow.visible,
         children: [
           Container(
-            margin: EdgeInsets.symmetric(vertical: 20),
-            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            
+            padding: EdgeInsets.fromLTRB(30.0, 20.0, 10.0, 20.0),
             decoration: boxDecorationComponent,
             child: content,
           ),
           Positioned(
-              top: 15,
+              top: -7,
               left: 30,
               child: Container(
                 color: colorBranco,
                 child: TextComponent(
                   label: label!.toUpperCase(),
                   fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
               )),
         ],

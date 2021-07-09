@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
+import 'package:projeto_flutter/models/AutenticacaoModel.dart';
 import 'package:projeto_flutter/services/Auth.dart';
 //import 'package:projeto_flutter/views/pedido/pedido.dart';
 //import '../views/pedido/pedido.dart';
 
+import 'package:provider/provider.dart';
 class DrawerComponent extends StatelessWidget {
   Widget headerMenu(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    
+    
     return Container(
         width: 368,
         height: 73,
@@ -32,7 +37,7 @@ class DrawerComponent extends StatelessWidget {
                       left: -20,
                       child: FlatButton(
                           onPressed: () {
-                            Auth.logout();
+                            //Auth.logout();
                             Navigator.of(context).pushNamed('/login');
                           },
                           child: Container(
@@ -60,8 +65,8 @@ class DrawerComponent extends StatelessWidget {
                       left: 38,
                       child: GestureDetector(
                           onTap: () {
-                            Auth.logout();
-                            Navigator.of(context).pushNamed('/login');
+                            //Auth.logout();
+                            Navigator.pushNamed(context, '/login');
                           },
                           child: TextComponent(
                             label: 'Sair',
@@ -111,34 +116,106 @@ class DrawerComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 368,
-      child: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            // Figma Flutter Generator Group62Widget - GROUP
-            headerMenu(context),
-            // itemMenu('Fornecedor', context),
-            // itemMenu('Produto', context),
-            //  itemMenu('Precificação', context),
-            // itemMenu('Estoque', context),
-            // itemMenu('Pedido de compras', context),
-            itemMenu('Fornecedor', context, '/cadastrar_fornecedor'),
-            itemMenu('Produto', context, '/cadastrar_produto'),
-            itemMenu('Precificação', context, '/cadastrar_precificacao'),
-            itemMenu('Estoque', context, '/estoque'),
-            itemMenu('Pedido de Compras', context, '/pedido_compra_cadastrar'),
-            itemMenu('Cliente', context, '/cadastrar_cliente'),
-            itemMenu('Pedido de venda', context, '/pedido_venda_cadastrar'),
-            //itemMenu('Pedido de compra', context, '/pedido_compra'),
+    var mediaQuery = MediaQuery.of(context);
+
+      return Container(
+        width:  mediaQuery.size.width * 0.8,
+        height: mediaQuery.size.height,
+        color: colorBranco,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 50),
+              color: colorAzul,
+              height: mediaQuery.size.height * 0.2,
+
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+                 IconButton(
+        icon: Icon(Icons.logout),
+        color: colorBranco,
+        onPressed: () => Navigator.pushNamed(context, '/login')),               
+               TextComponent(label: Provider.of<AutenticacaoModel>(context).usuario.toString(),
+                       cor: colorBranco,),
+            ],
+              ),
+            ),
+            Container(
+              width: mediaQuery.size.width * 0.8,
+              height: mediaQuery.size.height * 0.8,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/pedido_venda_cadastrar'),
+                      child: Container(
+                        padding: paddingPadrao,
+                        height: mediaQuery.size.height * 0.1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                        
+                          TextComponent(label: 'Pedido venda',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,),
+                           Icon(Icons.arrow_forward_ios),
+                        ],),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/cadastrar_cliente'),
+                      child: Container(
+                        padding: paddingPadrao,
+                        height: mediaQuery.size.height * 0.1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                        
+                          TextComponent(label: 'Cliente',
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,),
+                           Icon(Icons.arrow_forward_ios),
+                        ],),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            )
           ],
         ),
-      ),
-    );
+      );
+    
+    
+    // return Container(
+    //   width: mediaQuery.size.width * 0.7,
+    //   child: Drawer(
+    //     Add a ListView to the drawer. This ensures the user can scroll
+    //     through the options in the drawer if there isn't enough vertical
+    //     space to fit everything.
+    //     child: ListView(
+    //       Important: Remove any padding from the ListView.
+    //       padding: EdgeInsets.zero,
+    //       children: <Widget>[
+    //         Figma Flutter Generator Group62Widget - GROUP
+    //         headerMenu(context),
+    //         itemMenu('Fornecedor', context),
+    //         itemMenu('Produto', context),
+    //          itemMenu('Precificação', context),
+    //         itemMenu('Estoque', context),
+    //         itemMenu('Pedido de compras', context),
+    //         itemMenu('Fornecedor', context, '/cadastrar_fornecedor'),
+    //         itemMenu('Produto', context, '/cadastrar_produto'),
+    //         itemMenu('Precificação', context, '/cadastrar_precificacao'),
+    //         itemMenu('Estoque', context, '/estoque'),
+    //         itemMenu('Pedido de Compras', context, '/pedido_compra_cadastrar'),
+    //         itemMenu('Cliente', context, '/cadastrar_cliente'),
+    //         itemMenu('Pedido de venda', context, '/pedido_venda_cadastrar'),
+    //         itemMenu('Pedido de compra', context, '/pedido_compra'),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }

@@ -31,20 +31,22 @@ class InputComponent extends StatefulWidget {
 class _InputComponentState extends State<InputComponent> {
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
     return Container(
-      margin: EdgeInsets.only(bottom: 5.0),
+      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            flex: 2,
+          SizedBox(
+            width: mediaQuery.size.width * 0.15,
             child: TextComponent(
               label: widget.label,
+              fontSize: 14,
               fontWeight: FontWeight.bold,
             ),
           ),
           Expanded(
-            flex: 5,
             child: TextFormFieldComponent(
               obscureText: widget.obscureText,
               inputFormatter: widget.inputFormatter,

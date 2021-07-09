@@ -35,7 +35,7 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
               fontWeight: FontWeight.bold,
               label: widget.titulo,
               cor: colorBranco,
-              tamanho: 17.0),
+              fontSize: 14,),
           Flexible(
               child: Padding(
             padding: EdgeInsets.only(left: 20),

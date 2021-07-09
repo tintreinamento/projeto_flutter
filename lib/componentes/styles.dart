@@ -34,3 +34,4 @@ final inputDecorationComponent = InputDecoration(
 final boxDecorationComponent = BoxDecoration(
     border: Border.all(color: colorCinza, width: 1),
     borderRadius: BorderRadius.circular(25));
+
