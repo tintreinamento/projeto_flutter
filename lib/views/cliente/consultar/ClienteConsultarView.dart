@@ -29,7 +29,7 @@ class _ClienteConsultaViewState extends State<ClienteConsultaView> {
     if (_formConsultarCliente.currentState!.validate()) {
       setState(() {
         clientes = clienteController.obtenhaTodos();
-        
+
         buscarClienteNome = clienteBuscarController.text;
       });
       _formConsultarCliente.currentState!.reset();
@@ -49,13 +49,12 @@ class _ClienteConsultaViewState extends State<ClienteConsultaView> {
     print(buscarClienteNome);
 
     return Scaffold(
-      appBar:    AppBarComponent(),
-      drawer: DrawerComponent(),
+        appBar: AppBarComponent(),
+        drawer: DrawerComponent(),
         body: Container(
             width: mediaQuery.size.width,
             height: mediaQuery.size.height,
             child: Column(children: [
-           
               SubMenuComponent(
                 titulo: 'Cliente',
                 tituloPrimeiraRota: 'Cadastro',
@@ -103,60 +102,60 @@ class _ClienteConsultaViewState extends State<ClienteConsultaView> {
                           future: clientes,
                           builder: (BuildContext context,
                               AsyncSnapshot<List<ClienteModel?>?>? snapshot) {
-                            if(snapshot != null){
+                            if (snapshot != null) {
                               if (snapshot.hasData) {
-                              final clientesOrdenado =
-                                  snapshot.data!.where((cliente) {
-                                final regexp =
-                                    new RegExp(buscarClienteNome.toLowerCase());
+                                final clientesOrdenado =
+                                    snapshot.data!.where((cliente) {
+                                  final regexp = new RegExp(
+                                      buscarClienteNome.toLowerCase());
 
-                                return regexp.hasMatch(
-                                    cliente!.nome.toString().toLowerCase());
-                              }).toList();
+                                  return regexp.hasMatch(
+                                      cliente!.nome.toString().toLowerCase());
+                                }).toList();
 
-                              print(clientesOrdenado);
+                                print(clientesOrdenado);
 
-                              clientesOrdenado.forEach((element) {
-                                print(element!.nome);
-                              });
+                                clientesOrdenado.forEach((element) {
+                                  print(element!.nome);
+                                });
 
-                              //Verifica se nenhum resultado foi encontrado
-                              if (clientesOrdenado == null) {
-                                return TextComponent(
+                                //Verifica se nenhum resultado foi encontrado
+                                if (clientesOrdenado.length == 0) {
+                                  return TextComponent(
+                                    label: 'Nenhum cliente foi encontrado !',
+                                  );
+                                }
+
+                                final clientesWidget =
+                                    clientesOrdenado.map((cliente) {
+                                  return cardCliente(context, cliente!);
+                                }).toList();
+
+                                return Container(
+                                  height: mediaQuery.size.height * 0.7,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [...clientesWidget],
+                                    ),
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                TextComponent(
                                   label: 'Nenhum cliente foi encontrado !',
                                 );
+                              } else {
+                                return Column(
+                                  children: [
+                                    CircularProgressIndicator(),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    TextComponent(
+                                      label: 'Buscando clientes...',
+                                    )
+                                  ],
+                                );
                               }
-
-                              final clientesWidget =
-                                  clientesOrdenado!.map((cliente) {
-                                return cardCliente(context, cliente!);
-                              }).toList();
-
-                              return Container(
-                                height: mediaQuery.size.height * 0.7,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [...clientesWidget],
-                                  ),
-                                ),
-                              );
-                            } else if (snapshot.hasError) {
-                              TextComponent(
-                                label: 'Nenhum cliente foi encontrado !',
-                              );
-                            } else {
-                              return Column(
-                                children: [
-                                  CircularProgressIndicator(),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  TextComponent(
-                                    label: 'Buscando clientes...',
-                                  )
-                                ],
-                              );
-                            }
                             }
                             return Container();
                           })
@@ -191,10 +190,9 @@ Widget cardCliente(BuildContext context, ClienteModel cliente) {
         height: mediaQuery.size.height * 0.25,
         margin: marginPadrao,
         padding: paddingPadrao,
-  
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-                color: colorCinza,
+          color: colorCinza,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,19 +243,18 @@ Widget cardCliente(BuildContext context, ClienteModel cliente) {
                     label: 'E-mail: ',
                     fontWeight: FontWeight.bold,
                   ),
-                   Flexible(
-                        child: new Container(
-                          child: new Text(
-                            cliente.email.toString(),
-                            maxLines: 4,
-                            style: new TextStyle(
-                              fontFamily: 'Roboto',
-                              color: new Color(0xFF212121),
-                            ),
-                          ),
+                  Flexible(
+                    child: new Container(
+                      child: new Text(
+                        cliente.email.toString(),
+                        maxLines: 4,
+                        style: new TextStyle(
+                          fontFamily: 'Roboto',
+                          color: new Color(0xFF212121),
                         ),
                       ),
-                
+                    ),
+                  ),
                 ],
               ),
             ),
