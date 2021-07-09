@@ -4,9 +4,11 @@ import 'package:projeto_flutter/models/ItemPedidoFornecedorModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
 class ItemPedidoFornecedorController {
-  Future<List<ItemPedidoFornecedorModel>> obtenhaTodos() async {
+  Future<List<ItemPedidoFornecedorModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('item-pedido-fornecedor');
-
+  if(resposta!.body == null){
+      return null;
+    }
     List<ItemPedidoFornecedorModel> colecaoDeItemPedido =
         new List.empty(growable: true);
 
@@ -20,10 +22,12 @@ class ItemPedidoFornecedorController {
     return colecaoDeItemPedido;
   }
 
-  Future<ItemPedidoFornecedorModel> obtenhaPorId(int id) async {
+  Future<ItemPedidoFornecedorModel?> obtenhaPorId(int id) async {
     final resposta =
         await new Api().obtenha('item-pedido-fornecedor/' + id.toString());
-
+if(resposta!.body == null){
+      return null;
+    }
     var stringJson = json.decode(resposta.body);
 
     return new ItemPedidoFornecedorModel.fromJson(stringJson.single);

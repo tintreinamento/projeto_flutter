@@ -3,7 +3,23 @@ import 'package:projeto_flutter/models/FuncionarioModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
 class FuncionarioController {
-  Future<List<FuncionarioModel>> obtenhaTodos() async {
+
+  Future<FuncionarioModel?> autenticacao(String usuario, String senha)async{
+    final resposta = await new Api().obtenha('funcionario/usuario/'+usuario+'/senha/'+senha);
+
+    print(resposta.body);
+    if(resposta.statusCode == 404){
+      return null;
+    }
+
+    var stringJson = json.decode(resposta.body);
+
+    return new FuncionarioModel.fromJson(stringJson);
+    
+  }
+
+
+  Future<List<FuncionarioModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('funcionario');
 
     List<FuncionarioModel> colecaoDeFuncionarios =
@@ -19,7 +35,7 @@ class FuncionarioController {
     return colecaoDeFuncionarios;
   }
 
-  Future<FuncionarioModel> obtenhaPorId(int id) async {
+  Future<FuncionarioModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('funcionario/' + id.toString());
 
     var stringJson = json.decode(resposta.body);

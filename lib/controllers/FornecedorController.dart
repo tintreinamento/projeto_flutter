@@ -3,9 +3,11 @@ import 'package:projeto_flutter/models/FornecedorModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
 class FornecedorController {
-  Future<List<FornecedorModel>> obtenhaTodos() async {
+  Future<List<FornecedorModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('fornecedor');
-
+    if (resposta!.body == null) {
+      return null;
+    }
     List<FornecedorModel> colecaoDeFornecedores =
         new List.empty(growable: true);
     List<dynamic> stringJson = json.decode(resposta.body);
@@ -17,25 +19,31 @@ class FornecedorController {
     return colecaoDeFornecedores;
   }
 
-  Future<FornecedorModel> obtenhaPorId(int id) async {
+  Future<FornecedorModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('fornecedor/' + id.toString());
-
+    if (resposta!.body == null) {
+      return null;
+    }
     var stringJson = json.decode(resposta.body);
 
     return new FornecedorModel.fromJson(stringJson);
   }
 
-  Future<FornecedorModel> obtenhaPorNome(String nome) async {
+  Future<FornecedorModel?> obtenhaPorNome(String nome) async {
     final resposta = await new Api().obtenha('fornecedor/nome/' + nome);
-
+    if (resposta!.body == null) {
+      return null;
+    }
     var stringJson = json.decode(resposta.body);
 
     return new FornecedorModel.fromJson(stringJson);
   }
 
-  Future<FornecedorModel> obtenhaPorCpfCnpj(String cpfCnpj) async {
+  Future<FornecedorModel?> obtenhaPorCpfCnpj(String cpfCnpj) async {
     final resposta = await new Api().obtenha('fornecedor/cpfCnpj/' + cpfCnpj);
-
+    if (resposta!.body == null) {
+      return null;
+    }
     var stringJson = json.decode(resposta.body);
 
     return new FornecedorModel.fromJson(stringJson);

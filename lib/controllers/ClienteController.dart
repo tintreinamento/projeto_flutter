@@ -3,8 +3,12 @@ import 'package:projeto_flutter/models/ClienteModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
 class ClienteController {
-  Future<List<ClienteModel>> obtenhaTodos() async {
+  Future<List<ClienteModel?>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('cliente');
+   
+    if(resposta.statusCode == 404){
+      return null;
+    }
 
     List<ClienteModel> colecaoDeClientes = new List.empty(growable: true);
 
@@ -18,17 +22,22 @@ class ClienteController {
     return colecaoDeClientes;
   }
 
-  Future<ClienteModel> obtenhaPorCpf(String cpf) async {
+  Future<ClienteModel?> obtenhaPorCpf(String cpf) async {
     final resposta = await new Api().obtenha('cliente/cpf/' + cpf);
-
+  
+    if(resposta.statusCode == 404){
+      return null;
+    }
     var stringJson = json.decode(resposta.body);
 
     return new ClienteModel.fromJson(stringJson);
   }
 
-  Future<ClienteModel> obtenhaPorId(int id) async {
+  Future<ClienteModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('cliente/' + id.toString());
-
+    if(resposta!.body == null){
+      return null;
+    }
     var stringJson = json.decode(resposta.body);
 
     return new ClienteModel.fromJson(stringJson);
