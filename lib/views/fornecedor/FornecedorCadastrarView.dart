@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flux_validator_dart/flux_validator_dart.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
@@ -236,7 +237,7 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             controller: telefoneController,
             validator: (value) {
               if (isVazio(value)) {
-                return 'Campo telefone vazio !';
+                return 'Campo celular vazio !';
               } else if (value!.length < 15) {
                 return 'Número de telefone inválido!';
               }
@@ -261,8 +262,16 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
               label: 'CEP: ',
               controller: cepController,
               validator: (value) {
-                if (isVazio(value)) {
-                  return 'Campo CEP vazio !';
+                if (value == null || value == "") {
+                  return 'Campo obrigátorio!';
+                }
+                if (UtilBrasilFields.removeCaracteres(value).length != 8) {
+                  return 'CEP inválido';
+                }
+                if (Validator.cep(UtilBrasilFields.obterCep(
+                    UtilBrasilFields.removeCaracteres(value),
+                    ponto: false))) {
+                  return 'CEP inválido';
                 }
                 return null;
               },
@@ -284,15 +293,16 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
               height: 10,
             ),
             InputComponent(
+              label: 'Número: ',
+              controller: numeroController,
               inputFormatter: [
                 FilteringTextInputFormatter.digitsOnly,
               ],
-              label: 'Número: ',
-              controller: numeroController,
               validator: (value) {
                 if (isVazio(value)) {
                   return 'Campo número vazio !';
                 }
+
                 return null;
               },
             ),
@@ -318,6 +328,9 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
               // ],
               label: 'Cidade: ',
               controller: cidadeController,
+              inputFormatter: [
+                FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]+|\s")),
+              ],
               validator: (value) {
                 if (isVazio(value)) {
                   return 'Campo cidade vazio !';
@@ -331,6 +344,9 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
             InputComponent(
               label: 'Estado: ',
               controller: estadoController,
+              inputFormatter: [
+                FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]+|\s")),
+              ],
               validator: (value) {
                 if (isVazio(value)) {
                   return 'Campo estado vazio !';
