@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/carrinhocompra.dart';
 import 'package:projeto_flutter/views/cliente/cadastrar/ClienteCadastrarView.dart';
@@ -24,6 +25,9 @@ void main() {
       ChangeNotifierProvider(create: (context) => CarrinhoCompraModel())
     ],
     child: MyApp(),
+  ));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
   ));
 }
 
