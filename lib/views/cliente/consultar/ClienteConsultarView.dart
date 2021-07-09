@@ -1,304 +1,320 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
-import 'package:projeto_flutter/componentes/InputComponent.dart';
-import 'package:flutter/material.dart';
-
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
-
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
-import 'package:projeto_flutter/models/ClienteModel.dart';
+import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
+import 'package:projeto_flutter/models/ClienteModel.dart';
 
-class ClienteConsultarView extends StatefulWidget {
-  const ClienteConsultarView({Key? key}) : super(key: key);
+class ClienteConsultaView extends StatefulWidget {
+  const ClienteConsultaView({Key? key}) : super(key: key);
 
   @override
-  _ClienteConsultarViewState createState() => _ClienteConsultarViewState();
+  _ClienteConsultaViewState createState() => _ClienteConsultaViewState();
 }
 
-class _ClienteConsultarViewState extends State<ClienteConsultarView> {
-  final _formKeyConsultaCliente = GlobalKey<FormState>();
-  final nomeController = TextEditingController();
-
-  ClienteController clienteController = new ClienteController();
-  Future<List<ClienteModel>>? listaClientes;
-
-  bool isVazio(value) {
-    if (value == null || value.isEmpty) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+class _ClienteConsultaViewState extends State<ClienteConsultaView> {
+  final _formConsultarCliente = GlobalKey<FormState>();
+  ClienteController clienteController = ClienteController();
+  Future<List<ClienteModel?>?>? clientes;
+  String buscarClienteNome = "";
+  final clienteBuscarController = TextEditingController();
 
   consultarCliente() {
-    if (_formKeyConsultaCliente.currentState!.validate()) {
-      //consulta
-      setState(() {});
+    if (_formConsultarCliente.currentState!.validate()) {
+      setState(() {
+        clientes = clienteController.obtenhaTodos();
+        
+        buscarClienteNome = clienteBuscarController.text;
+      });
+      _formConsultarCliente.currentState!.reset();
     }
-  }
-
-  carregarCliente() {
-    listaClientes = clienteController.obtenhaTodos();
   }
 
   @override
   void initState() {
-    super.initState();
-    carregarCliente();
+    // TODO: implement initState
+    clientes = clienteController.obtenhaTodos();
   }
 
   @override
   Widget build(BuildContext context) {
-    final formConsulta = Form(
-      key: _formKeyConsultaCliente,
-      child: Column(
-        children: [
-          InputComponent(
-            label: 'Nome:',
-            controller: nomeController,
-            validator: (value) {
-              if (isVazio(value)) {
-                return 'Campo nome vazio !';
-              }
-              return null;
-            },
-          ),
-          ButtonComponent(
-            label: 'Consultar',
-            onPressed: consultarCliente,
-          ),
-        ],
-      ),
-    );
+    var mediaQuery = MediaQuery.of(context);
 
-    //Map
-    var lista = FutureBuilder(
-        future: listaClientes,
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ClienteModel>> snapshot) {
-          if (snapshot.hasData) {
-            //Ordena consulta
-            final listaOrdenada = snapshot.data!.where((cliente) {
-              return cliente.nome!
-                  .toLowerCase()
-                  .startsWith(nomeController.text.toLowerCase());
-            });
-
-            final listaClientes = listaOrdenada.map((cliente) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    cardCliente(cliente),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
-              );
-            }).toList();
-
-            return Column(
-              children: [
-                ...listaClientes,
-              ],
-            );
-          } else if (snapshot.hasError) {
-            // If something went wrong
-            return Text('Falha ao obter os dados da API ');
-          }
-          return CircularProgressIndicator();
-        });
-
-    final layoutVertical = Container(
-      child: Column(
-        children: [
-          SubMenuComponent(
-            titulo: 'Cliente',
-            tituloPrimeiraRota: 'Cadastro',
-            primeiraRota: '/cadastrar_cliente',
-            tituloSegundaRota: 'Consultar',
-            segundaRota: '/consultar_cliente',
-          ),
-          Expanded(
-              child: SingleChildScrollView(
-            child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height,
-              margin: EdgeInsets.only(left: 20, top: 20, right: 20),
-              child: Column(
-                children: [
-                  MolduraComponent(
-                    label: 'Cliente',
-                    content: formConsulta,
-                  ),
-                  MolduraComponent(
-                    label: 'Clientes',
-                    content: lista,
-                  ),
-                ],
-              ),
-            ),
-          ))
-        ],
-      ),
-    );
-
-    final layoutHorizontal = Container(
-      child: Column(
-        children: [
-          SubMenuComponent(
-            titulo: 'Cliente',
-            tituloPrimeiraRota: 'Cadastro',
-            primeiraRota: '/cadastrar_cliente',
-            tituloSegundaRota: 'Consultar',
-            segundaRota: '/consultar_cliente',
-          ),
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.all(10),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: MolduraComponent(
-                      label: 'Cliente',
-                      content: formConsulta,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      child: SingleChildScrollView(
-                    child: MolduraComponent(
-                      label: 'Clientes',
-                      content: lista,
-                    ),
-                  ))
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+    print(buscarClienteNome);
 
     return Scaffold(
-        appBar: AppBarComponent(),
-        drawer: DrawerComponent(),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxHeight > 600) {
-              return layoutVertical;
-            } else {
-              return layoutHorizontal;
-            }
-          },
-        ));
+      appBar:    AppBarComponent(),
+      drawer: DrawerComponent(),
+        body: Container(
+            width: mediaQuery.size.width,
+            height: mediaQuery.size.height,
+            child: Column(children: [
+           
+              SubMenuComponent(
+                titulo: 'Cliente',
+                tituloPrimeiraRota: 'Cadastro',
+                primeiraRota: '/cadastrar_cliente',
+                tituloSegundaRota: 'Consultar',
+                segundaRota: '/consultar_cliente',
+              ),
+              Expanded(
+                  child: Container(
+                padding: paddingPadrao,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      MolduraComponent(
+                        label: 'Cliente',
+                        content: Form(
+                          key: _formConsultarCliente,
+                          child: Column(
+                            children: [
+                              InputComponent(
+                                label: 'Nome: ',
+                                controller: clienteBuscarController,
+                                validator: (value) {
+                                  if (value == null || value == "") {
+                                    return 'Campo obrigátorio!';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              ButtonComponent(
+                                label: 'Consultar',
+                                onPressed: consultarCliente,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      FutureBuilder(
+                          future: clientes,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<ClienteModel?>?>? snapshot) {
+                            if(snapshot != null){
+                              if (snapshot.hasData) {
+                              final clientesOrdenado =
+                                  snapshot.data!.where((cliente) {
+                                final regexp =
+                                    new RegExp(buscarClienteNome.toLowerCase());
+
+                                return regexp.hasMatch(
+                                    cliente!.nome.toString().toLowerCase());
+                              }).toList();
+
+                              print(clientesOrdenado);
+
+                              clientesOrdenado.forEach((element) {
+                                print(element!.nome);
+                              });
+
+                              //Verifica se nenhum resultado foi encontrado
+                              if (clientesOrdenado == null) {
+                                return TextComponent(
+                                  label: 'Nenhum cliente foi encontrado !',
+                                );
+                              }
+
+                              final clientesWidget =
+                                  clientesOrdenado!.map((cliente) {
+                                return cardCliente(context, cliente!);
+                              }).toList();
+
+                              return Container(
+                                height: mediaQuery.size.height * 0.7,
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    children: [...clientesWidget],
+                                  ),
+                                ),
+                              );
+                            } else if (snapshot.hasError) {
+                              TextComponent(
+                                label: 'Nenhum cliente foi encontrado !',
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  CircularProgressIndicator(),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  TextComponent(
+                                    label: 'Buscando clientes...',
+                                  )
+                                ],
+                              );
+                            }
+                            }
+                            return Container();
+                          })
+                    ],
+                  ),
+                ),
+              ))
+            ])));
   }
 }
 
-String getCpfCnpj(String value) {
+Widget cardCliente(BuildContext context, ClienteModel cliente) {
+  var mediaQuery = MediaQuery.of(context);
   String cpfCnpj = "";
+  String telefone = cliente.ddd.toString() + cliente.numeroTelefone.toString();
 
-  if (value.length == 10 || value.length == 13) {
-    value = '0' + value;
-  } else if (value.length == 9 || value.length == 12) {
-    value = '00' + value;
+  telefone = UtilBrasilFields.obterTelefone(telefone);
+  print(cliente.cpf);
+  if (UtilBrasilFields.removeCaracteres(cliente.cpf.toString()).length == 11) {
+    cpfCnpj = UtilBrasilFields.obterCpf(
+        UtilBrasilFields.removeCaracteres(cliente.cpf.toString()));
+  }
+  if (UtilBrasilFields.removeCaracteres(cliente.cpf.toString()).length == 14) {
+    cpfCnpj = UtilBrasilFields.obterCnpj(
+        UtilBrasilFields.removeCaracteres(cliente.cpf.toString()));
   }
 
-  if (value.length == 11) {
-    cpfCnpj = UtilBrasilFields.obterCpf(value);
-  } else if (value.length == 14) {
-    cpfCnpj = UtilBrasilFields.obterCnpj(value);
-  }
-
-  return cpfCnpj;
+  return Stack(
+    children: [
+      Container(
+        width: mediaQuery.size.width,
+        height: mediaQuery.size.height * 0.25,
+        margin: marginPadrao,
+        padding: paddingPadrao,
+  
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+                color: colorCinza,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  TextComponent(
+                    label: 'Nome: ',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  TextComponent(label: cliente.nome.toString())
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  TextComponent(
+                    label: 'CPF/CNPJ: ',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  TextComponent(label: cpfCnpj)
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  TextComponent(
+                    label: 'Telefone: ',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  TextComponent(label: telefone)
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextComponent(
+                    label: 'E-mail: ',
+                    fontWeight: FontWeight.bold,
+                  ),
+                   Flexible(
+                        child: new Container(
+                          child: new Text(
+                            cliente.email.toString(),
+                            maxLines: 4,
+                            style: new TextStyle(
+                              fontFamily: 'Roboto',
+                              color: new Color(0xFF212121),
+                            ),
+                          ),
+                        ),
+                      ),
+                
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      //Button para edição
+      // Positioned(
+      //     right: 20,
+      //     bottom: 20,
+      //     child: IconButton(
+      //       color: colorAzul,
+      //         icon: Icon(Icons.edit),
+      //         onPressed: () => print('edit')))
+    ],
+  );
 }
 
-Widget cardCliente(ClienteModel clienteModel) {
-  return ConstrainedBox(
-    constraints: BoxConstraints(minWidth: 340.0),
-    child: Container(
-        padding: EdgeInsets.all(10),
-        color: Color.fromRGBO(235, 231, 231, 1),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    TextComponent(
-                      label: 'Nome: ',
-                    ),
-                    TextComponent(
-                      label: clienteModel.nome,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 3,
-                ),
-                Row(
-                  children: [
-                    TextComponent(
-                      label: 'CPF/CNPJ: ',
-                    ),
-                    TextComponent(
-                      label: getCpfCnpj(clienteModel.cpf.toString()),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 3,
-                ),
-                Row(
-                  children: [
-                    TextComponent(
-                      label: 'Telefone: ',
-                    ),
-                    TextComponent(
-                      label: UtilBrasilFields.obterTelefone(
-                          clienteModel.ddd.toString() +
-                              clienteModel.numeroTelefone.toString()),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 3,
-                ),
-                Row(
-                  children: [
-                    TextComponent(
-                      label: 'E-mail: ',
-                    ),
-                    TextComponent(
-                      label: clienteModel.email,
-                    ),
-                  ],
-                )
-              ],
-            ),
-            // Positioned(
-            //   top: 50,
-            //   right: -10,
-            //   child: FlatButton(
-            //       onPressed: () {
-            //         // Navigator.pushNamed(context, '/login');
-            //       },
-            //       child: Container(
-            //           child:
-            //               Image(image: AssetImage('assets/images/edit.png')))),
-            // ),
+_showDialog(context, info) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actions: [
+            Column(children: [
+              TextComponent(
+                label: info.toString(),
+              ),
+              Container(
+                width: 241,
+                height: 31,
+                margin: EdgeInsets.only(top: 18, bottom: 13),
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromRGBO(0, 94, 181, 1)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ))),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Confirmar pedido',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                      ),
+                    )),
+              )
+            ])
           ],
-        )),
-  );
+        );
+      });
 }
