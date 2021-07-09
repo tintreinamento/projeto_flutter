@@ -9,9 +9,7 @@ import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:projeto_flutter/controllers/FornecedorController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
-import 'package:projeto_flutter/models/FornecedorModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
-import 'package:intl/intl.dart';
 
 class ProdutoCadastrarView extends StatefulWidget {
   const ProdutoCadastrarView({Key? key}) : super(key: key);
@@ -139,6 +137,7 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
 
   consultarFornecedor() async {
     //Consultando dados do cliente através da API
+
     FornecedorController fornecedorController = new FornecedorController();
     final fornecedor = await fornecedorController.obtenhaPorCpfCnpj(
         UtilBrasilFields.removeCaracteres(cpfCnpjController.text));
@@ -161,8 +160,10 @@ class _ProdutoCadastrarViewState extends State<ProdutoCadastrarView> {
             nome: nomeProdutoController.text,
             descricao: descricaoController.text,
             idCategoria: int.parse(categoriaController.text),
-            valorCompra: int.parse(valorCompraController.text),
-            valorVenda: 0,
+            valorCompra: int.parse(
+                UtilBrasilFields.removeCaracteres(valorCompraController.text)),
+            valorVenda: int.parse(
+                UtilBrasilFields.removeCaracteres(valorCompraController.text)),
             idFornecedor: idFornecedorController);
 
         ProdutoController produtoController = ProdutoController();
