@@ -79,5 +79,6 @@ class CarrinhoModel extends ChangeNotifier {
     // funcionario = "";
     cliente = ClienteModel();
     itemPedido = [];
+    notifyListeners();
   }
 }
