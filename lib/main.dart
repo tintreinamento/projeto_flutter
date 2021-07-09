@@ -24,6 +24,7 @@ void main() {
   runApp(MultiProvider(
     providers: [
       ListenableProvider<CarrinhoModel>(create: (_) => CarrinhoModel()),
+      ListenableProvider<CarrinhoCompraModel>(create: (_) => CarrinhoCompraModel()),
       ListenableProvider<AutenticacaoModel>(create: (_) => AutenticacaoModel()),
     ],
     child: MyApp(),
