@@ -169,7 +169,7 @@ class DetalhePedido extends StatelessWidget {
     final fornecedorModel = fornecedor.obtenhaPorId(value);
 
     fornecedorModel.then((value) {
-      fornecedorController.text = value.nome;
+      fornecedorController.text = value!.nome;
     });
   }
 
@@ -178,7 +178,7 @@ class DetalhePedido extends StatelessWidget {
     final funcionarioModel = funcionario.obtenhaPorId(value);
 
     funcionarioModel.then((value) {
-      funcionarioController.text = value.nome;
+      funcionarioController.text = value!.nome;
     });
   }
 
@@ -242,7 +242,7 @@ class _ItemPedidoState extends State<ItemPedido> {
   getItemPedidos() async {
     ItemPedidoFornecedorController itemPedidoController =
         new ItemPedidoFornecedorController();
-    listaItemPedido = await itemPedidoController.obtenhaTodos();
+    listaItemPedido = (await itemPedidoController.obtenhaTodos())!;
 
     listaItemPedido = listaItemPedido.map((element) {
       if (element.idPedido == pedidoModel?.id) {

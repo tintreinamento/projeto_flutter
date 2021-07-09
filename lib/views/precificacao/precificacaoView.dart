@@ -155,6 +155,7 @@ class _PrecificacaoViewState extends State<PrecificacaoView> {
                             label: 'Cadastrar',
                             onPressed: () async {
                               await cadastrarMargem();
+                              setState(() {});
                               Navigator.of(context).pop();
                             }),
                       ],

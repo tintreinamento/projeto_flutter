@@ -1,12 +1,13 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:projeto_flutter/models/FuncionarioModel.dart';
 
 class AutenticacaoModel extends ChangeNotifier {
   String? jwt;
-  String usuario = "";
+  FuncionarioModel? funcionarioModel;
 
- setUsuario(String usuario){
-   this.usuario = usuario;
+ setFuncionario(FuncionarioModel funcionarioModel){
+   this.funcionarioModel = funcionarioModel;
    notifyListeners();
  }
 }

@@ -190,13 +190,13 @@ class _FormFornecedorState extends State<FormFornecedor> {
     var fornecedor = await fornecedorController.obtenhaPorCpfCnpj(
         UtilBrasilFields.removeCaracteres(cpfCnpjController.text));
 
-    nomeFornecedorController.text = fornecedor.nome;
+    nomeFornecedorController.text = fornecedor!.nome;
 
     var enderecoController = new EnderecoController();
     var endereco =
         await enderecoController.obtenhaPorIdFornecedor(fornecedor.id);
 
-    cepController.text = endereco.cep.toString();
+    cepController.text = endereco!.cep.toString();
     logradouroController.text = endereco.logradouro;
     numeroController.text = endereco.numero.toString();
     bairroController.text = endereco.bairro;
@@ -204,12 +204,12 @@ class _FormFornecedorState extends State<FormFornecedor> {
     var cidadeController1 = new CidadeController();
     var cidade = await cidadeController1.obtenhaPorId(endereco.idCidade);
 
-    cidadeController.text = cidade.nome;
+    cidadeController.text = cidade!.nome;
 
     var estadoController1 = new EstadoController();
     var estado = await estadoController1.obtenhaPorId(endereco.idEstado);
 
-    estadoController.text = estado.nome;
+    estadoController.text = estado!.nome;
 
     this.context.read<CarrinhoCompraModel>().fornecedor = fornecedor;
     setState(() {});

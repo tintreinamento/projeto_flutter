@@ -7,6 +7,7 @@ import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
+import 'package:projeto_flutter/componentes/ResponsiveComponenet.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
@@ -19,6 +20,7 @@ import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
+import 'package:projeto_flutter/models/EstoqueModel.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
@@ -357,7 +359,7 @@ class Produto extends StatefulWidget {
 
 class _ProdutoState extends State<Produto> {
   String? categoriaNome;
-  late Future<List<ProdutoModel>?> listaProdutos;
+  late Future<List<ProdutoModel>> listaProdutos;
 
   void carregarProdutos() {
     ProdutoController produtoController = new ProdutoController();
@@ -376,7 +378,7 @@ class _ProdutoState extends State<Produto> {
     final listaProdutosWidget = FutureBuilder(
       future: listaProdutos, // a previously-obtained Future<String> or null
       builder:
-          (BuildContext context, AsyncSnapshot<List<ProdutoModel>?> snapshot) {
+          (BuildContext context, AsyncSnapshot<List<ProdutoModel>> snapshot) {
         var listaProdutosWidget;
         List<Widget> children;
         if (snapshot.hasData) {

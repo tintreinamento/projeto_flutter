@@ -4,12 +4,9 @@ import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
-import 'package:projeto_flutter/controllers/AutenticacaoController.dart';
 import 'package:projeto_flutter/controllers/FuncionarioController.dart';
 import 'package:projeto_flutter/models/AutenticacaoModel.dart';
 import 'package:projeto_flutter/models/FuncionarioModel.dart';
-import 'package:projeto_flutter/services/Auth.dart';
-import '../homepage/homepage.dart';
 import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
@@ -27,17 +24,6 @@ class _LoginViewState extends State<LoginView> {
   TextEditingController senhaController = new TextEditingController();
 
   autenticar(BuildContext context) async {
-    /*AutenticacaoController autenticacaoController = AutenticacaoController();
-
-    AutenticacaoModel autenticacaoModel = await autenticacaoController.crie(
-        usuarioController.text, senhaController.text);
-
-    //Realiza o login
-    Auth.login(autenticacaoModel.jwt!);
-
-    if (Auth.isAuthenticated()) {
-      Navigator.of(context).pushNamed('/pedido_venda_cadastrar');
-    }*/
     if (_formKeyAutenticacao.currentState!.validate()) {
       FuncionarioController funcionarioController = new FuncionarioController();
       FuncionarioModel? funcionario = new FuncionarioModel();
@@ -57,7 +43,7 @@ class _LoginViewState extends State<LoginView> {
       } else {
         context
             .read<AutenticacaoModel>()
-            .setUsuario(funcionario.usuario.toString());
+            .setFuncionario(funcionario);
 
         //caso seja autenticado, direciona para a rota subsequente
         Navigator.of(context).pushNamed('/pedido_venda_cadastrar');

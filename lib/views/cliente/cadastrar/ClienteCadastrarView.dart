@@ -253,7 +253,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                       return null;
                                     },
                                   ),
-                                    SizedBox(
+                                  SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -417,7 +417,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                       ),
                                     ],
                                   ),
-                                    SizedBox(
+                                  SizedBox(
                                     height: 10,
                                   ),
                                   Row(
@@ -432,7 +432,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                       ),
                                       Expanded(
                                         child: SelectFormField(
-                                          decoration: InputDecoration(
+                                            decoration: InputDecoration(
                                                 contentPadding: EdgeInsets.only(
                                                     left: 10,
                                                     top: 15,
@@ -441,10 +441,15 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                                     borderSide: BorderSide(
                                                         color: Color.fromRGBO(
                                                             191, 188, 188, 1))),
-                                                focusedBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Color.fromRGBO(
-                                                            191, 188, 188, 1))),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                Color.fromRGBO(
+                                                                    191,
+                                                                    188,
+                                                                    188,
+                                                                    1))),
                                                 border: OutlineInputBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -472,7 +477,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                       ),
                                     ],
                                   ),
-                                    SizedBox(
+                                  SizedBox(
                                     height: 10,
                                   ),
                                   InputComponent(
