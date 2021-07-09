@@ -8,11 +8,9 @@ import 'package:projeto_flutter/views/precificacao/precificacaoView.dart';
 import 'FornecedorController.dart';
 
 class ProdutoController {
-  Future<List<ProdutoModel>?> obtenhaTodos() async {
+  Future<List<ProdutoModel>> obtenhaTodos() async {
     final resposta = await new Api().obtenha('produto');
-if(resposta!.body == null){
-      return null;
-    }
+
     List<ProdutoModel> colecaoDeProdutos = new List.empty(growable: true);
 
     List<dynamic> stringJson = json.decode(resposta.body);
@@ -25,56 +23,55 @@ if(resposta!.body == null){
     return colecaoDeProdutos;
   }
 
-  // Future<List<ProdutoCategoriaModel>> obtenhaTodosComCategoria() async {
-  //   var colecaoDeProdutos = await obtenhaTodos();
-  //   var categorias = await new CategoriaController().obtenhaTodos();
-        
-    
-  //   List<ProdutoCategoriaModel> colecaoProdutoComCategoria =
-  //       new List.empty(growable: true);
+  Future<List<ProdutoCategoriaModel>> obtenhaTodosComCategoria() async {
+    var colecaoDeProdutos = await obtenhaTodos();
+    var categorias = await new CategoriaController().obtenhaTodos();
 
-  //   colecaoDeProdutos.forEach((element) async {
-  //     var produtoCategoria = new ProdutoCategoriaModel();
-  //     produtoCategoria.categoriaModel = categorias
-  //         .firstWhere((categoria) => categoria.id == element.idCategoria);
-  //     produtoCategoria.produto = element;
+    List<ProdutoCategoriaModel> colecaoProdutoComCategoria =
+        new List.empty(growable: true);
 
-  //     colecaoProdutoComCategoria.add(produtoCategoria);
-  //   });
+    colecaoDeProdutos.forEach((element) async {
+      var produtoCategoria = new ProdutoCategoriaModel();
+      produtoCategoria.categoriaModel = categorias!
+          .firstWhere((categoria) => categoria.id == element.idCategoria);
+      produtoCategoria.produto = element;
 
-  //   return colecaoProdutoComCategoria;
-  // }
+      colecaoProdutoComCategoria.add(produtoCategoria);
+    });
 
-  // Future<List<ProdutoCategoriaFornecedorModel>>
-  //     obtenhaTodosComCategoriaFornecedor() async {
-  //   var colecaoDeProdutos = await obtenhaTodos();
-  //   var categorias = await new CategoriaController().obtenhaTodos();
-  //   var fornecedores = await new FornecedorController().obtenhaTodos();
+    return colecaoProdutoComCategoria;
+  }
 
-  //   List<ProdutoCategoriaFornecedorModel> colecaoProdutoComCategoria =
-  //       new List.empty(growable: true);
+  Future<List<ProdutoCategoriaFornecedorModel>>
+      obtenhaTodosComCategoriaFornecedor() async {
+    var colecaoDeProdutos = await obtenhaTodos();
+    var categorias = await new CategoriaController().obtenhaTodos();
+    var fornecedores = await new FornecedorController().obtenhaTodos();
 
-  //   colecaoDeProdutos.forEach((element) async {
-  //     var produtoCategoriaFornecedor = new ProdutoCategoriaFornecedorModel();
+    List<ProdutoCategoriaFornecedorModel> colecaoProdutoComCategoria =
+        new List.empty(growable: true);
 
-  //     produtoCategoriaFornecedor.fornecedorModel = fornecedores
-  //         .firstWhere((fornecedor) => fornecedor.id == element.idFornecedor);
+    colecaoDeProdutos.forEach((element) async {
+      var produtoCategoriaFornecedor = new ProdutoCategoriaFornecedorModel();
 
-  //     produtoCategoriaFornecedor.categoriaModel = categorias
-  //         .firstWhere((categoria) => categoria.id == element.idCategoria);
+      produtoCategoriaFornecedor.fornecedorModel = fornecedores
+          .firstWhere((fornecedor) => fornecedor.id == element.idFornecedor);
 
-  //     produtoCategoriaFornecedor.produto = element;
+      produtoCategoriaFornecedor.categoriaModel = categorias!
+          .firstWhere((categoria) => categoria.id == element.idCategoria);
 
-  //     colecaoProdutoComCategoria.add(produtoCategoriaFornecedor);
-  //   });
+      produtoCategoriaFornecedor.produto = element;
 
-  //   return colecaoProdutoComCategoria;
-  // }
+      colecaoProdutoComCategoria.add(produtoCategoriaFornecedor);
+    });
+
+    return colecaoProdutoComCategoria;
+  }
 
   Future<ProdutoModel> obtenhaPorNome(String nome) async {
     final resposta = await new Api().obtenha('produto/nome/' + nome);
 
-    var stringJson = json.decode(resposta!.body);
+    var stringJson = json.decode(resposta.body);
 
     return new ProdutoModel.fromJson(stringJson);
   }
@@ -82,7 +79,7 @@ if(resposta!.body == null){
   Future<ProdutoModel> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('produto/' + id.toString());
 
-    var stringJson = json.decode(resposta!.body);
+    var stringJson = json.decode(resposta.body);
 
     return new ProdutoModel.fromJson(stringJson);
   }
