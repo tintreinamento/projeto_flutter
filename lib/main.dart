@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:projeto_flutter/models/AutenticacaoModel.dart';
 import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/views/cliente/cadastrar/ClienteCadastrarView.dart';
 import 'package:projeto_flutter/views/cliente/consultar/ClienteConsultarView.dart';
@@ -17,7 +19,11 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (context) => CarrinhoModel())],
+    providers: [
+      ListenableProvider<CarrinhoModel>(create: (_) => CarrinhoModel()),
+       ListenableProvider<AutenticacaoModel>(create: (_) => AutenticacaoModel()),
+      
+    ],
     child: MyApp(),
   ));
 }
@@ -31,21 +37,31 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('pt', 'BR'), // English, no country code
+
+// Spanish, no country code
+      ],
+      initialRoute: '/login',
       routes: {
-        '/': (context) => SplashPage(), //ok
+        // '/': (context) => SplashPage(), //ok
         '/login': (context) => LoginView(), // ok
-        '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
-        '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
+        '/pedido_venda_cadastrar': (context) => PedidoVendaCadastrarView(),
+        //'/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
         '/cadastrar_cliente': (contexto) => ClienteCadastroView(),
-        '/consultar_cliente': (contexto) => ClienteConsultarView(),
+        '/consultar_cliente': (contexto) => ClienteConsultaView(),
         '/cadastrar_fornecedor': (context) => FornecedorCadastrarView(),
-        '/consultar_fornecedor': (context) => FornecedorConsultarView(),
-        '/consultar_produto': (context) => ProdutoConsultarView(),
+        //  '/consultar_fornecedor': (context) => FornecedorConsultarView(),
+        // '/consultar_produto': (context) => ProdutoConsultarView(),
         //'/pedido_compra_cadastrar': (contexto) => PedidoCompraCadastroView(),
         '/pedido_compra_consultar': (contexto) => PedidoCompraConsultaView(),
-        '/estoque': (contexto) => EstoqueView(),
-        '/cadastrar_precificacao': (context) => PrecificacaoView(),
+        // '/estoque': (contexto) => EstoqueView(),
+        // '/cadastrar_precificacao': (context) => PrecificacaoView(),
       },
     );
   }
