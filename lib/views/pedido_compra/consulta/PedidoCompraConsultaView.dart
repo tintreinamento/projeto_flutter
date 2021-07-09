@@ -12,12 +12,13 @@ import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/CategoriaController.dart';
 import 'package:projeto_flutter/controllers/FornecedorController.dart';
 import 'package:projeto_flutter/controllers/FuncionarioController.dart';
-import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
-import 'package:projeto_flutter/controllers/PedidoController.dart';
+import 'package:projeto_flutter/controllers/ItemPedidoFornecedorController.dart';
+import 'package:projeto_flutter/controllers/PedidoFornecedorController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/CategoriaModel.dart';
-import 'package:projeto_flutter/models/ItemPedidoModel.dart';
-import 'package:projeto_flutter/models/PedidoModel.dart';
+import 'package:projeto_flutter/models/ItemPedidoFornecedorModel.dart';
+import 'package:projeto_flutter/models/PedidoFornecedorModel.dart';
+
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 
 class PedidoCompraConsultaView extends StatefulWidget {
@@ -34,17 +35,19 @@ class _PedidoCompraConsultaViewState extends State<PedidoCompraConsultaView> {
   TextEditingController idPedidoController = TextEditingController();
 
   //Pedido
-  PedidoModel? pedidoModel;
+  PedidoFornecedorModel? pedidoModel;
 
   consultarPedido() async {
-    PedidoController pedidoController = new PedidoController();
-    try {
-      pedidoModel = await pedidoController
-          .obtenhaPorId(int.parse(idPedidoController.text));
+    PedidoFornecedorController pedidoFornecedorController =
+        new PedidoFornecedorController();
 
+    try {
+      pedidoModel = await pedidoFornecedorController
+          .obtenhaPorId(int.parse(idPedidoController.text));
       _active = !_active;
       setState(() {});
     } catch (e) {
+      print("oi");
       mensagemErro();
     }
   }
@@ -152,7 +155,7 @@ class FormConsulta extends StatelessWidget {
 }
 
 class DetalhePedido extends StatelessWidget {
-  PedidoModel? pedidoModel;
+  PedidoFornecedorModel? pedidoModel;
 
   TextEditingController funcionarioController = new TextEditingController();
   TextEditingController fornecedorController = new TextEditingController();
@@ -184,9 +187,7 @@ class DetalhePedido extends StatelessWidget {
     NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
 
     getFuncionario(pedidoModel!.idFuncionario);
-    getfornecedor(pedidoModel!.data);
-
-    print(fornecedorController.text);
+    getfornecedor(pedidoModel!.idFornecedor);
 
     dataController.text = UtilData.obterDataDDMMAAAA(
         DateTime.parse(pedidoModel!.data.toString().substring(0, 10)));
@@ -219,10 +220,8 @@ class DetalhePedido extends StatelessWidget {
   }
 }
 
-class fornecedorController {}
-
 class ItemPedido extends StatefulWidget {
-  PedidoModel? pedidoModel;
+  PedidoFornecedorModel? pedidoModel;
 
   ItemPedido({Key? key, this.pedidoModel}) : super(key: key);
 
@@ -232,16 +231,17 @@ class ItemPedido extends StatefulWidget {
 
 class _ItemPedidoState extends State<ItemPedido> {
   var listaItemPedido = new List.empty(growable: true);
-  PedidoModel? pedidoModel;
+  PedidoFornecedorModel? pedidoModel;
   ProdutoModel? produtoModel;
   CategoriaModel? categoriaModel;
 
-  _ItemPedidoState(PedidoModel? pedidoModel) {
+  _ItemPedidoState(PedidoFornecedorModel? pedidoModel) {
     this.pedidoModel = pedidoModel;
   }
 
   getItemPedidos() async {
-    ItemPedidoController itemPedidoController = new ItemPedidoController();
+    ItemPedidoFornecedorController itemPedidoController =
+        new ItemPedidoFornecedorController();
     listaItemPedido = await itemPedidoController.obtenhaTodos();
 
     listaItemPedido = listaItemPedido.map((element) {
@@ -296,7 +296,7 @@ class _ItemPedidoState extends State<ItemPedido> {
 
 class ItemPedidoCard extends StatelessWidget {
   NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
-  ItemPedidoModel? itemPedidoModel;
+  ItemPedidoFornecedorModel? itemPedidoModel;
 
   ProdutoModel? produtoModel;
   CategoriaModel? categoriaModel;

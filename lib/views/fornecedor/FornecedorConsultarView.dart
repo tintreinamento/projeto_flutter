@@ -191,7 +191,7 @@ class _FornecedorConsultarViewState extends State<FornecedorConsultarView> {
         body: LayoutBuilder(
           builder: (context, constraints) {
             // if (constraints.maxHeight > 600) {
-              return layoutVertical;
+            return layoutVertical;
             // } else {
             //   return layoutHorizontal;
             // }
@@ -218,7 +218,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: 'Nome: ',
                     ),
-                    Expanded(child: Text( fornecedorModel.nome)),
+                    Expanded(child: Text(fornecedorModel.nome)),
                   ],
                 ),
                 SizedBox(
@@ -231,7 +231,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: 'CPF/CNPJ: ',
                     ),
-                    Expanded(child: Text( (fornecedorModel.cpfCnpj).toString())),
+                    Expanded(child: Text((fornecedorModel.cpfCnpj).toString())),
                   ],
                 ),
                 SizedBox(
@@ -244,7 +244,8 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: 'Telefone: ',
                     ),
-                    Expanded(child: Text( (fornecedorModel.telefone).toString())),
+                    Expanded(
+                        child: Text((fornecedorModel.telefone).toString())),
                   ],
                 ),
                 SizedBox(
@@ -257,7 +258,7 @@ Widget cardFornecedor(FornecedorModel fornecedorModel) {
                     TextComponent(
                       label: 'E-mail: ',
                     ),
-                    Expanded(child: Text( fornecedorModel.email)),
+                    Expanded(child: Text(fornecedorModel.email)),
                   ],
                 )
               ],
