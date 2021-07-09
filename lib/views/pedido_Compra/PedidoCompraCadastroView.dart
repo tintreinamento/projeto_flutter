@@ -640,11 +640,11 @@ class Resumo extends StatelessWidget {
           data: carrinho.dataPedido);
 
       //Criando pedido
-      var pedidoResposta = await pedidoController.crie(pedido);
+      // var pedidoResposta = await pedidoController.crie(pedido);
 
-      carrinho.itemPedido.forEach((element) {
-        element.idPedido = pedidoResposta.id;
-      });
+      // carrinho.itemPedido.forEach((element) {
+      //   element.idPedido = pedidoResposta.id;
+      // });
 
       //Realiza a baixa no estoque
 
@@ -658,7 +658,7 @@ class Resumo extends StatelessWidget {
       //  formCliente!.currentState!.reset();
       limparPedido!();
       context.read<CarrinhoCompraModel>().limparCarrinho(); //Chama notificação
-      _showMyDialog(context, pedidoResposta);
+      // _showMyDialog(context, pedidoResposta);
     }
   }
 
