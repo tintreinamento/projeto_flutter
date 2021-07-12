@@ -98,4 +98,18 @@ class EstoqueMovimentacaoController {
 
     return new EstoqueMovimentacaoModel.fromJson(stringJson);
   }
+
+  Future<EstoqueMovimentacaoModel> atualizePorEstoqueProduto(
+      EstoqueMovimentacaoModel estoque) async {
+    final resposta = await new Api().atualize(
+        'estoquemv/estoque/' +
+            estoque.idEstoque.toString() +
+            "/produto/" +
+            estoque.idProduto.toString(),
+        json.encode(estoque));
+
+    var stringJson = json.decode(resposta.body);
+
+    return new EstoqueMovimentacaoModel.fromJson(stringJson);
+  }
 }
