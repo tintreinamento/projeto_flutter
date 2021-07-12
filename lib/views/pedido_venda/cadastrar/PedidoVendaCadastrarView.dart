@@ -461,6 +461,7 @@ class _ProdutoState extends State<Produto> {
     }
 
     return Container(
+        height: mediaQuery.size.height,
         child: FutureBuilder(
             future: estoques,
             builder: (context, AsyncSnapshot<List<EstoqueModel>> snapshot) {
@@ -479,54 +480,57 @@ class _ProdutoState extends State<Produto> {
                   label: 'Produtos',
                   content: Column(
                     children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: mediaQuery.size.width * 0.15,
-                            child: TextComponent(
-                              label: 'Estoque: ',
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                      SingleChildScrollView(
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: mediaQuery.size.width * 0.15,
+                              child: TextComponent(
+                                label: 'Estoque: ',
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: SelectFormField(
-                                decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
-                                        left: 10, top: 15, bottom: 15),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color.fromRGBO(
-                                                191, 188, 188, 1))),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color.fromRGBO(
-                                                191, 188, 188, 1))),
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(5)),
-                                    suffixIcon: Container(
-                                      child: Icon(Icons.arrow_drop_down),
-                                    )),
-                                labelText: 'Selecione o',
-                                type: SelectFormFieldType
-                                    .dropdown, // or can be dialog
+                            Expanded(
+                              child: SelectFormField(
+                                  decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(
+                                          left: 10, top: 15, bottom: 15),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color.fromRGBO(
+                                                  191, 188, 188, 1))),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Color.fromRGBO(
+                                                  191, 188, 188, 1))),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
+                                      suffixIcon: Container(
+                                        child: Icon(Icons.arrow_drop_down),
+                                      )),
+                                  labelText: 'Selecione o',
+                                  type: SelectFormFieldType
+                                      .dropdown, // or can be dialog
 
-                                items: selectEstoque,
-                                validator: (value) {
-                                  if (value == null || value == "") {
-                                    return 'Campo obrigátorio!';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) {
-                                  context.read<CarrinhoModel>().idEstoque =
-                                      int.parse(value);
-                                  print('ada' + value);
-                                  carregarEstoqueMovimentacao(value);
-                                },
-                                onSaved: (value) => print(value)),
-                          ),
-                        ],
+                                  items: selectEstoque,
+                                  validator: (value) {
+                                    if (value == null || value == "") {
+                                      return 'Campo obrigátorio!';
+                                    }
+                                    return null;
+                                  },
+                                  onChanged: (value) {
+                                    context.read<CarrinhoModel>().idEstoque =
+                                        int.parse(value);
+                                    print('ada' + value);
+                                    carregarEstoqueMovimentacao(value);
+                                  },
+                                  onSaved: (value) => print(value)),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 20,
@@ -914,9 +918,15 @@ class Resumo extends StatelessWidget {
 
         print('teste' + carrinho.idEstoque.toString());
 
-        //Enviado items
         carrinho.itemPedido.forEach((element) async {
-          await itemPedidoController.crie(element);
+          //Recebe o estoque
+          var estoque = await EstoqueMovimentacaoController()
+              .obtenhaPorId(carrinho.idEstoque!);
+          //Atualiza a quantidade
+          estoque.quantidade -= element.quantidade;
+          //Seta nova atualização
+          var resultado = await EstoqueMovimentacaoController()
+              .atualizePorEstoqueProduto(estoque);
         });
 
         //Realiza a baixa no estoque
@@ -991,12 +1001,13 @@ class Resumo extends StatelessWidget {
     var mediaQuery = MediaQuery.of(context);
 
     return Container(
-      height: mediaQuery.size.height * 0.2,
+      height: mediaQuery.size.height * 0.15,
       width: mediaQuery.size.width,
       color: colorBranco,
       child: Row(
         children: [
           Expanded(
+            flex: 3,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

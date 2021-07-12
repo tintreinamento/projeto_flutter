@@ -109,7 +109,7 @@ class EstoqueMovimentacaoController {
         json.encode(estoque));
 
     var stringJson = json.decode(resposta.body);
-
-    return new EstoqueMovimentacaoModel.fromJson(stringJson);
+    print(stringJson);
+    return new EstoqueMovimentacaoModel.fromJson(stringJson.single);
   }
 }

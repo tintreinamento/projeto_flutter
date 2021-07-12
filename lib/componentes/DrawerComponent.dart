@@ -88,13 +88,16 @@ class DrawerComponent extends StatelessWidget {
   }
 
   //Item do menu
-  Widget itemMenu(String titulo, BuildContext context, String rota) {
+  Widget itemMenu(IconData icon, String titulo, BuildContext context, String rota) {
     return Container(
       margin: EdgeInsets.fromLTRB(0.0, 32.0, 0.0, 0.0),
       child: ListTile(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+             Row(children: [
+               Icon(icon),
+               SizedBox(width: 10),
             Text(
               titulo,
               style: TextStyle(
@@ -105,6 +108,7 @@ class DrawerComponent extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
+             ],),
             Icon(Icons.arrow_forward_ios),
           ],
         ),
@@ -136,12 +140,17 @@ class DrawerComponent extends StatelessWidget {
                     icon: Icon(Icons.logout),
                     color: colorBranco,
                     onPressed: () => Navigator.pushNamed(context, '/login')),
-                if(context.watch<CarrinhoModel>().funcionario != null) TextComponent(
-                  label: Provider.of<AutenticacaoModel>(context)
+                Row(children: [
+                  Icon(Icons.person, color: colorBranco, size: 32,),
+                  SizedBox(width: 10,),
+                  TextComponent(
+                    fontSize: 18,
+                  label: 'Olá, ' + Provider.of<AutenticacaoModel>(context)
                       .funcionarioModel!.nome
                       .toString(),
                   cor: colorBranco,
                 ),
+                ],)
               ],
             ),
           ),
@@ -150,17 +159,25 @@ class DrawerComponent extends StatelessWidget {
             height: mediaQuery.size.height * 0.8,
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  itemMenu('Fornecedor', context, '/cadastrar_fornecedor'),
-                  itemMenu('Produto', context, '/cadastrar_produto'),
-                  itemMenu('Precificação', context, '/cadastrar_precificacao'),
-                  itemMenu('Estoque', context, '/estoque'),
-                  itemMenu(
+                  SizedBox(height: 5,),
+                  itemMenu( Icons.local_shipping_outlined, 'Fornecedor', context, '/cadastrar_fornecedor'),
+                  itemMenu(Icons.shopping_bag_outlined,'Produto', context, '/cadastrar_produto'),
+                  itemMenu(Icons.paid_outlined,'Precificação', context, '/cadastrar_precificacao'),
+                  itemMenu(Icons.inventory_2_outlined,'Estoque', context, '/estoque'),
+                  itemMenu( Icons.add_shopping_cart_outlined,
                       'Pedido de Compras', context, '/pedido_compra_cadastrar'),
-                  itemMenu('Cliente', context, '/cadastrar_cliente'),
-                  itemMenu(
-                      'Pedido de venda', context, '/pedido_venda_cadastrar')
+                  itemMenu(Icons.person_outline,'Cliente', context, '/cadastrar_cliente'),
+                  itemMenu(Icons.shopping_cart_outlined ,
+                      'Pedido de venda', context, '/pedido_venda_cadastrar'),
+                      Divider(),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                    child: TextComponent(label: 'Versão 1.0.0', fontWeight: FontWeight.bold, fontSize: 14, ),
+                  )
                 ],
+                
               ),
             ),
           )
@@ -170,24 +187,24 @@ class DrawerComponent extends StatelessWidget {
   }
 }
 
-Widget itemMenu(String nome, BuildContext context, String rota) {
-  var mediaQuery = MediaQuery.of(context);
-  return GestureDetector(
-    onTap: () => Navigator.pushNamed(context, rota),
-    child: Container(
-      padding: paddingPadrao,
-      height: mediaQuery.size.height * 0.1,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TextComponent(
-            label: nome,
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-          Icon(Icons.arrow_forward_ios),
-        ],
-      ),
-    ),
-  );
-}
+// Widget itemMenu(String nome, BuildContext context, String rota) {
+//   var mediaQuery = MediaQuery.of(context);
+//   return GestureDetector(
+//     onTap: () => Navigator.pushNamed(context, rota),
+//     child: Container(
+//       padding: paddingPadrao,
+//       height: mediaQuery.size.height * 0.1,
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           TextComponent(
+//             label: nome,
+//             fontSize: 14,
+//             fontWeight: FontWeight.bold,
+//           ),
+//           Icon(Icons.arrow_forward_ios),
+//         ],
+//       ),
+//     ),
+//   );
+// }
