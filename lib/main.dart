@@ -51,9 +51,9 @@ class MyApp extends StatelessWidget {
       supportedLocales: [
         const Locale('pt', 'BR'),
       ],
-      initialRoute: '/pedido_venda_cadastrar',
+      initialRoute: '/',
       routes: {
-       // '/': (context) => SplashPage(), //ok
+        '/': (context) => SplashPage(), //ok
         '/login': (context) => LoginView(), // ok
         '/pedido_venda_cadastrar': (context) => PedidoVendaCadastraView(),
         '/pedido_venda_consultar': (context) => PedidoVendaConsultaView(),
