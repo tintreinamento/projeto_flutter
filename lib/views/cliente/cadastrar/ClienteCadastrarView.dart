@@ -596,6 +596,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                     label: 'Estado: ',
                                     controller: estadoController,
                                     inputFormatter: [
+                                      LengthLimitingTextInputFormatter(2),
                                       FilteringTextInputFormatter.allow(
                                           RegExp(r"[a-zA-Z]+|\s")),
                                     ],
