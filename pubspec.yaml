@@ -39,12 +39,17 @@ dependencies:
   localstorage: ^4.0.0+1
   select_form_field: "^2.0.0"
   flux_validator_dart: ^2.0.0
+  flutter_launcher_icons: ^0.9.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  image_path: "assets/images/LogoProjeto.png"
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -61,6 +66,7 @@ flutter:
     - assets/images/return.png
     - assets/images/cart.png
     - assets/images/edit.png
+    - assets/images/LogoProjeto.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

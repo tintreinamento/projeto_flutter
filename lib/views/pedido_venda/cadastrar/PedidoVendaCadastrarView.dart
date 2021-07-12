@@ -298,7 +298,7 @@ class _FormClienteState extends State<FormCliente> {
                     controller: bairroController,
                     validator: (value) {
                       if (value == null || value == "") {
-                        return 'Campo obrigátorio!';
+                        return 'Campo obrigatório!';
                       }
                       return null;
                     },
@@ -461,7 +461,7 @@ class _ProdutoState extends State<Produto> {
     }
 
     return Container(
-      height: mediaQuery.size.height,
+        height: mediaQuery.size.height,
         child: FutureBuilder(
             future: estoques,
             builder: (context, AsyncSnapshot<List<EstoqueModel>> snapshot) {
@@ -505,14 +505,15 @@ class _ProdutoState extends State<Produto> {
                                               color: Color.fromRGBO(
                                                   191, 188, 188, 1))),
                                       border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(5)),
+                                          borderRadius:
+                                              BorderRadius.circular(5)),
                                       suffixIcon: Container(
                                         child: Icon(Icons.arrow_drop_down),
                                       )),
                                   labelText: 'Selecione o',
                                   type: SelectFormFieldType
                                       .dropdown, // or can be dialog
-                      
+
                                   items: selectEstoque,
                                   validator: (value) {
                                     if (value == null || value == "") {
@@ -521,9 +522,9 @@ class _ProdutoState extends State<Produto> {
                                     return null;
                                   },
                                   onChanged: (value) {
-                                  
-                                        context.read<CarrinhoModel>().idEstoque = int.parse(value);
-                                        print('ada' + value);
+                                    context.read<CarrinhoModel>().idEstoque =
+                                        int.parse(value);
+                                    print('ada' + value);
                                     carregarEstoqueMovimentacao(value);
                                   },
                                   onSaved: (value) => print(value)),
@@ -541,7 +542,9 @@ class _ProdutoState extends State<Produto> {
                           setState(() {});
                         },
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       //Lista de produtos
                       if (_isSelectEstoque)
                         Column(
@@ -670,12 +673,14 @@ class _CardProdutoState extends State<CardProduto> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(context
-                                  .watch<CarrinhoModel>()
-                                  .getQuantidade(snapshot.data!.id)
-                                  .toString(),
-                                  style: TextStyle(fontWeight: FontWeight.bold,
-                                  fontSize: 14),),
+                              Text(
+                                context
+                                    .watch<CarrinhoModel>()
+                                    .getQuantidade(snapshot.data!.id)
+                                    .toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 14),
+                              ),
                             ],
                           ),
                         ),
@@ -895,49 +900,51 @@ class Resumo extends StatelessWidget {
   finalizarPedido(BuildContext context) async {
     if (keyFormClientePedidoVenda.currentState!.validate()) {
       var carrinho = context.read<CarrinhoModel>();
-     if(carrinho.idEstoque != null){
+      if (carrinho.idEstoque != null) {
         final pedidoController = PedidoController();
-      final itemPedidoController = ItemPedidoController();
-      PedidoModel pedido = new PedidoModel(
-          idCliente: carrinho.cliente.id,
-          idFuncionario: 1,
-          total: carrinho.totalPedido,
-          data: carrinho.dataPedido);
+        final itemPedidoController = ItemPedidoController();
+        PedidoModel pedido = new PedidoModel(
+            idCliente: carrinho.cliente.id,
+            idFuncionario: 1,
+            total: carrinho.totalPedido,
+            data: carrinho.dataPedido);
 
-      //Criando pedido
-      PedidoModel pedidoResposta = await pedidoController.crie(pedido);
-      print(pedidoResposta.id);
-      carrinho.itemPedido.forEach((element) {
-        element.idPedido = pedidoResposta.id;
-      });
+        //Criando pedido
+        PedidoModel pedidoResposta = await pedidoController.crie(pedido);
+        print(pedidoResposta.id);
+        carrinho.itemPedido.forEach((element) {
+          element.idPedido = pedidoResposta.id;
+        });
 
-      
-      print('teste' + carrinho.idEstoque.toString());
+        // carrinho.itemPedido.forEach((element) async {
+        //   //Recebe o estoque
+        //   var estoque = await EstoqueMovimentacaoController().obtenhaPorId(carrinho.idEstoque!);
+        //   //Atualiza a quantidade
+        //   estoque.quantidade -= element.quantidade;
+        //   //Seta nova atualização
+        //   var resultado = await EstoqueMovimentacaoController().atualizePorEstoqueProduto(estoque);
+        // });
 
-      //Enviado items
-      carrinho.itemPedido.forEach((element) async {
-        await itemPedidoController.crie(element);
-      });
+        //Realiza a baixa no estoque
 
-      //Realiza a baixa no estoque
+        carrinho.itemPedido.forEach((element) async {
+          //Recebe o estoque
+          var estoque = await EstoqueMovimentacaoController()
+              .obtenhaPorId(carrinho.idEstoque!);
+          //Atualiza a quantidade
+          estoque.quantidade -= element.quantidade;
+          //Seta nova atualização
+          var resultado =
+              await EstoqueMovimentacaoController().atualize(estoque);
+        });
 
-      // carrinho.itemPedido.forEach((element) async {
-      //   //Recebe o estoque
-      //   var estoque = await EstoqueMovimentacaoController().obtenhaPorId(carrinho.idEstoque!);
-      //   //Atualiza a quantidade
-      //   estoque.quantidade -= element.quantidade;
-      //   //Seta nova atualização
-      //   var resultado = await EstoqueMovimentacaoController().atualizePorEstoqueProduto(estoque);
-      // });
-
-
-      //limpa form
-      keyFormClientePedidoVenda.currentState!.reset();
-      context.read<CarrinhoModel>().limparCarrinho(); //Chama notificação
-      _showMyDialog(context, pedidoResposta);
-     }else{
-       _showDialog(context, 'Selecione o estoque para realizar o pedido !');
-     }
+        //limpa form
+        keyFormClientePedidoVenda.currentState!.reset();
+        context.read<CarrinhoModel>().limparCarrinho(); //Chama notificação
+        _showMyDialog(context, pedidoResposta);
+      } else {
+        _showDialog(context, 'Selecione o estoque para realizar o pedido !');
+      }
     }
   }
 
@@ -995,7 +1002,7 @@ class Resumo extends StatelessWidget {
       color: colorBranco,
       child: Row(
         children: [
-          Expanded( 
+          Expanded(
             flex: 3,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -1238,7 +1245,6 @@ class ItemCarrinhoCard extends StatelessWidget {
   }
 }
 
-
 _showDialog(context, info) {
   showDialog(
       context: context,
@@ -1252,7 +1258,7 @@ _showDialog(context, info) {
               Container(
                 width: 241,
                 height: 31,
-                padding: paddingPadrao  ,
+                padding: paddingPadrao,
                 margin: EdgeInsets.only(top: 18, bottom: 13),
                 child: ElevatedButton(
                     style: ButtonStyle(

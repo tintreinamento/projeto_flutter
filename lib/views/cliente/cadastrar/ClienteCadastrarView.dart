@@ -203,7 +203,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                     ],
                                     validator: (value) {
                                       if (value == null || value == "") {
-                                        return 'Campo obrigátorio!';
+                                        return 'Campo obrigatório!';
                                       }
                                       return null;
                                     },
@@ -261,7 +261,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                       SizedBox(
                                         width: mediaQuery.size.width * 0.15,
                                         child: TextComponent(
-                                          label: 'Estado Civel: ',
+                                          label: 'Estado Civil: ',
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -298,7 +298,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                             validator: (value) {
                                               if (value == null ||
                                                   value == "") {
-                                                return 'Campo obrigátorio!';
+                                                return 'Campo obrigatório!';
                                               }
                                               return null;
                                             },
