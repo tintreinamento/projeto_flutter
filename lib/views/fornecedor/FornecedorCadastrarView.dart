@@ -383,6 +383,7 @@ class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
                       label: 'Fornecedor',
                       content: formFornecedor,
                     ),
+                    SizedBox(height: 10),
                     MolduraComponent(
                       label: 'Endereço',
                       content: formEndereco,
