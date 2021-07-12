@@ -927,7 +927,7 @@ class Resumo extends StatelessWidget {
         //Atualiza a quantidade
         estoque.quantidade -= element.quantidade;
         //Seta nova atualização
-        var resultado = await EstoqueMovimentacaoController().atualize(estoque);
+        var resultado = await EstoqueMovimentacaoController().atualizePorEstoqueProduto(estoque);
       });
 
 
