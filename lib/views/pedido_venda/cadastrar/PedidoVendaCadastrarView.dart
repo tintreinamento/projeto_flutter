@@ -990,7 +990,7 @@ class Resumo extends StatelessWidget {
     var mediaQuery = MediaQuery.of(context);
 
     return Container(
-      height: mediaQuery.size.height * 0.2,
+      height: mediaQuery.size.height * 0.15,
       width: mediaQuery.size.width,
       color: colorBranco,
       child: Row(
