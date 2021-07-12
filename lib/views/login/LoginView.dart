@@ -74,7 +74,7 @@ class _LoginViewState extends State<LoginView> {
           ),
           InputComponent(
             label: 'Senha: ',
-            obscureText: false,
+            obscureText: true,
             controller: senhaController,
             validator: (value) {
               if (value == null || value == "") {
