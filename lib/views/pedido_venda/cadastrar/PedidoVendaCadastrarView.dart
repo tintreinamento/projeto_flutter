@@ -30,7 +30,7 @@ import 'package:projeto_flutter/models/ProdutoModel.dart';
 import 'package:provider/provider.dart';
 import 'package:select_form_field/select_form_field.dart';
 
-final keyFormCliente = new GlobalKey<FormState>();
+GlobalKey<FormState> keyFormClientePedidoVenda = new GlobalKey<FormState>();
 
 class PedidoVendaCadastraView extends StatefulWidget {
   const PedidoVendaCadastraView({Key? key}) : super(key: key);
@@ -166,7 +166,7 @@ class _FormClienteState extends State<FormCliente> {
   Widget build(BuildContext context) {
     return Container(
       child: Form(
-        key: keyFormCliente,
+        key: keyFormClientePedidoVenda,
         child: Column(
           children: [
             MolduraComponent(
@@ -898,7 +898,7 @@ class Resumo extends StatelessWidget {
       : super(key: key);
 
   finalizarPedido(BuildContext context) async {
-    if (keyFormCliente.currentState!.validate()) {
+    if (keyFormClientePedidoVenda.currentState!.validate()) {
       var carrinho = context.read<CarrinhoModel>();
       if (carrinho.idEstoque != null) {
         final pedidoController = PedidoController();
@@ -916,18 +916,14 @@ class Resumo extends StatelessWidget {
           element.idPedido = pedidoResposta.id;
         });
 
-        print('teste' + carrinho.idEstoque.toString());
-
-        carrinho.itemPedido.forEach((element) async {
-          //Recebe o estoque
-          var estoque = await EstoqueMovimentacaoController()
-              .obtenhaPorId(carrinho.idEstoque!);
-          //Atualiza a quantidade
-          estoque.quantidade -= element.quantidade;
-          //Seta nova atualização
-          var resultado = await EstoqueMovimentacaoController()
-              .atualizePorEstoqueProduto(estoque);
-        });
+        // carrinho.itemPedido.forEach((element) async {
+        //   //Recebe o estoque
+        //   var estoque = await EstoqueMovimentacaoController().obtenhaPorId(carrinho.idEstoque!);
+        //   //Atualiza a quantidade
+        //   estoque.quantidade -= element.quantidade;
+        //   //Seta nova atualização
+        //   var resultado = await EstoqueMovimentacaoController().atualizePorEstoqueProduto(estoque);
+        // });
 
         //Realiza a baixa no estoque
 
@@ -943,7 +939,7 @@ class Resumo extends StatelessWidget {
         });
 
         //limpa form
-        keyFormCliente.currentState!.reset();
+        keyFormClientePedidoVenda.currentState!.reset();
         context.read<CarrinhoModel>().limparCarrinho(); //Chama notificação
         _showMyDialog(context, pedidoResposta);
       } else {
