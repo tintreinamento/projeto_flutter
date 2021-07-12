@@ -62,6 +62,7 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
                   cor: colorBranco,
                 )),
           )),
+          SizedBox(height: 10,)
         ],
       ),
     );
