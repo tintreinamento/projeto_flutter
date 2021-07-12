@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/models/AutenticacaoModel.dart';
+import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/services/Auth.dart';
 //import 'package:projeto_flutter/views/pedido/pedido.dart';
 //import '../views/pedido/pedido.dart';
@@ -135,7 +136,7 @@ class DrawerComponent extends StatelessWidget {
                     icon: Icon(Icons.logout),
                     color: colorBranco,
                     onPressed: () => Navigator.pushNamed(context, '/login')),
-                TextComponent(
+                if(context.watch<CarrinhoModel>().funcionario != null) TextComponent(
                   label: Provider.of<AutenticacaoModel>(context)
                       .funcionarioModel!.nome
                       .toString(),

@@ -1,6 +1,7 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flux_validator_dart/flux_validator_dart.dart';
 import 'package:intl/intl.dart';
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
@@ -14,6 +15,7 @@ import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/CategoriaController.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
 import 'package:projeto_flutter/controllers/EstoqueController.dart';
+import 'package:projeto_flutter/controllers/EstoqueMovimentacaoController.dart';
 import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
 import 'package:projeto_flutter/controllers/PedidoController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
@@ -21,22 +23,14 @@ import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
 import 'package:projeto_flutter/models/EstoqueModel.dart';
+import 'package:projeto_flutter/models/EstoqueMovimentacaoModel.dart';
 import 'package:projeto_flutter/models/ItemPedidoModel.dart';
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/models/ProdutoModel.dart';
 import 'package:provider/provider.dart';
+import 'package:select_form_field/select_form_field.dart';
 
-TextEditingController cpfCnpjController = TextEditingController();
-
-TextEditingController nomeClienteController = TextEditingController();
-
-TextEditingController cepController = TextEditingController();
-TextEditingController logradouroController = TextEditingController();
-TextEditingController complementoController = TextEditingController();
-TextEditingController numeroController = TextEditingController();
-TextEditingController bairroController = TextEditingController();
-TextEditingController cidadeController = TextEditingController();
-TextEditingController estadoController = TextEditingController();
+final keyFormCliente = new GlobalKey<FormState>();
 
 class PedidoVendaCadastraView extends StatefulWidget {
   const PedidoVendaCadastraView({Key? key}) : super(key: key);
@@ -57,18 +51,6 @@ class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
   GlobalKey<FormState> formConsultaProduto = new GlobalKey<FormState>();
 
   String searchProduto = "";
-
-  void limparPedido() {
-    cpfCnpjController.clear();
-    nomeClienteController.clear();
-    cepController.clear();
-    logradouroController.clear();
-    numeroController.clear();
-    bairroController.clear();
-    cidadeController.clear();
-    estadoController.clear();
-    setState(() {});
-  }
 
   //Busca produto
   void buscarProduto(String nomeProduto) {
@@ -108,90 +90,58 @@ class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarComponent(),
-      drawer: DrawerComponent(),
-      body: Container(
-        child: Column(
-          children: [
-            SubMenuComponent(
-                titulo: 'Pedido Venda',
-                tituloPrimeiraRota: 'Cadastrar',
-                primeiraRota: '/pedido_venda_cadastrar',
-                tituloSegundaRota: 'Consultar',
-                segundaRota: '/pedido_venda_consultar'),
-            Expanded(
-              flex: 15,
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                      child: Column(
+        appBar: AppBarComponent(),
+        drawer: DrawerComponent(),
+        body: Container(
+            child: Column(children: [
+          SubMenuComponent(
+              titulo: 'Pedido Venda',
+              tituloPrimeiraRota: 'Cadastrar',
+              primeiraRota: '/pedido_venda_cadastrar',
+              tituloSegundaRota: 'Consultar',
+              segundaRota: '/pedido_venda_consultar'),
+          Expanded(
+            child: Stack(
+              children: [
+                Expanded(
+                    child: SingleChildScrollView(
+                  child: Column(
                     children: [
-                      FormCliente(formCliente: formCliente),
-                      FormConsultaProduto(
-                        formConsultaProduto: formConsultaProduto,
-                        buscarProduto: buscarProduto,
+                      SizedBox(
+                        height: 20,
                       ),
-                      if (listaProdutos != null)
-                        Produto(
-                          searchProduto: searchProduto,
-                          listaProdutos: auxListaProdutos,
-                        ),
+                      FormCliente(),
+                      Produto(),
                     ],
-                  )),
-                  ProdutoCarrinhoWidget(
-                    active: active,
                   ),
-                ],
-              ),
+                )),
+                Positioned(bottom: 0, child: Resumo())
+              ],
             ),
-            Expanded(
-              flex: 2,
-              child: Resumo(
-                  limparPedido: limparPedido,
-                  formCliente: formCliente,
-                  abrirCarrinho: abrirCarrinho),
-            )
-          ],
-        ),
-      ),
-    );
+          )
+        ])));
   }
 }
 
 class FormCliente extends StatefulWidget {
-  GlobalKey<FormState> formCliente;
-
-  FormCliente({Key? key, required this.formCliente}) : super(key: key);
+  FormCliente({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _FormClienteState createState() => _FormClienteState();
 }
 
 class _FormClienteState extends State<FormCliente> {
-  // BuildContext? context;
-
-  isEmpty(value) {
-    if (value == null || value.isEmpty) {
-      return 'Campo vazio !';
-    }
-    return null;
-  }
-
-  isCpfCnpjValidator(cpfCnpj) {
-    if (cpfCnpj == null || cpfCnpj.isEmpty) {
-      return 'Campo vazio !';
-    } else {
-      var auxCpfCnpj = UtilBrasilFields.removeCaracteres(cpfCnpj);
-      if (auxCpfCnpj.length == 11 &&
-          !UtilBrasilFields.isCPFValido(auxCpfCnpj)) {
-        return 'CPF inválido !';
-      }
-      if (auxCpfCnpj.length == 14 &&
-          !UtilBrasilFields.isCNPJValido(auxCpfCnpj)) {
-        return 'CNPJ inválido !';
-      }
-    }
-  }
+  TextEditingController cpfCnpjController = TextEditingController();
+  TextEditingController nomeController = TextEditingController();
+  TextEditingController cepController = TextEditingController();
+  TextEditingController logradouroController = TextEditingController();
+  TextEditingController complementoController = TextEditingController();
+  TextEditingController numeroController = TextEditingController();
+  TextEditingController bairroController = TextEditingController();
+  TextEditingController cidadeController = TextEditingController();
+  TextEditingController estadoController = TextEditingController();
 
   carregarCliente(BuildContext context) async {
     ClienteController clienteController = new ClienteController();
@@ -199,7 +149,7 @@ class _FormClienteState extends State<FormCliente> {
         UtilBrasilFields.removeCaracteres(cpfCnpjController.text));
 
     //Carrega dados do cliente
-    nomeClienteController.text = cliente!.nome!;
+    nomeController.text = cliente!.nome!;
     //Seta cliente no pedido
 
     cepController.text = cliente.cep.toString();
@@ -210,112 +160,184 @@ class _FormClienteState extends State<FormCliente> {
     estadoController.text = cliente.uf;
 
     this.context.read<CarrinhoModel>().cliente = cliente;
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Form(
-      key: widget.formCliente,
-      child: Column(
-        children: [
-          MolduraComponent(
-            label: 'Consultar',
-            content: Column(
-              children: [
-                InputComponent(
-                  label: 'CPF/CNPJ: ',
-                  controller: cpfCnpjController,
-                  // onFieldSubmitted: carregarCliente,
-                  validator: (cpfCnpj) {
-                    return isCpfCnpjValidator(cpfCnpj);
-                  },
-                  inputFormatter: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    CpfOuCnpjFormatter()
-                  ],
-                ),
-                ButtonComponent(
-                  label: 'Consultar',
-                  onPressed: () {
-                    carregarCliente(context);
-                  },
-                )
-              ],
+      child: Form(
+        key: keyFormCliente,
+        child: Column(
+          children: [
+            MolduraComponent(
+              label: 'Consultar',
+              content: Column(
+                children: [
+                  InputComponent(
+                    label: 'CPF/CNPJ: ',
+                    controller: cpfCnpjController,
+                    inputFormatter: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CpfOuCnpjFormatter()
+                    ],
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return 'Campo obrigátorio!';
+                      }
+
+                      if (UtilBrasilFields.removeCaracteres(value).length !=
+                              11 &&
+                          UtilBrasilFields.removeCaracteres(value).length !=
+                              14) {
+                        return 'Formato de CPF ou CNPJ inválido';
+                      }
+                      if (UtilBrasilFields.removeCaracteres(value).length ==
+                          11) {
+                        if (!UtilBrasilFields.isCPFValido(
+                            UtilBrasilFields.removeCaracteres(value))) {
+                          return 'Informe um CPF válido !';
+                        }
+                      }
+                      if (UtilBrasilFields.removeCaracteres(value).length ==
+                          14) {
+                        if (!UtilBrasilFields.isCNPJValido(
+                            UtilBrasilFields.removeCaracteres(value))) {
+                          return 'Informe um CNPJ válido !';
+                        }
+                      }
+                      return null;
+                    },
+                  ),
+                  ButtonComponent(
+                    label: 'Consultar',
+                    onPressed: () => carregarCliente(context),
+                  )
+                ],
+              ),
             ),
-          ),
-          MolduraComponent(
-            label: 'Cliente',
-            content: Column(
-              children: [
-                InputComponent(
-                  label: 'Nome: ',
-                  controller: nomeClienteController,
-                  validator: (value) {
-                    return isEmpty(value);
-                  },
-                ),
-              ],
+            SizedBox(
+              height: 20,
             ),
-          ),
-          MolduraComponent(
-            label: 'Endereço',
-            content: Column(
-              children: [
-                InputComponent(
-                  label: 'CEP: ',
-                  controller: cepController,
-                  // onFieldSubmitted: carregarEndereco,
-                  validator: (value) {
-                    return isEmpty(value);
-                  },
-                  inputFormatter: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    CepInputFormatter()
-                  ],
-                ),
-                InputComponent(
-                  label: 'Logradouro: ',
-                  controller: logradouroController,
-                  validator: (value) {
-                    return isEmpty(value);
-                  },
-                ),
-                InputComponent(
-                  label: 'Número: ',
-                  controller: numeroController,
-                  validator: (value) {
-                    return isEmpty(value);
-                  },
-                ),
-                InputComponent(
-                  label: 'Bairro: ',
-                  controller: bairroController,
-                  validator: (value) {
-                    return isEmpty(value);
-                  },
-                ),
-                InputComponent(
-                  label: 'Cidade: ',
-                  controller: cidadeController,
-                  validator: (value) {
-                    return isEmpty(value);
-                  },
-                ),
-                InputComponent(
-                  label: 'Estado: ',
-                  controller: estadoController,
-                  validator: (value) {
-                    return isEmpty(value);
-                  },
-                ),
-              ],
+            MolduraComponent(
+              label: 'Cliente',
+              content: Column(
+                children: [
+                  InputComponent(
+                    label: 'Nome: ',
+                    controller: nomeController,
+                    inputFormatter: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r"[a-zA-Z]+|\s")),
+                    ],
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return 'Campo obrigátorio!';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
             ),
-          )
-        ],
+            SizedBox(
+              height: 20.0,
+            ),
+            MolduraComponent(
+              label: 'Endereço',
+              content: Column(
+                children: [
+                  InputComponent(
+                    label: 'CEP: ',
+                    inputFormatter: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CepInputFormatter()
+                    ],
+                    //   onFieldSubmitted: carregarEndereco,
+                    controller: cepController,
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return 'Campo obrigátorio!';
+                      }
+                      if (UtilBrasilFields.removeCaracteres(value).length !=
+                          8) {
+                        return 'CEP inválido';
+                      }
+                      if (Validator.cep(UtilBrasilFields.obterCep(
+                          UtilBrasilFields.removeCaracteres(value),
+                          ponto: false))) {
+                        return 'CEP inválido';
+                      }
+                      return null;
+                    },
+                  ),
+                  InputComponent(
+                    label: 'Logradouro: ',
+                    controller: logradouroController,
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return 'Campo obrigátorio!';
+                      }
+                      return null;
+                    },
+                  ),
+                  InputComponent(
+                    label: 'Número: ',
+                    inputFormatter: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    controller: numeroController,
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return 'Campo obrigátorio!';
+                      }
+                      return null;
+                    },
+                  ),
+                  InputComponent(
+                    label: 'Bairro: ',
+                    controller: bairroController,
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return 'Campo obrigátorio!';
+                      }
+                      return null;
+                    },
+                  ),
+                  InputComponent(
+                    label: 'Cidade: ',
+                    controller: cidadeController,
+                    inputFormatter: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r"[a-zA-Z]+|\s")),
+                    ],
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return 'Campo obrigátorio!';
+                      }
+                      return null;
+                    },
+                  ),
+                  InputComponent(
+                    label: 'Estado: ',
+                    controller: estadoController,
+                    inputFormatter: [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r"[a-zA-Z]+|\s")),
+                    ],
+                    validator: (value) {
+                      if (value == null || value == "") {
+                        return 'Campo obrigátorio!';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
 
@@ -348,64 +370,75 @@ class FormConsultaProduto extends StatelessWidget {
 }
 
 class Produto extends StatefulWidget {
-  List<ProdutoModel>? listaProdutos;
-  String? searchProduto;
-
-  Produto({Key? key, this.listaProdutos, this.searchProduto}) : super(key: key);
+  Produto({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _ProdutoState createState() => _ProdutoState();
 }
 
 class _ProdutoState extends State<Produto> {
-  String? categoriaNome;
-  late Future<List<ProdutoModel>> listaProdutos;
+  final nomeController = TextEditingController();
+  late Future<List<EstoqueModel>> estoques;
+  List<EstoqueMovimentacaoModel>? estoqueMovimentacao;
+  late Future<List<ProdutoModel>> produtos;
+  bool _isSelectEstoque = false;
 
-  void carregarProdutos() {
-    ProdutoController produtoController = new ProdutoController();
-    listaProdutos = produtoController.obtenhaTodos();
+  carregarEstoqueMovimentacao(value) async {
+    print(value);
+    //carregar estoque por id
+    estoqueMovimentacao = await EstoqueMovimentacaoController()
+        .obtenhaPorEstoque(int.parse(value));
+
+    setState(() {
+      _isSelectEstoque = true;
+    });
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    carregarProdutos();
+
+    //Carrega estoque
+    estoques = EstoqueController().obtenhaTodos();
+    produtos = ProdutoController().obtenhaTodos();
   }
 
   @override
   Widget build(BuildContext context) {
-    final listaProdutosWidget = FutureBuilder(
-      future: listaProdutos, // a previously-obtained Future<String> or null
-      builder:
-          (BuildContext context, AsyncSnapshot<List<ProdutoModel>> snapshot) {
-        var listaProdutosWidget;
-        List<Widget> children;
-        if (snapshot.hasData) {
-          var listaOrdenadaProduto = snapshot.data!.where((produto) {
-            return produto.nome!
-                .toLowerCase()
-                .startsWith(widget.searchProduto!.toLowerCase());
-          });
+    // final listaProdutosWidget = FutureBuilder(
+    //   future: listaProdutos, // a previously-obtained Future<String> or null
+    //   builder:
+    //       (BuildContext context, AsyncSnapshot<List<ProdutoModel>> snapshot) {
+    //     var listaProdutosWidget;
+    //     List<Widget> children;
+    //     if (snapshot.hasData) {
+    //       var listaOrdenadaProduto = snapshot.data!.where((produto) {
+    //         return produto.nome!
+    //             .toLowerCase()
+    //             .startsWith(widget.searchProduto!.toLowerCase());
+    //       });
 
-          listaProdutosWidget = listaOrdenadaProduto.map((produto) {
-            print(produto.nome);
-            return CardProduto(produto: produto);
-          }).toList();
-        } else if (snapshot.hasError) {
-          children = <Widget>[];
-        } else {
-          children = const <Widget>[];
-        }
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [...listaProdutosWidget],
-          ),
-        );
-      },
-    );
+    //       listaProdutosWidget = listaOrdenadaProduto.map((produto) {
+    //         print(produto.nome);
+    //         return CardProduto(produto: produto);
+    //       }).toList();
+    //     } else if (snapshot.hasError) {
+    //       children = <Widget>[];
+    //     } else {
+    //       children = const <Widget>[];
+    //     }
+    //     return Center(
+    //       child: Column(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         children: [...listaProdutosWidget],
+    //       ),
+    //     );
+    //   },
+    // );
 
     // List<CardProduto> listaProdutosWidget =
     //     widget.listaProdutos!.map((produto) {
@@ -413,17 +446,142 @@ class _ProdutoState extends State<Produto> {
     //   return CardProduto(produto: produto);
     // }).toList();
 
+    var mediaQuery = MediaQuery.of(context);
+
+    List<Widget> children = [];
+
+    print(_isSelectEstoque);
+    if (_isSelectEstoque) {
+      estoqueMovimentacao!.forEach((element) {
+        children.add(CardProduto(
+          idProduto: element.idProduto,
+          nomeProduto: nomeController.text,
+        ));
+      });
+    }
+
     return Container(
-        child: SingleChildScrollView(
-      child: listaProdutosWidget,
-    ));
+        child: FutureBuilder(
+            future: estoques,
+            builder: (context, AsyncSnapshot<List<EstoqueModel>> snapshot) {
+              if (snapshot.hasData) {
+                List<Map<String, dynamic>> selectEstoque = [];
+                snapshot.data!.forEach((element) {
+                  selectEstoque.add(
+                    {
+                      'value': element.id.toString(),
+                      'label': element.nome.toString(),
+                    },
+                  );
+                });
+
+                return MolduraComponent(
+                  label: 'Produtos',
+                  content: Column(
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: mediaQuery.size.width * 0.15,
+                            child: TextComponent(
+                              label: 'Estoque: ',
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Expanded(
+                            child: SelectFormField(
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(
+                                        left: 10, top: 15, bottom: 15),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color.fromRGBO(
+                                                191, 188, 188, 1))),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color.fromRGBO(
+                                                191, 188, 188, 1))),
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5)),
+                                    suffixIcon: Container(
+                                      child: Icon(Icons.arrow_drop_down),
+                                    )),
+                                labelText: 'Selecione o',
+                                type: SelectFormFieldType
+                                    .dropdown, // or can be dialog
+
+                                items: selectEstoque,
+                                validator: (value) {
+                                  if (value == null || value == "") {
+                                    return 'Campo obrigátorio!';
+                                  }
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                
+                                      context.read<CarrinhoModel>().idEstoque = int.parse(value);
+                                      print('ada' + value);
+                                  carregarEstoqueMovimentacao(value);
+                                },
+                                onSaved: (value) => print(value)),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      InputComponent(
+                        label: 'Produto: ',
+                        controller: nomeController,
+                        onChange: (value) {
+                          setState(() {});
+                        },
+                      ),
+                      SizedBox(height: 10,),
+                      //Lista de produtos
+                      if (_isSelectEstoque)
+                        Column(
+                          children: [...children],
+                        ),
+                      if (!_isSelectEstoque)
+                        FutureBuilder(
+                          future: produtos,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<List<ProdutoModel>> snapshot) {
+                            if (snapshot.hasData) {
+                              List<Widget> children = [];
+                              snapshot.data!.forEach((element) {
+                                children.add(CardProduto(
+                                  idProduto: element.id,
+                                  nomeProduto: nomeController.text,
+                                ));
+                              });
+                              return Container(
+                                child: Column(
+                                  children: [...children],
+                                ),
+                              );
+                            }
+                            //Para não retonar null
+                            return Container();
+                          },
+                        )
+                    ],
+                  ),
+                );
+              }
+
+              return Container();
+            }));
   }
 }
 
 class CardProduto extends StatefulWidget {
-  ProdutoModel? produto;
+  int? idProduto;
+  String? nomeProduto;
 
-  CardProduto({Key? key, this.produto}) : super(key: key);
+  CardProduto({Key? key, this.idProduto, this.nomeProduto}) : super(key: key);
 
   @override
   _CardProdutoState createState() => _CardProdutoState();
@@ -434,6 +592,9 @@ class _CardProdutoState extends State<CardProduto> {
   NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
   List<CategoriaModel>? listaCategoria;
   List<Map<String, dynamic>>? selectEstoque;
+
+  //Card produto aqui
+  late Future<ProdutoModel> produto;
 
   String? categoriaNome;
   final estoqueController = EstoqueController();
@@ -460,119 +621,210 @@ class _CardProdutoState extends State<CardProduto> {
   @override
   void initState() {
     // TODO: implement initState
-
-    getCategoria(widget.produto!.idCategoria);
+    produto = ProdutoController().obtenhaPorId(widget.idProduto!);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * .15,
-      margin: EdgeInsets.only(bottom: 5.0),
-      child: Row(
-        children: [
-          Expanded(
-              flex: 4,
-              child: Container(
-                padding: paddingPadrao,
-                color: colorCinza,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    var mediaQuery = MediaQuery.of(context);
+    return FutureBuilder(
+        future: produto,
+        builder: (BuildContext context, AsyncSnapshot<ProdutoModel> snapshot) {
+          if (snapshot.hasData) {
+            var regex = new RegExp(widget.nomeProduto!.toLowerCase());
+            var teste =
+                regex.hasMatch(snapshot.data!.nome.toString().toLowerCase());
+
+            if (teste) {
+              return Container(
+                margin: EdgeInsets.only(bottom: 10),
+                height: mediaQuery.size.height * 0.2,
+                child: Row(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextComponent(
-                          label: 'Nome:',
-                          tamanho: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        SizedBox(width: 5.0),
-                        Expanded(child: Text(widget.produto!.nome)),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextComponent(
-                          label: 'Categoria:',
-                          tamanho: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        SizedBox(width: 5.0),
-                        Expanded(child: Text(categoria!.nome)),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextComponent(
-                          label: 'Preço:',
-                          tamanho: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        SizedBox(width: 5.0),
-                        Expanded(
-                          child: Text(
-                              formatter.format(widget.produto!.valorVenda)),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              )),
-          Expanded(
-            child: Column(
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TextComponent(
-                        tamanho: 28,
-                        fontWeight: FontWeight.bold,
-                        label: context
-                            .watch<CarrinhoModel>()
-                            .getQuantidade(widget.produto!.id)
-                            .toString(),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 40,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ButtonCustom(
-                          isAdd: true,
-                          isRemoved: false,
-                          produto: widget.produto,
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        padding: paddingPadrao,
+                        color: colorCinza,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(snapshot.data!.nome),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(formatter.format(snapshot.data!.valorVenda))
+                          ],
                         ),
                       ),
-                      Expanded(
-                        child: ButtonCustom(
-                          isAdd: false,
-                          isRemoved: true,
-                          produto: widget.produto,
+                    ),
+                    Expanded(
+                        child: Column(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(context
+                                  .watch<CarrinhoModel>()
+                                  .getQuantidade(snapshot.data!.id)
+                                  .toString(),
+                                  style: TextStyle(fontWeight: FontWeight.bold,
+                                  fontSize: 14),),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Container(
+                                color: colorVerde,
+                                child: IconButton(
+                                  color: colorBranco,
+                                  icon: Icon(Icons.add),
+                                  onPressed: () => context
+                                      .read<CarrinhoModel>()
+                                      .addItemCarrinho(snapshot.data!),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Container(
+                                color: colorVermelho,
+                                child: IconButton(
+                                  color: colorBranco,
+                                  icon: Icon(
+                                    Icons.horizontal_rule_outlined,
+                                  ),
+                                  onPressed: () => context
+                                      .read<CarrinhoModel>()
+                                      .removeItemCarrinho(snapshot.data!),
+                                ),
+                              ))
+                            ],
+                          ),
+                        )
+                      ],
+                    ))
+                  ],
+                ),
+              );
+            } else {
+              return Container();
+            }
+          }
+          return Container();
+        });
+
+    // return Container(
+    //   height: MediaQuery.of(context).size.height * .15,
+    //   margin: EdgeInsets.only(bottom: 5.0),
+    //   child: Row(
+    //     children: [
+    //       Expanded(
+    //           flex: 4,
+    //           child: Container(
+    //             padding: paddingPadrao,
+    //             color: colorCinza,
+    //             child: Column(
+    //               mainAxisAlignment: MainAxisAlignment.center,
+    //               children: [
+    //                 Row(
+    //                   mainAxisAlignment: MainAxisAlignment.center,
+    //                   crossAxisAlignment: CrossAxisAlignment.center,
+    //                   children: [
+    //                     TextComponent(
+    //                       label: 'Nome:',
+    //                       tamanho: 18,
+    //                       fontWeight: FontWeight.bold,
+    //                     ),
+    //                     SizedBox(width: 5.0),
+    //                     Expanded(child: Text(widget.produto!.nome)),
+    //                   ],
+    //                 ),
+    //                 Row(
+    //                   mainAxisAlignment: MainAxisAlignment.center,
+    //                   crossAxisAlignment: CrossAxisAlignment.center,
+    //                   children: [
+    //                     TextComponent(
+    //                       label: 'Categoria:',
+    //                       tamanho: 18,
+    //                       fontWeight: FontWeight.bold,
+    //                     ),
+    //                     SizedBox(width: 5.0),
+    //                     Expanded(child: Text(categoria!.nome)),
+    //                   ],
+    //                 ),
+    //                 SizedBox(
+    //                   height: 5,
+    //                 ),
+    //                 Row(
+    //                   mainAxisAlignment: MainAxisAlignment.center,
+    //                   crossAxisAlignment: CrossAxisAlignment.center,
+    //                   children: [
+    //                     TextComponent(
+    //                       label: 'Preço:',
+    //                       tamanho: 18,
+    //                       fontWeight: FontWeight.bold,
+    //                     ),
+    //                     SizedBox(width: 5.0),
+    //                     Expanded(
+    //                       child: Text(
+    //                           formatter.format(widget.produto!.valorVenda)),
+    //                     )
+    //                   ],
+    //                 ),
+    //               ],
+    //             ),
+    //           )),
+    //       Expanded(
+    //         child: Column(
+    //           children: [
+    //             Expanded(
+    //               child: Row(
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 crossAxisAlignment: CrossAxisAlignment.center,
+    //                 children: [
+    //                   TextComponent(
+    //                     tamanho: 28,
+    //                     fontWeight: FontWeight.bold,
+    //                     label: context
+    //                         .watch<CarrinhoModel>()
+    //                         .getQuantidade(widget.produto!.id)
+    //                         .toString(),
+    //                   )
+    //                 ],
+    //               ),
+    //             ),
+    //             Container(
+    //               height: 40,
+    //               child: Row(
+    //                 children: [
+    //                   Expanded(
+    //                     child: ButtonCustom(
+    //                       isAdd: true,
+    //                       isRemoved: false,
+    //                       produto: widget.produto,
+    //                     ),
+    //                   ),
+    //                   Expanded(
+    //                     child: ButtonCustom(
+    //                       isAdd: false,
+    //                       isRemoved: true,
+    //                       produto: widget.produto,
+    //                     ),
+    //                   )
+    //                 ],
+    //               ),
+    //             )
+    //           ],
+    //         ),
+    //       )
+    //     ],
+    //   ),
+    // );
   }
 }
 
@@ -638,9 +890,10 @@ class Resumo extends StatelessWidget {
       : super(key: key);
 
   finalizarPedido(BuildContext context) async {
-    if (formCliente!.currentState!.validate()) {
+    if (keyFormCliente.currentState!.validate()) {
       var carrinho = context.read<CarrinhoModel>();
-      final pedidoController = PedidoController();
+     if(carrinho.idEstoque != null){
+        final pedidoController = PedidoController();
       final itemPedidoController = ItemPedidoController();
       PedidoModel pedido = new PedidoModel(
           idCliente: carrinho.cliente.id,
@@ -655,19 +908,33 @@ class Resumo extends StatelessWidget {
         element.idPedido = pedidoResposta.id;
       });
 
-      //Realiza a baixa no estoque
+      
+      print('teste' + carrinho.idEstoque.toString());
 
       //Enviado items
       carrinho.itemPedido.forEach((element) async {
         await itemPedidoController.crie(element);
       });
 
-      //limpa form
+      //Realiza a baixa no estoque
 
-      //  formCliente!.currentState!.reset();
-      limparPedido!();
+      carrinho.itemPedido.forEach((element) async {
+        //Recebe o estoque
+        var estoque = await EstoqueMovimentacaoController().obtenhaPorId(carrinho.idEstoque!);
+        //Atualiza a quantidade
+        estoque.quantidade -= element.quantidade;
+        //Seta nova atualização
+        var resultado = await EstoqueMovimentacaoController().atualize(estoque);
+      });
+
+
+      //limpa form
+      keyFormCliente.currentState!.reset();
       context.read<CarrinhoModel>().limparCarrinho(); //Chama notificação
       _showMyDialog(context, pedidoResposta);
+     }else{
+       _showDialog(context, 'Selecione o estoque para realizar o pedido !');
+     }
     }
   }
 
@@ -678,23 +945,26 @@ class Resumo extends StatelessWidget {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: TextComponent(
-            label: 'Pedido: #' + pedidoModel.id.toString(),
+          title: Text(
+            'Pedido: #' + pedidoModel.id.toString(),
+            style: TextStyle(
+                color: colorAzul, fontWeight: FontWeight.bold, fontSize: 24),
           ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                TextComponent(
-                  label: 'Data do pedido: ' +
+                Text(
+                  'Data do pedido: ' +
                       UtilData.obterDataDDMMAAAA(
                           DateTime.parse(pedidoModel.data)),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                TextComponent(
-                  label:
-                      'Total do pedido:' + formatter.format(pedidoModel.total),
+                Text(
+                  'Total do pedido:' + formatter.format(pedidoModel.total),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                 )
               ],
             ),
@@ -714,61 +984,117 @@ class Resumo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+
     return Container(
-        height: 40.0,
-        child: Row(
-          children: [
-            Expanded(
-                child: GestureDetector(
-              onTap: () {
-                abrirCarrinho!();
-              },
-              child: Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          TextComponent(
-                            label: 'por',
-                            tamanho: 18,
-                            fontWeight: FontWeight.bold,
-                            cor: colorAzul,
-                          ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          TextComponent(
-                            label: formatter.format(
-                                context.watch<CarrinhoModel>().getTotal()),
-                            tamanho: 24,
-                            cor: colorAzul,
-                            fontWeight: FontWeight.bold,
-                          )
-                        ]),
-                  ],
+      height: mediaQuery.size.height * 0.2,
+      width: mediaQuery.size.width,
+      color: colorBranco,
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: Text(
+                    'por ',
+                    style: TextStyle(
+                        color: colorAzul,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                  ),
                 ),
-              ),
-            )),
-            Expanded(
-                child: GestureDetector(
-              onTap: () {
-                finalizarPedido(context);
-              },
+                Flexible(
+                  child: Text(
+                      formatter
+                          .format(context.watch<CarrinhoModel>().getTotal()),
+                      style: TextStyle(
+                          color: colorAzul,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
+                )
+              ],
+            ),
+          ),
+          Expanded(
               child: Container(
-                color: colorVerde,
-                child: Align(
-                    alignment: Alignment.center,
-                    child: Image(
-                      image: AssetImage('assets/images/cart.png'),
-                    )),
-              ),
-            ))
-          ],
-        ));
+            color: colorVerde,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  iconSize: 48,
+                  onPressed: () => finalizarPedido(context),
+                  color: colorBranco,
+                  icon: Icon(
+                    Icons.shopping_cart_outlined,
+                  ),
+                )
+              ],
+            ),
+          ))
+        ],
+      ),
+    );
+
+    // return Container(
+    //     height: 40.0,
+    //     child: Row(
+    //       children: [
+    //         Expanded(
+    //             child: GestureDetector(
+    //           onTap: () {
+    //             abrirCarrinho!();
+    //           },
+    //           child: Container(
+    //             child: Column(
+    //               mainAxisAlignment: MainAxisAlignment.center,
+    //               crossAxisAlignment: CrossAxisAlignment.center,
+    //               children: [
+    //                 Row(
+    //                     mainAxisAlignment: MainAxisAlignment.center,
+    //                     crossAxisAlignment: CrossAxisAlignment.center,
+    //                     children: [
+    //                       TextComponent(
+    //                         label: 'por',
+    //                         tamanho: 18,
+    //                         fontWeight: FontWeight.bold,
+    //                         cor: colorAzul,
+    //                       ),
+    //                       SizedBox(
+    //                         width: 5,
+    //                       ),
+    //                       TextComponent(
+    //                         label: formatter.format(
+    //                             context.watch<CarrinhoModel>().getTotal()),
+    //                         tamanho: 24,
+    //                         cor: colorAzul,
+    //                         fontWeight: FontWeight.bold,
+    //                       )
+    //                     ]),
+    //               ],
+    //             ),
+    //           ),
+    //         )),
+    //         Expanded(
+    //             child: GestureDetector(
+    //           onTap: () {
+    //             finalizarPedido(context);
+    //           },
+    //           child: Container(
+    //             color: colorVerde,
+    //             child: Align(
+    //                 alignment: Alignment.center,
+    //                 child: Image(
+    //                   image: AssetImage('assets/images/cart.png'),
+    //                 )),
+    //           ),
+    //         ))
+    //       ],
+    //     ));
   }
 }
 
@@ -906,4 +1232,49 @@ class ItemCarrinhoCard extends StatelessWidget {
       ),
     );
   }
+}
+
+
+_showDialog(context, info) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          actions: [
+            Column(children: [
+              TextComponent(
+                label: info.toString(),
+              ),
+              Container(
+                width: 241,
+                height: 31,
+                padding: paddingPadrao  ,
+                margin: EdgeInsets.only(top: 18, bottom: 13),
+                child: ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromRGBO(0, 94, 181, 1)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100),
+                        ))),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Ok',
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontStyle: FontStyle.normal,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                      ),
+                    )),
+              )
+            ])
+          ],
+        );
+      });
 }

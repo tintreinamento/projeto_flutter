@@ -41,7 +41,7 @@ class _TextFormFieldComponentState extends State<TextFormFieldComponent> {
       decoration: inputDecorationComponent,
       onFieldSubmitted: (value) {
         if (widget.onFieldSubmitted != null) {
-          widget.onFieldSubmitted!();
+          widget.onFieldSubmitted!(value);
         }
       },
       onChanged: (value) {

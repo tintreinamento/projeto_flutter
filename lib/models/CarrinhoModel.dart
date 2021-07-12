@@ -8,9 +8,15 @@ import 'package:projeto_flutter/models/ProdutoModel.dart';
 class CarrinhoModel extends ChangeNotifier {
   String dataPedido = UtilData.obterDataDDMMAAAA(DateTime.now());
   double totalPedido = 0;
+  int? idEstoque;
   FuncionarioModel? funcionario;
   ClienteModel cliente = new ClienteModel();
   List<ItemPedidoModel> itemPedido = [];
+
+  setEstoque(int idEstoque){
+    this.idEstoque = idEstoque;
+    notifyListeners();
+  }
 
   getQuantidade(idProduto) {
     int index = itemPedido.indexWhere((item) {
@@ -76,7 +82,8 @@ class CarrinhoModel extends ChangeNotifier {
   void limparCarrinho() {
     dataPedido = UtilData.obterDataDDMMAAAA(DateTime.now());
     totalPedido = 0;
-    // funcionario = "";
+    this.idEstoque = 0;
+     funcionario = FuncionarioModel();
     cliente = ClienteModel();
     itemPedido = [];
     notifyListeners();
