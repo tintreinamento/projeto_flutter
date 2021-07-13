@@ -273,7 +273,7 @@ Widget cardCliente(BuildContext context, ClienteModel cliente) {
   );
 }
 
-_showDialog(context, info) {
+exibirShowDialog(context, info) {
   showDialog(
       context: context,
       builder: (BuildContext context) {

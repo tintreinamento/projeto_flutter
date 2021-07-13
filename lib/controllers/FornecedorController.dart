@@ -18,9 +18,7 @@ class FornecedorController {
 
   Future<FornecedorModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('fornecedor/' + id.toString());
-    if (resposta!.body == null) {
-      return null;
-    }
+ 
     var stringJson = json.decode(resposta.body);
 
     return new FornecedorModel.fromJson(stringJson);
@@ -28,9 +26,7 @@ class FornecedorController {
 
   Future<FornecedorModel?> obtenhaPorNome(String nome) async {
     final resposta = await new Api().obtenha('fornecedor/nome/' + nome);
-    if (resposta!.body == null) {
-      return null;
-    }
+   
     var stringJson = json.decode(resposta.body);
 
     return new FornecedorModel.fromJson(stringJson);
@@ -38,9 +34,7 @@ class FornecedorController {
 
   Future<FornecedorModel?> obtenhaPorCpfCnpj(String cpfCnpj) async {
     final resposta = await new Api().obtenha('fornecedor/cpfCnpj/' + cpfCnpj);
-    if (resposta!.body == null) {
-      return null;
-    }
+ 
     var stringJson = json.decode(resposta.body);
 
     return new FornecedorModel.fromJson(stringJson);

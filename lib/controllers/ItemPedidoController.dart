@@ -6,9 +6,7 @@ import 'package:projeto_flutter/services/Api.dart';
 class ItemPedidoController {
   Future<List<ItemPedidoModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('item-pedido');
-    if (resposta!.body == null) {
-      return null;
-    }
+ 
     List<ItemPedidoModel> colecaoDeItemPedido = new List.empty(growable: true);
 
     List<dynamic> stringJson = json.decode(resposta.body);
@@ -23,9 +21,7 @@ class ItemPedidoController {
 
   Future<ItemPedidoModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('item-pedido/' + id.toString());
-    if (resposta!.body == null) {
-      return null;
-    }
+   
     var stringJson = json.decode(resposta.body);
 
     return new ItemPedidoModel.fromJson(stringJson);

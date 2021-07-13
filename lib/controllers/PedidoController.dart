@@ -1,15 +1,13 @@
 import 'dart:convert';
 
-import 'package:projeto_flutter/models/PedidoFornecedorModel.dart';
+
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
 class PedidoController {
   Future<List<PedidoModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('pedido');
-if(resposta!.body == null){
-      return null;
-    }
+
     List<PedidoModel> colecaoDePedidos = new List.empty(growable: true);
 
     List<dynamic> stringJson = json.decode(resposta.body);
@@ -24,9 +22,7 @@ if(resposta!.body == null){
 
   Future<PedidoModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('pedido/' + id.toString());
-if(resposta!.body == null){
-      return null;
-    }
+
     var stringJson = json.decode(resposta.body);
 
     return new PedidoModel.fromJson(stringJson);

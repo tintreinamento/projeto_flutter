@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flux_validator_dart/flux_validator_dart.dart';
-import 'package:intl/intl.dart';
+
 import 'package:projeto_flutter/componentes/AppBarComponent.dart';
 import 'package:projeto_flutter/componentes/ButtonComponent.dart';
-import 'package:projeto_flutter/componentes/DropDownComponent.dart';
+
 
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
-import 'package:projeto_flutter/componentes/TextFormFieldComponent.dart';
-import 'package:projeto_flutter/componentes/inputDropDownComponent.dart';
+
 import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
-import 'package:flutter/services.dart';
+
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
 import 'package:projeto_flutter/controllers/EnderecoCorreioController.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
-import 'package:projeto_flutter/models/EnderecoCorreioModel.dart';
+
 import 'package:select_form_field/select_form_field.dart';
 
 class ClienteCadastroView extends StatefulWidget {
@@ -54,7 +53,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
   ];
 
   final _formKeyCliente = GlobalKey<FormState>();
-  final _formKeyEndereco = GlobalKey<FormState>();
+
 
   //Dados de cliente
   final nomeController = TextEditingController();
@@ -404,7 +403,7 @@ class _ClienteCadastroViewState extends State<ClienteCadastroView> {
                                                 child: SizedBox(
                                                   height: 10,
                                                   width: 10,
-                                                  child: FlatButton(
+                                                  child: TextButton(
                                                       onPressed: () =>
                                                           exibirData(context),
                                                       child: Icon(

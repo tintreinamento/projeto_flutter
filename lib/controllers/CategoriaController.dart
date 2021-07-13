@@ -6,9 +6,7 @@ class CategoriaController {
   Future<List<CategoriaModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('categoria');
 
-    if(resposta!.body == null){
-      return null;
-    }
+  
 
     List<CategoriaModel> colecaoDeCategoria = new List.empty(growable: true);
 
@@ -25,9 +23,6 @@ class CategoriaController {
   Future<CategoriaModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('categoria/' + id.toString());
 
-    if(resposta!.body == null){
-      return null;
-    }
 
     var stringJson = json.decode(resposta.body);
     return new CategoriaModel.fromJson(stringJson);

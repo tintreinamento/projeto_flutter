@@ -5,9 +5,7 @@ import 'package:projeto_flutter/services/Api.dart';
 class CidadeController {
   Future<List<CidadeModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('cidade');
-    if(resposta!.body == null){
-      return null;
-    }
+
 
     List<CidadeModel> colecaoDeClientes = new List.empty(growable: true);
 
@@ -23,9 +21,7 @@ class CidadeController {
 
   Future<CidadeModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('cidade/' + id.toString());
-if(resposta!.body == null){
-      return null;
-    }
+
     var stringJson = json.decode(resposta.body);
     return new CidadeModel.fromJson(stringJson);
   }

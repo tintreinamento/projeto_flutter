@@ -5,9 +5,7 @@ import 'package:projeto_flutter/services/Api.dart';
 class EnderecoController {
   Future<EnderecoModel?> obtenhaEnderecoPorCep(String cep) async {
     final resposta = await new Api().obtenha(cep);
-    if (resposta!.body == null) {
-      return null;
-    }
+   
     if (resposta.statusCode != 200) {
       throw new Exception("Falha ao comunicar com a api");
     }
@@ -20,9 +18,7 @@ class EnderecoController {
   Future<List<EnderecoModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('endereco');
 
-    if (resposta!.body == null) {
-      return null;
-    }
+   
     List<EnderecoModel> colecaoDeEnderecos = new List.empty(growable: true);
 
     List<dynamic> stringJson = json.decode(resposta.body);
@@ -37,9 +33,7 @@ class EnderecoController {
 
   Future<EnderecoModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('endereco/' + id.toString());
-    if (resposta!.body == null) {
-      return null;
-    }
+  
     var stringJson = json.decode(resposta.body);
 
     return new EnderecoModel.fromJson(stringJson);
@@ -48,9 +42,7 @@ class EnderecoController {
   Future<EnderecoModel?> obtenhaPorIdFornecedor(int id) async {
     final resposta =
         await new Api().obtenha('endereco/fornecedor/' + id.toString());
-    if (resposta!.body == null) {
-      return null;
-    }
+  
     var stringJson = json.decode(resposta.body);
 
     return new EnderecoModel.fromJson(stringJson);

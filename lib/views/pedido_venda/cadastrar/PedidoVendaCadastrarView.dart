@@ -8,15 +8,15 @@ import 'package:projeto_flutter/componentes/ButtonComponent.dart';
 import 'package:projeto_flutter/componentes/DrawerComponent.dart';
 import 'package:projeto_flutter/componentes/InputComponent.dart';
 import 'package:projeto_flutter/componentes/MoldulraComponent.dart';
-import 'package:projeto_flutter/componentes/ResponsiveComponenet.dart';
+
 import 'package:projeto_flutter/componentes/SubMenuComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
-import 'package:projeto_flutter/controllers/CategoriaController.dart';
+
 import 'package:projeto_flutter/controllers/ClienteController.dart';
 import 'package:projeto_flutter/controllers/EstoqueController.dart';
 import 'package:projeto_flutter/controllers/EstoqueMovimentacaoController.dart';
-import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
+
 import 'package:projeto_flutter/controllers/PedidoController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
 import 'package:projeto_flutter/models/CarrinhoModel.dart';
@@ -42,44 +42,6 @@ class PedidoVendaCadastraView extends StatefulWidget {
 
 class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
   bool active = false;
-
-  List<ProdutoModel>? listaProdutos;
-  List<ProdutoModel>? auxListaProdutos;
-
-  GlobalKey<FormState> formCliente = new GlobalKey<FormState>();
-  GlobalKey<FormState> formEndereco = new GlobalKey<FormState>();
-  GlobalKey<FormState> formConsultaProduto = new GlobalKey<FormState>();
-
-  String searchProduto = "";
-
-  //Busca produto
-  void buscarProduto(String nomeProduto) {
-    setState(() {
-      searchProduto = nomeProduto;
-    });
-    // var auxListaProdutos = listaProdutos!.where((produto) {
-    //   return produto.nome!.toLowerCase().startsWith(nomeProduto.toLowerCase());
-    // }).toList();
-
-    // setState(() {
-    //   this.auxListaProdutos = auxListaProdutos;
-    // });
-  }
-
-  void carregarProdutos() async {
-    ProdutoController produtoController = new ProdutoController();
-    listaProdutos = await produtoController.obtenhaTodos();
-
-    setState(() {
-      auxListaProdutos = listaProdutos;
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    carregarProdutos();
-  }
 
   abrirCarrinho() {
     setState(() {
@@ -123,6 +85,7 @@ class _PedidoVendaCadastraViewState extends State<PedidoVendaCadastraView> {
   }
 }
 
+//Formulário de cliente
 class FormCliente extends StatefulWidget {
   FormCliente({
     Key? key,
@@ -341,34 +304,7 @@ class _FormClienteState extends State<FormCliente> {
   }
 }
 
-class FormConsultaProduto extends StatelessWidget {
-  GlobalKey<FormState> formConsultaProduto;
-  Function? buscarProduto;
-  FormConsultaProduto(
-      {Key? key, required this.formConsultaProduto, this.buscarProduto})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-        key: formConsultaProduto,
-        child: Column(children: [
-          MolduraComponent(
-              label: 'Consultar',
-              content: Column(
-                children: [
-                  InputComponent(
-                    label: 'Produto: ',
-                    onChange: buscarProduto,
-                    //controller: cpfCnpjController,
-                    // onFieldSubmitted: carregarCliente,
-                  ),
-                ],
-              ))
-        ]));
-  }
-}
-
+//Produto
 class Produto extends StatefulWidget {
   Produto({
     Key? key,
@@ -379,7 +315,7 @@ class Produto extends StatefulWidget {
 }
 
 class _ProdutoState extends State<Produto> {
-  final nomeController = TextEditingController();
+  TextEditingController nomeController = TextEditingController();
   late Future<List<EstoqueModel>> estoques;
   List<EstoqueMovimentacaoModel>? estoqueMovimentacao;
   late Future<List<ProdutoModel>> produtos;
@@ -398,6 +334,7 @@ class _ProdutoState extends State<Produto> {
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
 
@@ -408,44 +345,6 @@ class _ProdutoState extends State<Produto> {
 
   @override
   Widget build(BuildContext context) {
-    // final listaProdutosWidget = FutureBuilder(
-    //   future: listaProdutos, // a previously-obtained Future<String> or null
-    //   builder:
-    //       (BuildContext context, AsyncSnapshot<List<ProdutoModel>> snapshot) {
-    //     var listaProdutosWidget;
-    //     List<Widget> children;
-    //     if (snapshot.hasData) {
-    //       var listaOrdenadaProduto = snapshot.data!.where((produto) {
-    //         return produto.nome!
-    //             .toLowerCase()
-    //             .startsWith(widget.searchProduto!.toLowerCase());
-    //       });
-
-    //       listaProdutosWidget = listaOrdenadaProduto.map((produto) {
-    //         print(produto.nome);
-    //         return CardProduto(produto: produto);
-    //       }).toList();
-    //     } else if (snapshot.hasError) {
-    //       children = <Widget>[];
-    //     } else {
-    //       children = const <Widget>[];
-    //     }
-    //     return Center(
-    //       child: Column(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [...listaProdutosWidget],
-    //       ),
-    //     );
-    //   },
-    // );
-
-    // List<CardProduto> listaProdutosWidget =
-    //     widget.listaProdutos!.map((produto) {
-    //   print(produto.nome);
-    //   return CardProduto(produto: produto);
-    // }).toList();
-
     var mediaQuery = MediaQuery.of(context);
 
     List<Widget> children = [];
@@ -583,6 +482,7 @@ class _ProdutoState extends State<Produto> {
   }
 }
 
+// ignore: must_be_immutable
 class CardProduto extends StatefulWidget {
   int? idProduto;
   String? nomeProduto;
@@ -594,7 +494,6 @@ class CardProduto extends StatefulWidget {
 }
 
 class _CardProdutoState extends State<CardProduto> {
-  CategoriaModel? categoria;
   NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
   List<CategoriaModel>? listaCategoria;
   List<Map<String, dynamic>>? selectEstoque;
@@ -604,28 +503,11 @@ class _CardProdutoState extends State<CardProduto> {
 
   String? categoriaNome;
   final estoqueController = EstoqueController();
-  getCategoria(value) async {
-    CategoriaController categoriaController = new CategoriaController();
-
-    final categoria = await categoriaController.obtenhaPorId(value);
-
-    setState(() {
-      this.categoria = categoria;
-    });
-  }
-
-  getEstoque() async {
-    // var estoque =
-    //     await estoqueController.obtenhaEstoqueProduto(widget.produto!.id.to);
-    // setState(() {
-    //   estoque.forEach((element) {
-    //     selectEstoque!.add({'value': element.id, 'label': element.nome});
-    //   });
-    // });
-  }
 
   @override
+  // ignore: must_call_super
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     produto = ProdutoController().obtenhaPorId(widget.idProduto!);
   }
@@ -725,184 +607,31 @@ class _CardProdutoState extends State<CardProduto> {
           }
           return Container();
         });
-
-    // return Container(
-    //   height: MediaQuery.of(context).size.height * .15,
-    //   margin: EdgeInsets.only(bottom: 5.0),
-    //   child: Row(
-    //     children: [
-    //       Expanded(
-    //           flex: 4,
-    //           child: Container(
-    //             padding: paddingPadrao,
-    //             color: colorCinza,
-    //             child: Column(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               children: [
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.center,
-    //                   crossAxisAlignment: CrossAxisAlignment.center,
-    //                   children: [
-    //                     TextComponent(
-    //                       label: 'Nome:',
-    //                       tamanho: 18,
-    //                       fontWeight: FontWeight.bold,
-    //                     ),
-    //                     SizedBox(width: 5.0),
-    //                     Expanded(child: Text(widget.produto!.nome)),
-    //                   ],
-    //                 ),
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.center,
-    //                   crossAxisAlignment: CrossAxisAlignment.center,
-    //                   children: [
-    //                     TextComponent(
-    //                       label: 'Categoria:',
-    //                       tamanho: 18,
-    //                       fontWeight: FontWeight.bold,
-    //                     ),
-    //                     SizedBox(width: 5.0),
-    //                     Expanded(child: Text(categoria!.nome)),
-    //                   ],
-    //                 ),
-    //                 SizedBox(
-    //                   height: 5,
-    //                 ),
-    //                 Row(
-    //                   mainAxisAlignment: MainAxisAlignment.center,
-    //                   crossAxisAlignment: CrossAxisAlignment.center,
-    //                   children: [
-    //                     TextComponent(
-    //                       label: 'Preço:',
-    //                       tamanho: 18,
-    //                       fontWeight: FontWeight.bold,
-    //                     ),
-    //                     SizedBox(width: 5.0),
-    //                     Expanded(
-    //                       child: Text(
-    //                           formatter.format(widget.produto!.valorVenda)),
-    //                     )
-    //                   ],
-    //                 ),
-    //               ],
-    //             ),
-    //           )),
-    //       Expanded(
-    //         child: Column(
-    //           children: [
-    //             Expanded(
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 crossAxisAlignment: CrossAxisAlignment.center,
-    //                 children: [
-    //                   TextComponent(
-    //                     tamanho: 28,
-    //                     fontWeight: FontWeight.bold,
-    //                     label: context
-    //                         .watch<CarrinhoModel>()
-    //                         .getQuantidade(widget.produto!.id)
-    //                         .toString(),
-    //                   )
-    //                 ],
-    //               ),
-    //             ),
-    //             Container(
-    //               height: 40,
-    //               child: Row(
-    //                 children: [
-    //                   Expanded(
-    //                     child: ButtonCustom(
-    //                       isAdd: true,
-    //                       isRemoved: false,
-    //                       produto: widget.produto,
-    //                     ),
-    //                   ),
-    //                   Expanded(
-    //                     child: ButtonCustom(
-    //                       isAdd: false,
-    //                       isRemoved: true,
-    //                       produto: widget.produto,
-    //                     ),
-    //                   )
-    //                 ],
-    //               ),
-    //             )
-    //           ],
-    //         ),
-    //       )
-    //     ],
-    //   ),
-    // );
   }
 }
 
-class ButtonCustom extends StatelessWidget {
-  bool isAdd = false;
-  bool isRemoved = false;
-  ProdutoModel? produto;
+//Resumo do pedido
 
-  ButtonCustom(
-      {Key? key, required this.isAdd, required this.isRemoved, this.produto})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    GestureDetector gestureDetector = GestureDetector();
-
-    if (isAdd) {
-      gestureDetector = GestureDetector(
-        onTap: () => context.read<CarrinhoModel>().addItemCarrinho(produto!),
-        child: Container(
-          color: colorVerde,
-          child: Align(
-            alignment: Alignment.center,
-            child: TextComponent(
-              label: '+',
-              cor: colorBranco,
-              tamanho: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      );
-    }
-
-    if (isRemoved) {
-      gestureDetector = GestureDetector(
-        onTap: () => context.read<CarrinhoModel>().removeItemCarrinho(produto!),
-        child: Container(
-          color: colorVermelho,
-          child: Align(
-            alignment: Alignment.center,
-            child: TextComponent(
-              label: '-',
-              cor: colorBranco,
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Container(
-      child: gestureDetector,
-    );
-  }
-}
-
-class Resumo extends StatelessWidget {
-  GlobalKey<FormState>? formCliente;
+// ignore: must_be_immutable
+class Resumo extends StatefulWidget {
   Function? limparPedido;
   Function? abrirCarrinho;
+
+  Resumo({Key? key, this.abrirCarrinho, this.limparPedido}) : super(key: key);
+
+  @override
+  _ResumoState createState() => _ResumoState();
+}
+
+class _ResumoState extends State<Resumo> {
   NumberFormat formatter = NumberFormat.simpleCurrency(locale: 'pt_BR');
-  Resumo({Key? key, this.formCliente, this.abrirCarrinho, this.limparPedido})
-      : super(key: key);
 
   finalizarPedido(BuildContext context) async {
     if (keyFormClientePedidoVenda.currentState!.validate()) {
       var carrinho = context.read<CarrinhoModel>();
       if (carrinho.idEstoque != null) {
         final pedidoController = PedidoController();
-        final itemPedidoController = ItemPedidoController();
+
         PedidoModel pedido = new PedidoModel(
             idCliente: carrinho.cliente.id,
             idFuncionario: 1,
@@ -927,16 +656,16 @@ class Resumo extends StatelessWidget {
 
         //Realiza a baixa no estoque
 
-        carrinho.itemPedido.forEach((element) async {
-          //Recebe o estoque
-          var estoque = await EstoqueMovimentacaoController()
-              .obtenhaPorId(carrinho.idEstoque!);
-          //Atualiza a quantidade
-          estoque.quantidade -= element.quantidade;
-          //Seta nova atualização
-          var resultado =
-              await EstoqueMovimentacaoController().atualize(estoque);
-        });
+        // carrinho.itemPedido.forEach((element) async {
+        //   //Recebe o estoque
+        //   var estoque = await EstoqueMovimentacaoController()
+        //       .obtenhaPorId(carrinho.idEstoque!);
+        //   //Atualiza a quantidade
+        //   estoque.quantidade -= element.quantidade;
+        //   //Seta nova atualização
+
+        //       await EstoqueMovimentacaoController().atualize(estoque);
+        // });
 
         //limpa form
         keyFormClientePedidoVenda.currentState!.reset();
@@ -1050,62 +779,6 @@ class Resumo extends StatelessWidget {
         ],
       ),
     );
-
-    // return Container(
-    //     height: 40.0,
-    //     child: Row(
-    //       children: [
-    //         Expanded(
-    //             child: GestureDetector(
-    //           onTap: () {
-    //             abrirCarrinho!();
-    //           },
-    //           child: Container(
-    //             child: Column(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               crossAxisAlignment: CrossAxisAlignment.center,
-    //               children: [
-    //                 Row(
-    //                     mainAxisAlignment: MainAxisAlignment.center,
-    //                     crossAxisAlignment: CrossAxisAlignment.center,
-    //                     children: [
-    //                       TextComponent(
-    //                         label: 'por',
-    //                         tamanho: 18,
-    //                         fontWeight: FontWeight.bold,
-    //                         cor: colorAzul,
-    //                       ),
-    //                       SizedBox(
-    //                         width: 5,
-    //                       ),
-    //                       TextComponent(
-    //                         label: formatter.format(
-    //                             context.watch<CarrinhoModel>().getTotal()),
-    //                         tamanho: 24,
-    //                         cor: colorAzul,
-    //                         fontWeight: FontWeight.bold,
-    //                       )
-    //                     ]),
-    //               ],
-    //             ),
-    //           ),
-    //         )),
-    //         Expanded(
-    //             child: GestureDetector(
-    //           onTap: () {
-    //             finalizarPedido(context);
-    //           },
-    //           child: Container(
-    //             color: colorVerde,
-    //             child: Align(
-    //                 alignment: Alignment.center,
-    //                 child: Image(
-    //                   image: AssetImage('assets/images/cart.png'),
-    //                 )),
-    //           ),
-    //         ))
-    //       ],
-    //     ));
   }
 }
 
@@ -1172,14 +845,20 @@ class _ProdutoCarrinhoWidgetState extends State<ProdutoCarrinhoWidget> {
   }
 }
 
-class ItemCarrinhoCard extends StatelessWidget {
+// ignore: must_be_immutable
+class ItemCarrinhoCard extends StatefulWidget {
   ItemPedidoModel itemPedido;
 
   ItemCarrinhoCard({Key? key, required this.itemPedido}) : super(key: key);
 
   @override
+  _ItemCarrinhoCardState createState() => _ItemCarrinhoCardState();
+}
+
+class _ItemCarrinhoCardState extends State<ItemCarrinhoCard> {
+  @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    //var size = MediaQuery.of(context).size;
 
     return Container(
       padding: paddingPadrao,
@@ -1198,7 +877,7 @@ class ItemCarrinhoCard extends StatelessWidget {
                     child: Row(
                       children: [
                         TextComponent(label: 'Nome: '),
-                        TextComponent(label: itemPedido.idProduto.toString()),
+                        TextComponent(label: widget.itemPedido.idProduto.toString()),
                       ],
                     ),
                   ),
@@ -1206,7 +885,7 @@ class ItemCarrinhoCard extends StatelessWidget {
                     child: Row(
                       children: [
                         TextComponent(label: 'Categoria: '),
-                        TextComponent(label: itemPedido.idProduto.toString()),
+                        TextComponent(label: widget.itemPedido.idProduto.toString()),
                       ],
                     ),
                   ),
@@ -1214,7 +893,7 @@ class ItemCarrinhoCard extends StatelessWidget {
                     child: Row(
                       children: [
                         TextComponent(label: 'Preço: '),
-                        TextComponent(label: itemPedido.idProduto.toString()),
+                        TextComponent(label: widget.itemPedido.idProduto.toString()),
                       ],
                     ),
                   )
@@ -1231,7 +910,7 @@ class ItemCarrinhoCard extends StatelessWidget {
                       TextComponent(
                           label: context
                               .read<CarrinhoModel>()
-                              .getQuantidade(itemPedido.idProduto)
+                              .getQuantidade(widget.itemPedido.idProduto)
                               .toString()),
                     ],
                   ),
