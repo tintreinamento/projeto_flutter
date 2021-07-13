@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/models/AutenticacaoModel.dart';
-import 'package:projeto_flutter/models/CarrinhoModel.dart';
-import 'package:projeto_flutter/services/Auth.dart';
+
 //import 'package:projeto_flutter/views/pedido/pedido.dart';
 //import '../views/pedido/pedido.dart';
 
@@ -11,8 +10,6 @@ import 'package:provider/provider.dart';
 
 class DrawerComponent extends StatelessWidget {
   Widget headerMenu(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-
     return Container(
         width: 368,
         height: 73,
@@ -36,7 +33,7 @@ class DrawerComponent extends StatelessWidget {
                     Positioned(
                       top: 2,
                       left: -20,
-                      child: FlatButton(
+                      child: TextButton(
                           onPressed: () {
                             //Auth.logout();
                             Navigator.of(context).pushNamed('/login');
@@ -77,7 +74,7 @@ class DrawerComponent extends StatelessWidget {
                     Positioned(
                         top: 1,
                         left: 290,
-                        child: FlatButton(
+                        child: TextButton(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -88,32 +85,35 @@ class DrawerComponent extends StatelessWidget {
   }
 
   //Item do menu
-  Widget itemMenu(IconData icon, String titulo, BuildContext context, String rota) {
+  Widget itemMenu(
+      IconData icon, String titulo, BuildContext context, String rota) {
     return Container(
       margin: EdgeInsets.fromLTRB(0.0, 32.0, 0.0, 0.0),
       child: ListTile(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-             Row(children: [
-               Icon(icon),
-               SizedBox(width: 10),
-            Text(
-              titulo,
-              style: TextStyle(
-                fontFamily: 'Roboto',
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.w700,
-                fontSize: 18.0,
-                color: Colors.black,
-              ),
+            Row(
+              children: [
+                Icon(icon),
+                SizedBox(width: 10),
+                Text(
+                  titulo,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontStyle: FontStyle.normal,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18.0,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
-             ],),
             Icon(Icons.arrow_forward_ios),
           ],
         ),
         onTap: () {
-          Navigator.pushNamed(context, rota);
+          Navigator.of(context).pushReplacementNamed(rota);
         },
       ),
     );
@@ -140,17 +140,27 @@ class DrawerComponent extends StatelessWidget {
                     icon: Icon(Icons.logout),
                     color: colorBranco,
                     onPressed: () => Navigator.pushNamed(context, '/login')),
-                Row(children: [
-                  Icon(Icons.person, color: colorBranco, size: 32,),
-                  SizedBox(width: 10,),
-                  TextComponent(
-                    fontSize: 18,
-                  label: 'Olá, ' + Provider.of<AutenticacaoModel>(context)
-                      .funcionarioModel!.nome
-                      .toString(),
-                  cor: colorBranco,
-                ),
-                ],)
+                Row(
+                  children: [
+                    Icon(
+                      Icons.person,
+                      color: colorBranco,
+                      size: 32,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    TextComponent(
+                      fontSize: 18,
+                      label: 'Olá, ' +
+                          Provider.of<AutenticacaoModel>(context)
+                              .funcionarioModel!
+                              .nome
+                              .toString(),
+                      cor: colorBranco,
+                    ),
+                  ],
+                )
               ],
             ),
           ),
@@ -161,23 +171,34 @@ class DrawerComponent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 5,),
-                  itemMenu( Icons.local_shipping_outlined, 'Fornecedor', context, '/cadastrar_fornecedor'),
-                  itemMenu(Icons.shopping_bag_outlined,'Produto', context, '/cadastrar_produto'),
-                  itemMenu(Icons.paid_outlined,'Precificação', context, '/cadastrar_precificacao'),
-                  itemMenu(Icons.inventory_2_outlined,'Estoque', context, '/estoque'),
-                  itemMenu( Icons.add_shopping_cart_outlined,
+                  SizedBox(
+                    height: 5,
+                  ),
+                  itemMenu(Icons.local_shipping_outlined, 'Fornecedor', context,
+                      '/cadastrar_fornecedor'),
+                  itemMenu(Icons.shopping_bag_outlined, 'Produto', context,
+                      '/cadastrar_produto'),
+                  itemMenu(Icons.paid_outlined, 'Precificação', context,
+                      '/cadastrar_precificacao'),
+                  itemMenu(Icons.inventory_2_outlined, 'Estoque', context,
+                      '/estoque'),
+                  itemMenu(Icons.add_shopping_cart_outlined,
                       'Pedido de Compras', context, '/pedido_compra_cadastrar'),
-                  itemMenu(Icons.person_outline,'Cliente', context, '/cadastrar_cliente'),
-                  itemMenu(Icons.shopping_cart_outlined ,
-                      'Pedido de venda', context, '/pedido_venda_cadastrar'),
-                      Divider(),
+                  itemMenu(Icons.person_outline, 'Cliente', context,
+                      '/cadastrar_cliente'),
+                  itemMenu(Icons.shopping_cart_outlined, 'Pedido de venda',
+                      context, '/pedido_venda_cadastrar'),
+                  Divider(),
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
-                    child: TextComponent(label: 'Versão 1.0.0', fontWeight: FontWeight.bold, fontSize: 14, ),
+                    padding:
+                        const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+                    child: TextComponent(
+                      label: 'Versão 1.0.0',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   )
                 ],
-                
               ),
             ),
           )

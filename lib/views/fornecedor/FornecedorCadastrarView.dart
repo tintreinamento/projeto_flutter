@@ -29,8 +29,8 @@ class FornecedorCadastrarView extends StatefulWidget {
 }
 
 class _FornecedorCadastrarViewState extends State<FornecedorCadastrarView> {
-  final _formKeyFornecedor = GlobalKey<FormState>();
-  final _formKeyEndereco = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKeyFornecedor = GlobalKey<FormState>();
+  GlobalKey<FormState> _formKeyEndereco = GlobalKey<FormState>();
 
   //Dados de fornecedor
   final nomeController = TextEditingController();

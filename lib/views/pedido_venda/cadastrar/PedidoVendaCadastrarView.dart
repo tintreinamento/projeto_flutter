@@ -16,9 +16,11 @@ import 'package:projeto_flutter/componentes/styles.dart';
 import 'package:projeto_flutter/controllers/ClienteController.dart';
 import 'package:projeto_flutter/controllers/EstoqueController.dart';
 import 'package:projeto_flutter/controllers/EstoqueMovimentacaoController.dart';
+import 'package:projeto_flutter/controllers/ItemPedidoController.dart';
 
 import 'package:projeto_flutter/controllers/PedidoController.dart';
 import 'package:projeto_flutter/controllers/ProdutoController.dart';
+import 'package:projeto_flutter/models/AutenticacaoModel.dart';
 import 'package:projeto_flutter/models/CarrinhoModel.dart';
 import 'package:projeto_flutter/models/CategoriaModel.dart';
 import 'package:projeto_flutter/models/ClienteModel.dart';
@@ -377,102 +379,108 @@ class _ProdutoState extends State<Produto> {
 
                 return MolduraComponent(
                   label: 'Produtos',
-                  content: Column(
-                    children: [
-                      SingleChildScrollView(
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: mediaQuery.size.width * 0.15,
-                              child: TextComponent(
-                                label: 'Estoque: ',
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Expanded(
-                              child: SelectFormField(
-                                  decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.only(
-                                          left: 10, top: 15, bottom: 15),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color.fromRGBO(
-                                                  191, 188, 188, 1))),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Color.fromRGBO(
-                                                  191, 188, 188, 1))),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      suffixIcon: Container(
-                                        child: Icon(Icons.arrow_drop_down),
-                                      )),
-                                  labelText: 'Selecione o',
-                                  type: SelectFormFieldType
-                                      .dropdown, // or can be dialog
-
-                                  items: selectEstoque,
-                                  validator: (value) {
-                                    if (value == null || value == "") {
-                                      return 'Campo obrigátorio!';
-                                    }
-                                    return null;
-                                  },
-                                  onChanged: (value) {
-                                    context.read<CarrinhoModel>().idEstoque =
-                                        int.parse(value);
-                                    print('ada' + value);
-                                    carregarEstoqueMovimentacao(value);
-                                  },
-                                  onSaved: (value) => print(value)),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      InputComponent(
-                        label: 'Produto: ',
-                        controller: nomeController,
-                        onChange: (value) {
-                          setState(() {});
-                        },
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      //Lista de produtos
-                      if (_isSelectEstoque)
-                        Column(
-                          children: [...children],
-                        ),
-                      if (!_isSelectEstoque)
-                        FutureBuilder(
-                          future: produtos,
-                          builder: (BuildContext context,
-                              AsyncSnapshot<List<ProdutoModel>> snapshot) {
-                            if (snapshot.hasData) {
-                              List<Widget> children = [];
-                              snapshot.data!.forEach((element) {
-                                children.add(CardProduto(
-                                  idProduto: element.id,
-                                  nomeProduto: nomeController.text,
-                                ));
-                              });
-                              return Container(
-                                child: Column(
-                                  children: [...children],
+                  content: Expanded(
+                    child: Column(
+                      children: [
+                        SingleChildScrollView(
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: mediaQuery.size.width * 0.15,
+                                child: TextComponent(
+                                  label: 'Estoque: ',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                              );
-                            }
-                            //Para não retonar null
-                            return Container();
+                              ),
+                              Expanded(
+                                child: SelectFormField(
+                                    decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.only(
+                                            left: 10, top: 15, bottom: 15),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color.fromRGBO(
+                                                    191, 188, 188, 1))),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color.fromRGBO(
+                                                    191, 188, 188, 1))),
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        suffixIcon: Container(
+                                          child: Icon(Icons.arrow_drop_down),
+                                        )),
+                                    labelText: 'Selecione o',
+                                    type: SelectFormFieldType
+                                        .dropdown, // or can be dialog
+
+                                    items: selectEstoque,
+                                    validator: (value) {
+                                      if (value == null || value == "") {
+                                        return 'Campo obrigátorio!';
+                                      }
+                                      return null;
+                                    },
+                                    onChanged: (value) {
+                                      context.read<CarrinhoModel>().idEstoque =
+                                          int.parse(value);
+                                      print('ada' + value);
+                                      carregarEstoqueMovimentacao(value);
+                                    },
+                                    onSaved: (value) => print(value)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        InputComponent(
+                          label: 'Produto: ',
+                          controller: nomeController,
+                          onChange: (value) {
+                            setState(() {});
                           },
-                        )
-                    ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        //Lista de produtos
+                        if (_isSelectEstoque)
+                          Expanded(
+                            child: Column(
+                              children: [...children],
+                            ),
+                          ),
+                        if (!_isSelectEstoque)
+                          FutureBuilder(
+                            future: produtos,
+                            builder: (BuildContext context,
+                                AsyncSnapshot<List<ProdutoModel>> snapshot) {
+                              if (snapshot.hasData) {
+                                List<Widget> children = [];
+                                snapshot.data!.forEach((element) {
+                                  children.add(CardProduto(
+                                    idProduto: element.id,
+                                    nomeProduto: nomeController.text,
+                                  ));
+                                });
+                                return Container(
+                                  child: Expanded(
+                                    child: Column(
+                                      children: [...children],
+                                    ),
+                                  ),
+                                );
+                              }
+                              //Para não retonar null
+                              return Container();
+                            },
+                          )
+                      ],
+                    ),
                   ),
                 );
               }
@@ -629,20 +637,28 @@ class _ResumoState extends State<Resumo> {
   finalizarPedido(BuildContext context) async {
     if (keyFormClientePedidoVenda.currentState!.validate()) {
       var carrinho = context.read<CarrinhoModel>();
+      var funcionario = context.read<AutenticacaoModel>().funcionarioModel;
       if (carrinho.idEstoque != null) {
         final pedidoController = PedidoController();
 
+        print('data: ' + carrinho.dataPedido);
+
         PedidoModel pedido = new PedidoModel(
             idCliente: carrinho.cliente.id,
-            idFuncionario: 1,
+            idFuncionario: funcionario!.id,
             total: carrinho.totalPedido,
             data: carrinho.dataPedido);
 
         //Criando pedido
         PedidoModel pedidoResposta = await pedidoController.crie(pedido);
-        print(pedidoResposta.id);
+
         carrinho.itemPedido.forEach((element) {
           element.idPedido = pedidoResposta.id;
+        });
+
+        //Cria os items do pedido
+        carrinho.itemPedido.forEach((element) async {
+          await ItemPedidoController().crie(element);
         });
 
         // carrinho.itemPedido.forEach((element) async {
@@ -656,16 +672,20 @@ class _ResumoState extends State<Resumo> {
 
         //Realiza a baixa no estoque
 
-        // carrinho.itemPedido.forEach((element) async {
-        //   //Recebe o estoque
-        //   var estoque = await EstoqueMovimentacaoController()
-        //       .obtenhaPorId(carrinho.idEstoque!);
-        //   //Atualiza a quantidade
-        //   estoque.quantidade -= element.quantidade;
-        //   //Seta nova atualização
+        var estoquesMV = await EstoqueMovimentacaoController().obtenhaTodos();
 
-        //       await EstoqueMovimentacaoController().atualize(estoque);
-        // });
+        carrinho.itemPedido.forEach((itemPedido) async {
+          // EstoqueMovimentacaoModel estoque;
+
+          var estoqueMV = estoquesMV.firstWhere((element) =>
+              element.idEstoque == carrinho.idEstoque &&
+              element.idProduto == itemPedido.idProduto);
+
+          //Atualiza a quantidade
+          estoqueMV.quantidade -= itemPedido.quantidade;
+          //Seta nova atualização
+          await EstoqueMovimentacaoController().atualize(estoqueMV);
+        });
 
         //limpa form
         keyFormClientePedidoVenda.currentState!.reset();
@@ -877,7 +897,8 @@ class _ItemCarrinhoCardState extends State<ItemCarrinhoCard> {
                     child: Row(
                       children: [
                         TextComponent(label: 'Nome: '),
-                        TextComponent(label: widget.itemPedido.idProduto.toString()),
+                        TextComponent(
+                            label: widget.itemPedido.idProduto.toString()),
                       ],
                     ),
                   ),
@@ -885,7 +906,8 @@ class _ItemCarrinhoCardState extends State<ItemCarrinhoCard> {
                     child: Row(
                       children: [
                         TextComponent(label: 'Categoria: '),
-                        TextComponent(label: widget.itemPedido.idProduto.toString()),
+                        TextComponent(
+                            label: widget.itemPedido.idProduto.toString()),
                       ],
                     ),
                   ),
@@ -893,7 +915,8 @@ class _ItemCarrinhoCardState extends State<ItemCarrinhoCard> {
                     child: Row(
                       children: [
                         TextComponent(label: 'Preço: '),
-                        TextComponent(label: widget.itemPedido.idProduto.toString()),
+                        TextComponent(
+                            label: widget.itemPedido.idProduto.toString()),
                       ],
                     ),
                   )

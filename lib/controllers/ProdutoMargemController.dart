@@ -6,10 +6,6 @@ class ProdutoMargemController {
   Future<List<ProdutoMargemModel>?> obtenhaTodos() async {
     final resposta = await new Api().obtenha('produto-margem');
 
-    if (resposta!.body == null) {
-      return null;
-    }
-
     List<ProdutoMargemModel> colecaoDeProdutos = new List.empty(growable: true);
 
     List<dynamic> stringJson = json.decode(resposta.body);
@@ -24,9 +20,7 @@ class ProdutoMargemController {
 
   Future<ProdutoMargemModel?> obtenhaPorNome(String nome) async {
     final resposta = await new Api().obtenha('produto-margem/nome/' + nome);
-    if (resposta!.body == null) {
-      return null;
-    }
+
     var stringJson = json.decode(resposta.body);
 
     return new ProdutoMargemModel.fromJson(stringJson.single);
@@ -35,9 +29,6 @@ class ProdutoMargemController {
   Future<ProdutoMargemModel?> obtenhaPorId(int id) async {
     final resposta = await new Api().obtenha('produto-margem/' + id.toString());
 
-    if (resposta!.body == null) {
-      return null;
-    }
     var stringJson = json.decode(resposta.body);
 
     return new ProdutoMargemModel.fromJson(stringJson.single);

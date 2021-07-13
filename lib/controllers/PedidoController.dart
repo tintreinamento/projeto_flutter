@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:projeto_flutter/models/PedidoModel.dart';
 import 'package:projeto_flutter/services/Api.dart';
 
@@ -29,9 +28,8 @@ class PedidoController {
   }
 
   Future<PedidoModel> crie(PedidoModel pedido) async {
-    print(json.encode(pedido));
     final resposta = await new Api().crie('pedido', json.encode(pedido));
-
+    print(resposta);
     var stringJson = json.decode(resposta.body);
     print(stringJson);
     return new PedidoModel.fromJson(stringJson);

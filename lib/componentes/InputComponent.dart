@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/TextFormFieldComponent.dart';
 import 'package:projeto_flutter/componentes/TextComponent.dart';
-import 'package:projeto_flutter/componentes/InputComponent.dart';
+
 import 'package:flutter/services.dart';
 
 class InputComponent extends StatefulWidget {

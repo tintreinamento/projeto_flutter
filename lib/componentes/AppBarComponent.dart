@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_flutter/componentes/styles.dart';
-import 'package:projeto_flutter/models/CarrinhoModel.dart';
+
 import 'TextComponent.dart';
-import 'package:provider/provider.dart';
+
 class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
   final String titulo = 'Sistema de Gestão de Vendas';
   final AppBar appBar = new AppBar();
@@ -34,48 +34,49 @@ class AppBarComponent extends StatelessWidget implements PreferredSizeWidget {
               color: colorBranco,
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
-       
-            Row(children: [
-              TextComponent(
-              label: 'Sistema de Gestão de Vendas',
-              cor: colorBranco,
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-            //Icone do carrinho de compra com interação
-            // SizedBox(
-            //   width: 5,
-            // ),
-            // Stack(
-            //   overflow: Overflow.visible,
-            //   children: [
-            //     Icon(
-            //       Icons.shopping_cart_outlined,
-            //       color: colorBranco,
-            //       size: 28,
-            //     ),
-            //     Positioned(
-            //         right: -2,
-            //         bottom: -5,
-            //         child: Container(
-            //           height: 20,
-            //           width: 20,
-            //           decoration: BoxDecoration(
-            //               borderRadius: BorderRadius.circular(50),
-            //               color: colorVermelho),
-            //           child: Align(
-            //             alignment: Alignment.center,
-            //             child: Text(
-            //               context.watch<CarrinhoModel>().itemPedido.length.toString(),
-            //               style: TextStyle(
-            //                 fontSize: 9,
-            //                   color: colorBranco, fontWeight: FontWeight.bold),
-            //             ),
-            //           ),
-            //         ))
-            //   ],
-            // )
-            ],)
+            Row(
+              children: [
+                TextComponent(
+                  label: 'Sistema de Gestão de Vendas',
+                  cor: colorBranco,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                //Icone do carrinho de compra com interação
+                // SizedBox(
+                //   width: 5,
+                // ),
+                // Stack(
+                //   overflow: Overflow.visible,
+                //   children: [
+                //     Icon(
+                //       Icons.shopping_cart_outlined,
+                //       color: colorBranco,
+                //       size: 28,
+                //     ),
+                //     Positioned(
+                //         right: -2,
+                //         bottom: -5,
+                //         child: Container(
+                //           height: 20,
+                //           width: 20,
+                //           decoration: BoxDecoration(
+                //               borderRadius: BorderRadius.circular(50),
+                //               color: colorVermelho),
+                //           child: Align(
+                //             alignment: Alignment.center,
+                //             child: Text(
+                //               context.watch<CarrinhoModel>().itemPedido.length.toString(),
+                //               style: TextStyle(
+                //                 fontSize: 9,
+                //                   color: colorBranco, fontWeight: FontWeight.bold),
+                //             ),
+                //           ),
+                //         ))
+                //   ],
+                // )
+              ],
+            )
           ],
         ));
 

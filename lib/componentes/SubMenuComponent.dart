@@ -32,16 +32,18 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
       child: Row(
         children: [
           TextComponent(
-              fontWeight: FontWeight.bold,
-              label: widget.titulo,
-              cor: colorBranco,
-              fontSize: 14,),
+            fontWeight: FontWeight.bold,
+            label: widget.titulo,
+            cor: colorBranco,
+            fontSize: 14,
+          ),
           Flexible(
               child: Padding(
             padding: EdgeInsets.only(left: 20),
             child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, widget.primeiraRota);
+                  Navigator.of(context)
+                      .pushReplacementNamed(widget.primeiraRota);
                 },
                 child: TextComponent(
                   fontWeight: FontWeight.bold,
@@ -54,7 +56,8 @@ class _SubMenuComponentState extends State<SubMenuComponent> {
             padding: EdgeInsets.only(left: 20),
             child: TextButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(widget.segundaRota);
+                  Navigator.of(context)
+                      .pushReplacementNamed(widget.segundaRota);
                 },
                 child: TextComponent(
                   fontWeight: FontWeight.bold,

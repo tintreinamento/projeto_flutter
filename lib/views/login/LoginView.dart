@@ -41,12 +41,10 @@ class _LoginViewState extends State<LoginView> {
           isAutenticated = false;
         });
       } else {
-        context
-            .read<AutenticacaoModel>()
-            .setFuncionario(funcionario);
+        context.read<AutenticacaoModel>().setFuncionario(funcionario);
 
         //caso seja autenticado, direciona para a rota subsequente
-        Navigator.of(context).pushNamed('/pedido_venda_cadastrar');
+        Navigator.pushReplacementNamed(context, '/pedido_venda_cadastrar');
       }
     }
   }
